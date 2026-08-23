@@ -1,5 +1,5 @@
-// Evia v127 adds staged photo and guided video evidence.
-const CACHE_NAME = 'evia-shell-v127';
+// Evia v128 fixes Evia_beta asset routing and refreshes staged evidence.
+const CACHE_NAME = 'evia-shell-v128';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v127.js',
+  './assets/evia-version-v128.js',
   './assets/evia-video-recorder.js',
   './assets/evia-staged-evidence-v127.js',
   './assets/evia-staged-evidence-v127.css',
