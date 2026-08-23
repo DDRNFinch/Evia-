@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION=132,QR_FILE='./course-delivery/qr/ST0171.svg',PACK_KEY='nisi-installed-course-packs-v1';
+const VERSION=133,QR_FILE='./course-delivery/qr/ST0171.svg',PACK_KEY='nisi-installed-course-packs-v1';
 const nativeFetch=window.fetch.bind(window);
 
 const STAGES={
@@ -17,45 +17,13 @@ const STAGES={
   fence_repair:[{title:'Defect',instruction:'Show the fencing or railing defect before the repair.'},{title:'Preparation',instruction:'Show the area prepared and any defective component removed or replacement component ready.'},{title:'Repair in progress',instruction:'Show the repair or replacement work being carried out.'},{title:'Completed repair',instruction:'Show the completed fencing or railing repair.'}],
   ground_repair:[{title:'External defect',instruction:'Show the groundwork, surface or landscaping defect before work begins.'},{title:'Preparation',instruction:'Show the area excavated, cleared, prepared or set out for the repair.'},{title:'Repair in progress',instruction:'Show the repair process and materials being used.'},{title:'Completed & safe',instruction:'Show the completed repair and how the area has been left safe.'}]
 };
-
-function patchMap(){
-  const data=window.EviaST0171Map;if(!Array.isArray(data))return false;
-  for(const cat of data)for(const job of cat.jobs||[])for(const opp of job.opps||[]){const stages=STAGES[opp.id];if(stages)opp.stages=stages.map((s,i)=>({...s,id:`${opp.id}-stage-${i+1}`}))}
-  return true
-}
-function patchInstalled(){
-  try{
-    const all=JSON.parse(localStorage.getItem(PACK_KEY)||'{}'),pack=all?.['st0171-v1-1'];
-    if(!pack||!Array.isArray(window.EviaST0171Map))return;
-    pack.siteData=window.EviaST0171Map;pack.updatedAt=Date.now();pack.evidenceStagesVersion=VERSION;all['st0171-v1-1']=pack;localStorage.setItem(PACK_KEY,JSON.stringify(all))
-  }catch(error){console.debug('Evia ST0171 staged pack refresh',error)}
-}
+function patchMap(){const data=window.EviaST0171Map;if(!Array.isArray(data))return false;for(const cat of data)for(const job of cat.jobs||[])for(const opp of job.opps||[]){const stages=STAGES[opp.id];if(stages)opp.stages=stages.map((s,i)=>({...s,id:`${opp.id}-stage-${i+1}`}))}return true}
+function patchInstalled(){try{const all=JSON.parse(localStorage.getItem(PACK_KEY)||'{}'),pack=all?.['st0171-v1-1'];if(!pack||!Array.isArray(window.EviaST0171Map))return;pack.siteData=window.EviaST0171Map;pack.updatedAt=Date.now();pack.evidenceStagesVersion=VERSION;all['st0171-v1-1']=pack;localStorage.setItem(PACK_KEY,JSON.stringify(all))}catch(error){console.debug('Evia ST0171 staged pack refresh',error)}}
 patchMap();patchInstalled();
-window.fetch=async function(input,init){
-  const url=typeof input==='string'?input:input?.url||'';
-  if(String(url).toUpperCase().startsWith('INLINE:ST0171')){
-    patchMap();const pack=window.EviaST0171Pack?.build?.();
-    if(!pack)return new Response(JSON.stringify({error:'ST0171 pack unavailable'}),{status:503,headers:{'Content-Type':'application/json'}});
-    return new Response(JSON.stringify(pack),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}})
-  }
-  return nativeFetch(input,init)
-};
-function copyCode(status){
-  const code='ST0171',done=()=>{if(status)status.textContent='ST0171 copied.'};
-  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(done).catch(()=>{if(status)status.textContent='Course code: ST0171'});
-  else{const t=document.createElement('textarea');t.value=code;t.readOnly=true;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch{if(status)status.textContent='Course code: ST0171'}t.remove()}
-}
-function patchQr(){
-  const grid=document.querySelector('.evia-course-qr-grid');if(!grid||grid.querySelector('[data-st0171-course-qr]'))return;
-  const card=document.createElement('article');card.className='evia-course-qr-card';card.dataset.st0171CourseQr='1';
-  card.innerHTML=`<a class="evia-course-qr-image" href="${QR_FILE}" download="ST0171.svg" aria-label="Download Property Maintenance QR code"><img src="${QR_FILE}" alt="Property Maintenance course QR code" loading="lazy" decoding="async" draggable="false"></a><div class="evia-course-qr-copy"><b>Property Maintenance</b><code>ST0171</code></div><div class="evia-course-qr-actions"><a href="${QR_FILE}" download="ST0171.svg">Download</a><button type="button" data-st0171-copy>Copy code</button></div>`;
-  grid.appendChild(card);card.querySelector('[data-st0171-copy]')?.addEventListener('click',()=>copyCode(document.querySelector('[data-course-qr-status]')))
-}
-function start(){
-  patchMap();patchInstalled();
-  try{window.EviaCoursePacks?.normalize?.(window.EviaST0171Pack?.build?.())}catch(error){console.error('Evia ST0171 pack validation failed',error)}
-  patchQr();new MutationObserver(patchQr).observe(document.body,{childList:true,subtree:true})
-}
+window.fetch=async function(input,init){const url=typeof input==='string'?input:input?.url||'';if(String(url).toUpperCase().startsWith('INLINE:ST0171')){patchMap();const pack=window.EviaST0171Pack?.build?.();if(!pack)return new Response(JSON.stringify({error:'ST0171 pack unavailable'}),{status:503,headers:{'Content-Type':'application/json'}});return new Response(JSON.stringify(pack),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}})}return nativeFetch(input,init)};
+function copyCode(status){const code='ST0171',done=()=>{if(status)status.textContent='ST0171 copied.'};if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(done).catch(()=>{if(status)status.textContent='Course code: ST0171'});else{const t=document.createElement('textarea');t.value=code;t.readOnly=true;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch{if(status)status.textContent='Course code: ST0171'}t.remove()}}
+function patchQr(){const grid=document.querySelector('.evia-course-qr-grid');if(!grid||grid.querySelector('[data-st0171-course-qr]'))return;const card=document.createElement('article');card.className='evia-course-qr-card';card.dataset.st0171CourseQr='1';card.innerHTML=`<a class="evia-course-qr-image" href="${QR_FILE}" download="ST0171.svg" aria-label="Download Property Maintenance QR code"><img src="${QR_FILE}" alt="Property Maintenance course QR code" loading="lazy" decoding="async" draggable="false"></a><div class="evia-course-qr-copy"><b>Property Maintenance</b><code>ST0171</code></div><div class="evia-course-qr-actions"><a href="${QR_FILE}" download="ST0171.svg">Download</a><button type="button" data-st0171-copy>Copy code</button></div>`;grid.appendChild(card);card.querySelector('[data-st0171-copy]')?.addEventListener('click',()=>copyCode(document.querySelector('[data-course-qr-status]')))}
+function start(){patchMap();patchInstalled();try{window.EviaCoursePacks?.normalize?.(window.EviaST0171Pack?.build?.())}catch(error){console.error('Evia ST0171 pack validation failed',error)}patchQr();new MutationObserver(patchQr).observe(document.body,{childList:true,subtree:true})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 window.EviaST0171=Object.freeze({version:VERSION,qrPayload:'EVIA1:ST0171',courseCode:'ST0171',build:()=>{patchMap();return window.EviaST0171Pack?.build?.()}})
 })();
