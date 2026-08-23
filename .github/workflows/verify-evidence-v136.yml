@@ -1,4 +1,4 @@
-name: Verify Evia evidence screen v136
+name: Verify Evia guided camera v137
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-evidence:
+  verify-camera:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,23 +20,37 @@ jobs:
           node-version: 22
       - name: Check production JavaScript
         run: |
+          node --check assets/evia-staged-evidence-v132.js
           node --check assets/evia-evidence-media-v122.js
           node --check assets/evia-st0171-v124.js
-          node --check assets/evia-staged-evidence-v132.js
           node --check assets/evia-selfobs-live.js
           node --check assets/evia-version-v136.js
           node --check sw.js
           node --check public/sw.js
-      - name: Verify clean evidence-card renderer
+      - name: Verify guided camera behaviour
         run: |
           node - <<'NODE'
           const fs=require('fs');
-          const s=fs.readFileSync('assets/evia-evidence-media-v122.js','utf8');
-          const must=['const VERSION=136','Guided video','Photo + written explanation','row.dataset.eviaEvidenceId','row.dataset.thumbReady="1"','Object.keys(groups).sort().flatMap'];
-          for(const x of must)if(!s.includes(x))throw Error('Missing evidence renderer behaviour: '+x);
-          for(const old of ['function scoreRow(','function matchEntries(','new MutationObserver(schedule)'])if(s.includes(old))throw Error('Old unstable evidence renderer still active: '+old);
+          const js=fs.readFileSync('assets/evia-staged-evidence-v132.js','utf8');
+          const css=fs.readFileSync('assets/evia-staged-evidence-v132.css','utf8');
+          const mustJs=[
+            'const VERSION=137',
+            'evia-capture-mode-v137',
+            'Photo prompt',
+            'What to talk about',
+            'data-next-prompt',
+            'markers.push({seconds:Math.floor((Date.now()-startedAt)/1000)',
+            'data-finish-video',
+            'videoPromptMarkers=meta.markers||[]',
+            'width:{ideal:1920}',
+            'ctx.drawImage(video,0,0,w,h,0,0,cw,ch)'
+          ];
+          for(const x of mustJs)if(!js.includes(x))throw Error('Missing camera behaviour: '+x);
+          for(const old of ['data-phone-photo','data-phone-video','phone.click()','aspectRatio:{ideal:1}'])if(js.includes(old))throw Error('Old native/square camera path still active: '+old);
+          const mustCss=['position:fixed!important','height:100dvh!important','evia-stage-capture-prompt-v137','evia-stage-capture-actions-v137'];
+          for(const x of mustCss)if(!css.includes(x))throw Error('Missing full-screen camera style: '+x);
           NODE
-      - name: Boot ST0171 and keep job-page tiles correct
+      - name: Keep Property Maintenance tiles unchanged
         run: |
           node - <<'NODE'
           const fs=require('fs'),vm=require('vm'),store=new Map();
@@ -53,22 +67,22 @@ jobs:
           exact(titles('plaster'),['Plaster defect','Preparation','Finished repair'],'Plaster repairs');
           exact(titles('flooring'),['Flooring defect','Preparation','Setting out','Finished repair'],'Flooring repairs');
           NODE
-      - name: Check v136 release wiring
+      - name: Check v137 release wiring
         run: |
-          grep -q 'name="evia-app-version" content="136"' index.html
-          grep -q 'evia-version-v136.js?v=136' index.html
-          grep -q 'evia-evidence-media-v122.js?v=136' index.html
-          grep -q 'evia-updater.js?v=136' index.html
-          grep -q "evia-shell-v136" sw.js
-          grep -q "evia-shell-v136" public/sw.js
-          grep -q 'evia-version-v136.js' sw.js
-          test ! -e assets/evia-version-v135.js
+          grep -q 'name="evia-app-version" content="137"' index.html
+          grep -q 'evia-staged-evidence-v132.js?v=137' index.html
+          grep -q 'evia-staged-evidence-v132.css?v=137' index.html
+          grep -q 'evia-version-v136.js?v=137' index.html
+          grep -q 'evia-updater.js?v=137' index.html
+          grep -q "evia-shell-v137" sw.js
+          grep -q "evia-shell-v137" public/sw.js
+          grep -q 'window.EviaAppVersion=137' assets/evia-version-v136.js
       - name: Check manifests and offline shell match
         run: |
           node - <<'NODE'
           const fs=require('fs');
           const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
-          if(a.version!=='136')throw Error('update.json is not v136');
+          if(a.version!=='137')throw Error('update.json is not v137');
           if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
           if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
           NODE
