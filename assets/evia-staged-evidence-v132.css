@@ -1,0 +1,35 @@
+/* Evia v132 staged evidence — fixed in the native Evia evidence area. */
+.selfobs .menu-stage.evia-stage-managed-v132 .self-panel{visibility:hidden!important;pointer-events:none!important}
+.selfobs .evia-stage-overlay-v132{position:absolute;inset:.55rem 0 0;z-index:6;width:min(29rem,100%);max-height:100%;margin:auto;padding:.1rem .1rem 1rem;overflow:auto;overflow-anchor:none;scrollbar-width:none;contain:paint}
+.selfobs .evia-stage-overlay-v132::-webkit-scrollbar{display:none}
+.selfobs .evia-stage-overlay-v132 *{animation:none!important}
+.selfobs .evia-stage-kicker-v132{text-align:center;margin:.05rem 0 .38rem;color:#aa9360;font-size:.6rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+.selfobs .evia-stage-method-card-v132{text-align:center;padding:.82rem .85rem}
+.selfobs .evia-stage-method-card-v132>span{display:block;margin-bottom:.55rem;font-size:.8rem;color:#3b393b}
+.selfobs .evia-stage-methods-v132{display:grid;grid-template-columns:1fr 1fr 2.8rem;gap:.5rem;align-items:stretch}
+.selfobs .evia-stage-methods-v132 .self-button{margin:0;min-height:2.8rem}
+.selfobs .evia-stage-gallery-v132{width:2.8rem;height:2.8rem;border-radius:50%;border:1px solid #ffffffcf;background:#ffffffa8;color:#6d6040;display:grid;place-items:center;padding:0}
+.selfobs .evia-stage-gallery-v132 svg{width:1.15rem;height:1.15rem}
+.selfobs .evia-stage-continue-v132{margin-top:.55rem;opacity:.32}
+.selfobs .evia-stage-camera-v132,.selfobs .evia-stage-video-v132{position:relative;width:100%;aspect-ratio:1/1;margin:.55rem auto .35rem;border-radius:1.1rem;overflow:hidden;background:#0b0b0b;box-shadow:0 5px 22px rgba(90,76,20,.08)}
+.selfobs .evia-stage-camera-v132 video,.selfobs .evia-stage-camera-v132 img,.selfobs .evia-stage-video-v132 video{display:block;width:100%;height:100%;object-fit:cover;background:#0b0b0b}
+.selfobs .evia-stage-camera-v132:after,.selfobs .evia-stage-video-v132:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(90deg,transparent 33.1%,rgba(255,255,255,.12) 33.33%,transparent 33.55%,transparent 66.45%,rgba(255,255,255,.12) 66.66%,transparent 66.9%),linear-gradient(transparent 33.1%,rgba(255,255,255,.12) 33.33%,transparent 33.55%,transparent 66.45%,rgba(255,255,255,.12) 66.66%,transparent 66.9%)}
+.selfobs .evia-stage-camera-status-v132{position:absolute;inset:0;display:grid;place-items:center;color:#fff9;font-size:.7rem}
+.selfobs .evia-stage-hint-v132{text-align:center;max-width:23rem;margin:.2rem auto .45rem;color:#8e8878;font-size:.65rem;line-height:1.4}
+.selfobs .evia-stage-video-time-v132{position:absolute;z-index:3;top:.6rem;left:50%;transform:translateX(-50%);padding:.32rem .55rem;border-radius:999px;background:#111b;color:#fff;font-size:.64rem;font-variant-numeric:tabular-nums;backdrop-filter:blur(6px)}
+.selfobs .evia-stage-prompt-v132{display:grid;gap:.28rem;margin:.5rem 0 0;padding:.7rem .8rem;background:#fff9dc;border-color:#ecda84;color:#51482d}
+.selfobs .evia-stage-prompt-v132 small{font-size:.56rem;color:#9d872e;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.selfobs .evia-stage-prompt-v132 strong{font-size:.76rem;line-height:1.42;color:#45402f}
+.selfobs .evia-stage-prompt-v132 span{font-size:.58rem;color:#91876b}
+.selfobs .evia-stage-counter-v132{text-align:right;margin:.25rem .3rem 0;color:#999;font-size:.56rem}
+.selfobs .evia-stage-summary-v132{display:grid;gap:.3rem;margin-bottom:.55rem}
+.selfobs .evia-stage-summary-v132>strong{font-size:.84rem}.selfobs .evia-stage-summary-v132>small{font-size:.6rem;color:#8d8776}
+.selfobs .evia-stage-summary-v132>div{display:grid;gap:.35rem;margin-top:.25rem}
+.selfobs .evia-stage-summary-v132 p{display:grid;grid-template-columns:2.7rem 1fr;gap:.45rem;margin:0;padding:.42rem .5rem;border-radius:.75rem;background:#fff9df;color:#5c5543;font-size:.62rem;line-height:1.35}
+.selfobs .evia-stage-summary-v132 p b{color:#a48619}
+.selfobs .evia-stage-three-v132{grid-template-columns:repeat(3,1fr)}
+.selfobs .evia-stage-saving-v132{margin:.55rem 0 0;text-align:center;color:#8c8060;font-size:.62rem}
+.selfobs .evia-stage-complete-v132{text-align:center;display:grid;place-items:center;gap:.3rem;padding:1.1rem}
+.selfobs .evia-stage-complete-v132 strong{width:3rem;height:3rem;border-radius:50%;display:grid;place-items:center;background:var(--yellow);color:#4c3b0b;font-size:1.3rem}
+.selfobs .evia-stage-complete-v132 span{font-size:.72rem;color:#706b5d}
+@media(max-width:420px){.selfobs .evia-stage-overlay-v132{left:0;right:0}.selfobs .evia-stage-three-v132{grid-template-columns:1fr}.selfobs .evia-stage-methods-v132{grid-template-columns:1fr 1fr 2.65rem}.selfobs .evia-stage-gallery-v132{width:2.65rem;height:2.65rem}}
