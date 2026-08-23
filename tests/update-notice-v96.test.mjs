@@ -12,9 +12,9 @@ const version = String(update.version);
 const guard = fs.readFileSync(new URL(`../assets/evia-version-v${version}.js`, import.meta.url), "utf8");
 
 test("Evia shows a persistent update available notification", () => {
-  assert.match(updater, /Update available/);
+  assert.match(updater, /Evia v\$\{escapeHtml\(manifest\.version\)\} is ready/);
   assert.match(updater, /evia-update-notice/);
-  assert.match(updater, /Install update/);
+  assert.match(updater, /Update Evia/);
   assert.match(updater, /data-later/);
 });
 
