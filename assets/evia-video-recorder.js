@@ -1,200 +1,38 @@
 (()=>{
 "use strict";
-
-const VIDEO_BITS_PER_SECOND=1370000;
-const AUDIO_BITS_PER_SECOND=96000;
-let active=null;
-
-function preferredMime(){
-  if(typeof MediaRecorder==="undefined")return "";
-  const types=[
-    'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
-    "video/mp4",
-    "video/webm;codecs=vp8,opus",
-    "video/webm;codecs=vp9,opus",
-    "video/webm"
-  ];
-  return types.find(type=>!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(type))||"";
-}
+const VIDEO_BITS_PER_SECOND=1370000,AUDIO_BITS_PER_SECOND=96000;
+let active=null,lastMeta=null;
+function preferredMime(){if(typeof MediaRecorder==="undefined")return"";const types=['video/mp4;codecs="avc1.42E01E,mp4a.40.2"',"video/mp4","video/webm;codecs=vp8,opus","video/webm;codecs=vp9,opus","video/webm"];return types.find(type=>!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(type))||""}
 function extension(type){return String(type||"").includes("mp4")?"mp4":"webm"}
-function clock(ms){
-  const total=Math.max(0,Math.floor(ms/1000)),m=Math.floor(total/60),s=total%60;
-  return `${m}:${String(s).padStart(2,"0")}`;
-}
+function clock(ms){const total=Math.max(0,Math.floor(ms/1000)),m=Math.floor(total/60),s=total%60;return`${m}:${String(s).padStart(2,"0")}`}
 function stopTracks(stream){try{stream?.getTracks?.().forEach(track=>track.stop())}catch{}}
-function nativeFallback(input){
-  if(!input)return;
-  try{input.value=""}catch{}
-  input.setAttribute("type","file");
-  input.setAttribute("capture","environment");
-  input.setAttribute("accept","video/*");
-  input.click();
-}
-function closeActive(){
-  if(!active)return;
-  clearInterval(active.timer);
-  try{if(active.recorder&&active.recorder.state!=="inactive")active.recorder.stop()}catch{}
-  stopTracks(active.stream);
-  active.layer?.remove();
-  active=null;
-}
-function deliver(input,file){
-  if(!input||!file)return false;
-  try{
-    if(typeof input.onchange==="function"){
-      input.onchange({target:{files:[file],value:""}});
-      requestAnimationFrame(()=>replaceVideoPreview(file));
-      return true;
-    }
-  }catch{}
-  try{
-    const dt=new DataTransfer();
-    dt.items.add(file);
-    input.files=dt.files;
-    input.dispatchEvent(new Event("change",{bubbles:true}));
-    requestAnimationFrame(()=>replaceVideoPreview(file));
-    return true;
-  }catch{}
-  return false;
-}
-function replaceVideoPreview(file){
-  if(!file?.type?.startsWith("video/"))return;
-  const img=document.querySelector(".self-card.photo img");
-  if(!img||!String(img.src||"").startsWith("blob:"))return;
-  const video=document.createElement("video");
-  video.src=img.src;
-  video.controls=true;
-  video.playsInline=true;
-  video.preload="metadata";
-  video.setAttribute("aria-label","Evidence video preview");
-  img.replaceWith(video);
-}
-function errorScreen(layer,message,input){
-  const body=layer.querySelector(".evia-video-body");
-  if(!body)return;
-  body.innerHTML=`<div class="evia-video-error"><b>Video camera unavailable</b><span>${message}</span><button type="button" data-video-phone>Use phone camera</button><button type="button" data-video-cancel>Cancel</button></div>`;
-  body.querySelector("[data-video-phone]").onclick=()=>{layer.remove();active=null;nativeFallback(input)};
-  body.querySelector("[data-video-cancel]").onclick=closeActive;
-}
-
+function nativeFallback(input){if(!input)return;lastMeta=null;try{input.value=""}catch{}input.setAttribute("type","file");input.setAttribute("capture","environment");input.setAttribute("accept","video/*");input.click()}
+function closeActive(){if(!active)return;clearInterval(active.timer);try{if(active.recorder&&active.recorder.state!=="inactive")active.recorder.stop()}catch{}stopTracks(active.stream);active.layer?.remove();active=null}
+function deliver(input,file){if(!input||!file)return false;try{if(typeof input.onchange==="function"){input.onchange({target:{files:[file],value:""}});try{window.dispatchEvent(new CustomEvent("evia-guided-video-delivered",{detail:{file}}))}catch{}requestAnimationFrame(()=>replaceVideoPreview(file));return true}}catch{}try{const dt=new DataTransfer();dt.items.add(file);input.files=dt.files;input.dispatchEvent(new Event("change",{bubbles:true}));requestAnimationFrame(()=>replaceVideoPreview(file));return true}catch{}return false}
+function replaceVideoPreview(file){if(!file?.type?.startsWith("video/"))return;const img=document.querySelector(".self-card.photo img");if(!img||!String(img.src||"").startsWith("blob:"))return;const video=document.createElement("video");video.src=img.src;video.controls=true;video.playsInline=true;video.preload="metadata";video.setAttribute("aria-label","Evidence video preview");img.replaceWith(video)}
+function context(){const c=window.EviaGuidedEvidenceContext||window.EviaStagedEvidence?.context?.()||{};const fallbackTitle=document.querySelector(".self-title")?.textContent?.trim()||"Evidence video",fallbackInstruction=document.querySelector(".self-copy")?.textContent?.trim()||"";const title=String(c.title||fallbackTitle),question=String(c.question||"").trim(),instruction=String(c.instruction||fallbackInstruction).trim();const prompts=Array.isArray(c.prompts)&&c.prompts.length?c.prompts.map(String):[`Show ${title.toLowerCase()} clearly and explain what we are looking at.`,question||"Explain what you are doing, the method or materials you are using, and why.",instruction?`Explain how you completed or checked this stage: ${instruction}`:"Explain what you checked and how you know this stage is correct."];return{...c,title,instruction,question,prompts}}
+function errorScreen(layer,message,input){const body=layer.querySelector(".evia-video-body");if(!body)return;body.innerHTML=`<div class="evia-video-error"><b>Video camera unavailable</b><span>${message}</span><button type="button" data-video-phone>Use phone camera</button><button type="button" data-video-cancel>Cancel</button></div>`;body.querySelector("[data-video-phone]").onclick=()=>{layer.remove();active=null;nativeFallback(input)};body.querySelector("[data-video-cancel]").onclick=closeActive}
+function promptMarkup(ctx,index){return`<div class="evia-video-prompt"><small>What to talk about</small><strong data-video-prompt>${ctx.prompts[index]}</strong><div class="evia-video-prompt-meta"><span data-video-prompt-count>Prompt ${index+1} of ${ctx.prompts.length}</span><span>Keep recording</span></div></div>`}
 async function open(input){
-  if(active)return;
-  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){
-    nativeFallback(input);
-    return;
-  }
-
-  const layer=document.createElement("div");
-  layer.className="evia-video-layer";
-  layer.innerHTML=`
-    <div class="evia-video-body">
-      <div class="evia-video-top"><button type="button" data-video-cancel>Cancel</button><b>Record video</b><span></span></div>
-      <div class="evia-video-loading">Opening camera and microphone…</div>
-    </div>`;
-  document.body.appendChild(layer);
-  active={layer,stream:null,recorder:null,timer:null};
-  layer.querySelector("[data-video-cancel]").onclick=closeActive;
-
-  let stream;
-  try{
-    stream=await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:{ideal:"environment"},
-        width:{ideal:1280,max:1280},
-        height:{ideal:720,max:1280},
-        frameRate:{ideal:30,max:30}
-      },
-      audio:{channelCount:{ideal:1},echoCancellation:true,noiseSuppression:true}
-    });
-  }catch(err){
-    errorScreen(layer,"Allow Evia to use both the camera and microphone, or use the phone camera instead.",input);
-    return;
-  }
-  if(!active||active.layer!==layer){stopTracks(stream);return}
-  active.stream=stream;
-  if(!stream.getVideoTracks().length||!stream.getAudioTracks().length){
-    stopTracks(stream);
-    active.stream=null;
-    errorScreen(layer,"Evia needs both camera and microphone access so the evidence video includes sound.",input);
-    return;
-  }
-
-  const body=layer.querySelector(".evia-video-body");
-  body.innerHTML=`
-    <div class="evia-video-top"><button type="button" data-video-cancel>Cancel</button><b>Record video</b><span></span></div>
-    <div class="evia-video-preview-wrap"><video class="evia-video-preview" autoplay muted playsinline></video><div class="evia-video-time" data-video-time>0:00</div></div>
-    <div class="evia-video-controls"><span data-video-status>Ready · camera + microphone</span><button type="button" class="evia-video-record" data-video-record>Start recording</button></div>`;
-  const preview=body.querySelector("video");
-  preview.srcObject=stream;
-  try{await preview.play()}catch{}
-  body.querySelector("[data-video-cancel]").onclick=closeActive;
-  body.querySelector("[data-video-record]").onclick=()=>startRecording(input);
+  if(active)return;lastMeta=null;
+  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){nativeFallback(input);return}
+  const ctx=context(),layer=document.createElement("div");layer.className="evia-video-layer";layer.innerHTML=`<div class="evia-video-body"><div class="evia-video-top"><button type="button" data-video-cancel>‹ Back</button><b>${ctx.title}</b><span></span></div><div class="evia-video-loading">Opening camera and microphone…</div></div>`;document.body.appendChild(layer);active={layer,stream:null,recorder:null,timer:null,ctx,promptIndex:0,markers:[],startedAt:0};layer.querySelector("[data-video-cancel]").onclick=closeActive;
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280,max:1280},height:{ideal:1280,max:1280},aspectRatio:{ideal:1},frameRate:{ideal:30,max:30}},audio:{channelCount:{ideal:1},echoCancellation:true,noiseSuppression:true}})}catch{errorScreen(layer,"Allow Evia to use both the camera and microphone, or use the phone camera instead.",input);return}
+  if(!active||active.layer!==layer){stopTracks(stream);return}active.stream=stream;if(!stream.getVideoTracks().length||!stream.getAudioTracks().length){stopTracks(stream);active.stream=null;errorScreen(layer,"Evia needs both camera and microphone access so the evidence video includes sound.",input);return}
+  const body=layer.querySelector(".evia-video-body");body.innerHTML=`<div class="evia-video-top"><button type="button" data-video-cancel>‹ Back</button><b>${ctx.title}</b><span></span></div><div class="evia-video-preview-wrap"><video class="evia-video-preview" autoplay muted playsinline></video><div class="evia-video-time" data-video-time>0:00</div></div>${promptMarkup(ctx,0)}<div class="evia-video-controls"><span data-video-status>Ready · camera + microphone</span><button type="button" class="evia-video-record" data-video-record>Start recording</button></div>`;
+  const preview=body.querySelector("video");preview.srcObject=stream;try{await preview.play()}catch{}body.querySelector("[data-video-cancel]").onclick=closeActive;body.querySelector("[data-video-record]").onclick=()=>startRecording(input)
 }
-
+function setPrompt(index){if(!active)return;active.promptIndex=index;const p=active.layer.querySelector("[data-video-prompt]"),n=active.layer.querySelector("[data-video-prompt-count]");if(p)p.textContent=active.ctx.prompts[index];if(n)n.textContent=`Prompt ${index+1} of ${active.ctx.prompts.length}`}
+function renderRecordingActions(input,recorder){if(!active)return;const box=active.layer.querySelector(".evia-video-controls");if(!box)return;const last=active.promptIndex>=active.ctx.prompts.length-1;box.innerHTML=`<span data-video-status>Recording · audio on</span><div class="evia-video-action-row"><button type="button" class="evia-video-restart" data-video-restart>Restart</button><button type="button" class="evia-video-next" data-video-next>${last?"Finish recording":"Next prompt"}</button></div>`;box.querySelector("[data-video-restart]").onclick=()=>restart(input,recorder);box.querySelector("[data-video-next]").onclick=()=>{if(!active)return;if(last){finishRecorder(recorder)}else{const next=active.promptIndex+1,seconds=Math.max(0,Math.floor((Date.now()-active.startedAt)/1000));active.markers.push({seconds,prompt:active.ctx.prompts[next]});setPrompt(next);renderRecordingActions(input,recorder)}}}
 function startRecording(input){
-  if(!active?.stream)return;
-  const {layer,stream}=active;
-  const button=layer.querySelector("[data-video-record]"),status=layer.querySelector("[data-video-status]"),time=layer.querySelector("[data-video-time]");
-  if(!button||button.dataset.recording==="1")return;
-  const mime=preferredMime();
-  const options={videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND};
-  if(mime)options.mimeType=mime;
-  let recorder;
-  try{recorder=new MediaRecorder(stream,options)}catch{
-    try{recorder=new MediaRecorder(stream)}catch{
-      errorScreen(layer,"This phone could not start the Evia recorder. Use the phone camera instead.",input);
-      return;
-    }
-  }
-  if(!recorder.stream?.getAudioTracks?.().length){
-    errorScreen(layer,"The microphone was not available. Evia will not save a silent evidence video.",input);
-    return;
-  }
-  active.recorder=recorder;
-  const chunks=[];
-  const started=Date.now();
-  button.dataset.recording="1";
-  button.textContent="Stop & use video";
-  button.classList.add("is-recording");
-  status.textContent="Recording · audio on";
-  const tick=()=>{if(time)time.textContent=clock(Date.now()-started)};
-  tick();
-  active.timer=setInterval(tick,250);
-  recorder.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
-  recorder.onerror=()=>{
-    clearInterval(active?.timer);
-    if(active)active.timer=null;
-    status.textContent="Recording problem · try again";
-    button.dataset.recording="";
-    button.textContent="Start recording";
-    button.classList.remove("is-recording");
-  };
-  recorder.onstop=()=>{
-    if(!active||active.recorder!==recorder)return;
-    clearInterval(active.timer);active.timer=null;
-    stopTracks(stream);
-    active.stream=null;
-    const type=recorder.mimeType||mime||chunks[0]?.type||"video/webm";
-    const blob=new Blob(chunks,{type});
-    if(blob.size<1024){
-      errorScreen(layer,"The recording could not be saved. Please try again or use the phone camera.",input);
-      return;
-    }
-    const file=new File([blob],`evia-video-${Date.now()}.${extension(type)}`,{type,lastModified:Date.now()});
-    const ok=deliver(input,file);
-    layer.remove();
-    active=null;
-    if(!ok)nativeFallback(input);
-  };
-  recorder.start(1000);
-  button.onclick=()=>{
-    if(recorder.state!=="inactive"){
-      button.disabled=true;
-      status.textContent="Saving video…";
-      recorder.stop();
-    }
-  };
+  if(!active?.stream)return;const{layer,stream,ctx}=active,button=layer.querySelector("[data-video-record]"),time=layer.querySelector("[data-video-time]");if(!button)return;const mime=preferredMime(),options={videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND};if(mime)options.mimeType=mime;let recorder;try{recorder=new MediaRecorder(stream,options)}catch{try{recorder=new MediaRecorder(stream)}catch{errorScreen(layer,"This phone could not start the Evia recorder. Use the phone camera instead.",input);return}}
+  if(!recorder.stream?.getAudioTracks?.().length){errorScreen(layer,"The microphone was not available. Evia will not save a silent evidence video.",input);return}
+  active.recorder=recorder;const chunks=[];active.startedAt=Date.now();active.promptIndex=0;active.markers=[{seconds:0,prompt:ctx.prompts[0]}];setPrompt(0);const tick=()=>{if(time&&active)time.textContent=clock(Date.now()-active.startedAt)};tick();active.timer=setInterval(tick,250);
+  recorder.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};recorder.onerror=()=>{if(!active)return;clearInterval(active.timer);active.timer=null;errorScreen(layer,"The recording stopped unexpectedly. Please try again.",input)};
+  recorder.onstop=()=>{if(!active||active.recorder!==recorder)return;clearInterval(active.timer);active.timer=null;stopTracks(stream);active.stream=null;const type=recorder.mimeType||mime||chunks[0]?.type||"video/webm",blob=new Blob(chunks,{type});if(blob.size<1024){errorScreen(layer,"The recording could not be saved. Please try again or use the phone camera.",input);return}const finishedAt=Date.now();lastMeta={startedAt:active.startedAt,finishedAt,durationSeconds:Math.max(0,Math.floor((finishedAt-active.startedAt)/1000)),markers:[...active.markers],title:ctx.title,stageIndex:ctx.stageIndex??null,stageCount:ctx.stageCount??1,opportunityId:ctx.opportunityId||""};const file=new File([blob],`evia-video-${Date.now()}.${extension(type)}`,{type,lastModified:Date.now()}),ok=deliver(input,file);layer.remove();active=null;if(!ok)nativeFallback(input)};
+  recorder.start(1000);renderRecordingActions(input,recorder)
 }
-
-window.EviaVideoCapture={open,videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND};
+function restart(input,recorder){if(!active)return;clearInterval(active.timer);active.timer=null;try{recorder.onstop=null;if(recorder.state!=="inactive")recorder.stop()}catch{}stopTracks(active.stream);const layer=active.layer;active=null;layer.remove();setTimeout(()=>open(input),80)}
+function finishRecorder(recorder){if(!active||recorder.state==="inactive")return;const next=active.layer.querySelector("[data-video-next]");if(next){next.disabled=true;next.textContent="Saving video…"}recorder.stop()}
+window.EviaVideoCapture={open,videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND,getLastMeta:()=>lastMeta};
 })();
