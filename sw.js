@@ -1,5 +1,5 @@
-// Evia v135 splits Property Maintenance evidence into separate job tiles.
-const CACHE_NAME = 'evia-shell-v135';
+// Evia v136 cleans and stabilises the Evidence screen.
+const CACHE_NAME = 'evia-shell-v136';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v135.js',
+  './assets/evia-version-v136.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-export-status.js',
