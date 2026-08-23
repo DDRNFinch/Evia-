@@ -1,5 +1,5 @@
-// Evia v140 refreshes the menu transition as a true cross-fade with no blank pause.
-const CACHE_NAME = 'evia-shell-v141';
+// Evia v142 keeps all approved behaviour and only fixes menu cross-fade timing.
+const CACHE_NAME = 'evia-shell-v142';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,9 +21,9 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v141.js',
+  './assets/evia-version-v142.js',
   './assets/evia-photo-fast-v140.js',
-  './assets/evia-menu-fade-v141.js',
+  './assets/evia-menu-fade-v142.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
