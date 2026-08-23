@@ -1,14 +1,15 @@
 {
-  "version": "148",
-  "title": "Instant photo capture",
+  "version": "149",
+  "title": "Post-evidence OTJ saving fixed",
   "details": [
-    "Photo capture now encodes a 1024px evidence image directly instead of creating the larger intermediate frame first",
-    "This removes the remaining shutter-to-preview pause",
-    "Camera UI, prompts, video, saving, menus, evidence flow, tiles and course data are unchanged"
+    "The existing post-evidence What did you learn flow now saves genuine learner-entered learning to the real OTJ record",
+    "The learner-entered learning duration is used and the task, job and KSB context are carried into the OTJ entry",
+    "The saved entry contributes to the OTJ total and OTJ arch",
+    "Evidence, camera, photo speed, video, menus, fade, tiles, layouts and course data are unchanged"
   ],
-  "summary": "Evia v148 removes the remaining photo capture delay.",
+  "summary": "Evia v149 connects the existing post-evidence learning reflection to the real OTJ record.",
   "changes": [
-    "Instant shutter-to-preview",
+    "Save post-evidence learning as OTJ",
     "Nothing else changed"
   ]
 }
