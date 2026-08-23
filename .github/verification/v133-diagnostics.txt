@@ -3,31 +3,31 @@ wiring=success
 manifests=success
 stages=success
 tests=failure
-assets=failure
+assets=success
 --- syntax ---
 --- wiring ---
 --- manifests ---
 --- stages ---
 --- tests ---
-  duration_ms: 2.540162
+  duration_ms: 3.475287
   type: 'test'
   ...
 # Subtest: Evia motion is compositor-only and follows the Milos path
 ok 10 - Evia motion is compositor-only and follows the Milos path
   ---
-  duration_ms: 0.320956
+  duration_ms: 0.367346
   type: 'test'
   ...
 # Subtest: Evia has one service-worker owner and one current cache
 ok 11 - Evia has one service-worker owner and one current cache
   ---
-  duration_ms: 0.280717
+  duration_ms: 0.28263
   type: 'test'
   ...
 # Subtest: duplicate motion and production audit layers stay removed
 not ok 12 - duplicate motion and production audit layers stay removed
   ---
-  duration_ms: 2.396058
+  duration_ms: 1.802966
   type: 'test'
   location: '/home/runner/work/Evia_beta/Evia_beta/tests/performance-current.test.mjs:43:1'
   failureType: 'testCodeFailure'
@@ -53,31 +53,31 @@ not ok 12 - duplicate motion and production audit layers stay removed
 # Subtest: runtime, manifest and offline cache agree
 ok 13 - runtime, manifest and offline cache agree
   ---
-  duration_ms: 0.258304
+  duration_ms: 0.275298
   type: 'test'
   ...
 # Subtest: Evia shows a persistent update available notification
 ok 14 - Evia shows a persistent update available notification
   ---
-  duration_ms: 0.793398
+  duration_ms: 0.821169
   type: 'test'
   ...
 # Subtest: Evia checks uncached update and index manifests
 ok 15 - Evia checks uncached update and index manifests
   ---
-  duration_ms: 0.951753
+  duration_ms: 0.880156
   type: 'test'
   ...
 # Subtest: Evia no longer silently refreshes when the next cache is ready
 ok 16 - Evia no longer silently refreshes when the next cache is ready
   ---
-  duration_ms: 0.341177
+  duration_ms: 0.308117
   type: 'test'
   ...
 # Subtest: current Evia shell, public assets and manifest agree
 ok 17 - current Evia shell, public assets and manifest agree
   ---
-  duration_ms: 0.20179
+  duration_ms: 0.202741
   type: 'test'
   ...
 1..17
@@ -88,10 +88,5 @@ ok 17 - current Evia shell, public assets and manifest agree
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 127.727121
+# duration_ms 130.350906
 --- assets ---
-Unreferenced production assets:
-assets/evia-version-v105.js
-assets/evia-version-v110.js
-assets/evia-version-v112.js
-assets/evia-version-v113.js
