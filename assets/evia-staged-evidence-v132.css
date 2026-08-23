@@ -1,6 +1,6 @@
 /* Evia staged evidence — fixed inside Evia's existing evidence area. */
 .selfobs .menu-stage.evia-stage-managed-v132{position:absolute!important;overflow:hidden!important}
-.selfobs .menu-stage.evia-stage-managed-v132 .self-panel{visibility:hidden!important;pointer-events:none!important}
+.selfobs .menu-stage.evia-stage-managed-v132 .self-panel{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .selfobs .evia-stage-overlay-v132{position:absolute;inset:.55rem 0 0;z-index:20;width:min(29rem,100%);height:calc(100% - .55rem);margin:auto;padding:.1rem .1rem 1rem;overflow:auto;overscroll-behavior:contain;overflow-anchor:none;scrollbar-width:none;contain:layout paint;background:transparent}
 .selfobs .evia-stage-overlay-v132::-webkit-scrollbar{display:none}
 .selfobs .evia-stage-overlay-v132 *{animation:none!important}
