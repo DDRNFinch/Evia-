@@ -1,17 +1,17 @@
 {
-  "version": "142",
-  "title": "Menu cross-fade fixed",
+  "version": "143",
+  "title": "Menu transition repaired",
   "details": [
-    "Menu navigation now happens immediately again",
-    "The old and new menu content cross-fade smoothly with no blank pause",
-    "The photo speed improvement remains unchanged",
-    "Camera, video prompts, timestamps, saving, course tiles and all layouts are unchanged"
+    "Removed the cloned menu layer that caused duplicate and misplaced Evia UI",
+    "Menu clicks now run normally with no delay or interception",
+    "Only the newly rendered menu receives a brief subtle opacity fade",
+    "Camera, photo speed, video prompts, timestamps, saving, course tiles and layouts are unchanged"
   ],
-  "summary": "Evia v142 fixes the menu fade without delaying navigation.",
+  "summary": "Evia v143 repairs the menu transition without changing the working app.",
   "changes": [
-    "Removed the artificial pre-navigation delay",
-    "Added immediate menu cross-fade",
-    "Everything else unchanged",
-    "Moved the offline shell to v142"
+    "Removed cloned menu transition",
+    "Restored normal immediate navigation",
+    "Added subtle single-panel fade",
+    "Everything else unchanged"
   ]
 }
