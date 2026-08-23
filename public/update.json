@@ -1,20 +1,19 @@
 {
-  "version": "134",
-  "title": "Property Maintenance evidence stages corrected",
+  "version": "135",
+  "title": "Property Maintenance evidence tiles corrected",
   "details": [
-    "Multi-part Property Maintenance evidence sentences are now split into one evidence stage per item instead of generic invented stages",
-    "Repair tiles now uses four stages: Tiling repair, Setting out, Preparation and Cutting",
-    "Plaster repairs now follows the three items in its instruction: Plaster defect, Preparation and Finished repair",
-    "Flooring, drainage, doors and windows, masonry, roofing, fencing and groundwork now follow the same sentence-to-stage rule",
-    "Every stage offers one photo or video, with the existing photo explanation and guided-video flow retained",
-    "Legacy capture controls are fully hidden while a staged task is open so duplicate camera buttons cannot appear"
+    "Combined Property Maintenance evidence prompts are now split into separate tiles on the job screen itself",
+    "Tiling repairs now shows four tiles on the same screen: Tiling repair, Setting out, Preparation and Cutting tiles",
+    "Each tile opens one photo-or-video evidence capture instead of hiding several evidence pieces inside one tile",
+    "Plaster, flooring, drainage, doors and windows, masonry, roofing, fencing, groundwork and decorating use the same tile-splitting rule where their prompt contains distinct evidence pieces",
+    "Existing evidence from the earlier staged version is migrated onto the matching separate tile where possible"
   ],
-  "summary": "Evia v134 makes Property Maintenance evidence stages match the task wording exactly.",
+  "summary": "Evia v135 puts each Property Maintenance evidence item on its own tile.",
   "changes": [
-    "Removed invented generic repair stages from ST0171",
-    "Split each relevant evidence sentence into its actual evidence items",
-    "Kept single-item Property Maintenance tasks as single evidence captures",
-    "Stopped legacy capture controls leaking through the staged evidence screen",
-    "Moved the offline shell to v134"
+    "Split multi-part ST0171 opportunities into separate job-screen tiles",
+    "Kept one photo or video capture per tile",
+    "Preserved the guided photo and video evidence flow",
+    "Migrated saved staged evidence to the matching new opportunity",
+    "Moved the offline shell to v135"
   ]
 }
