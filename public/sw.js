@@ -1,4 +1,4 @@
-// Evia v140 keeps the approved v138 camera/save flow and only speeds photo processing plus menu fades.
+// Evia v140 refreshes the menu transition as a true cross-fade with no blank pause.
 const CACHE_NAME = 'evia-shell-v140';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
