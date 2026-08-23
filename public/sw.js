@@ -1,5 +1,5 @@
-// Evia v129 keeps camera and video capture inside the existing Evia UI.
-const CACHE_NAME = 'evia-shell-v129';
+// Evia v130 removes the slow photo capture and broken media handoff.
+const CACHE_NAME = 'evia-shell-v130';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,9 +21,10 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v129.js',
+  './assets/evia-version-v130.js',
   './assets/evia-staged-evidence-v129.js',
   './assets/evia-staged-evidence-v129.css',
+  './assets/evia-evidence-flow-v130.js',
   './assets/evia-folder-completion-v116.js',
   './assets/evia-mini-milos-v86.js',
   './assets/evia-qr-exchange-v107.js',
