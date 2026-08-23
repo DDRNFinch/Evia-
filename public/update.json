@@ -1,19 +1,19 @@
 {
-  "version": "136",
-  "title": "Evidence screen cleaned up",
+  "version": "137",
+  "title": "Guided camera restored",
   "details": [
-    "Evidence cards now show a compact evidence summary instead of dumping the full saved answer or video timestamp transcript onto the screen",
-    "Guided videos show as Guided video with duration and prompt count while the full prompt timestamps remain stored with the evidence",
-    "Photo evidence shows as Photo + written explanation without filling the card with the learner's full text",
-    "Downloaded evidence uses the same clean card layout so old test notes no longer dominate the screen",
-    "Evidence thumbnails now match records by their exact saved order and evidence ID instead of guessing from similar card text"
+    "Photo and video now stay inside Evia instead of handing control to the phone camera app",
+    "The camera view fills the screen as much as possible while the evidence prompt remains visible",
+    "Video recording keeps the prompt on screen with a timer and Next prompt button",
+    "Each Next prompt press records its exact timestamp without stopping the continuous video",
+    "Photo capture still moves to the required written explanation and video still offers optional extra text or Skip text afterwards"
   ],
-  "summary": "Evia v136 fixes the broken Evidence screen layout and media matching.",
+  "summary": "Evia v137 restores the full-screen guided photo and video capture flow.",
   "changes": [
-    "Rebuilt the evidence-card media renderer",
-    "Removed raw answer text from evidence-list cards",
-    "Made video summaries concise",
-    "Stopped legacy thumbnail decoration from owning the same row",
-    "Moved the offline shell to v136"
+    "Restored Evia-owned full-screen camera capture",
+    "Kept photo prompts visible while taking evidence",
+    "Kept video prompts, timer and Next prompt visible while recording",
+    "Preserved prompt timestamps for the evidence record",
+    "Moved the offline shell to v137"
   ]
 }
