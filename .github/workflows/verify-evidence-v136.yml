@@ -54,12 +54,13 @@ jobs:
           for(const x of ['.evia-stage-overlay-v132.evia-photo-mode-v137','longest<=1280','const scale=1280/longest','nativeToBlob.call(fast,callback,"image/jpeg"','maxLongEdge:1280'])if(!js.includes(x))throw Error('Fast photo requirement missing: '+x);
           for(const bad of ['MediaRecorder','data-next-prompt','data-finish-video','evia-video-mode-v137'])if(js.includes(bad))throw Error('Photo optimisation must not alter video flow: '+bad);
           NODE
-      - name: Verify smooth menu fades
+      - name: Verify smooth menu cross-fade
         run: |
           node - <<'NODE'
           const fs=require('fs');
           const js=fs.readFileSync('assets/evia-menu-fade-v140.js','utf8');
-          for(const x of ['[data-cat]','[data-job]','[data-opp]','opacity 95ms ease','opacity 170ms ease','button.closest?.(".evia-stage-overlay-v132")','prefers-reduced-motion'])if(!js.includes(x))throw Error('Menu fade requirement missing: '+x);
+          for(const x of ['[data-cat]','[data-job]','[data-opp]','const DURATION=135','makeGhost(panel)','mode:"crossfade"','prefers-reduced-motion'])if(!js.includes(x))throw Error('Menu cross-fade requirement missing: '+x);
+          for(const bad of ['setTimeout(()=>{\n    bypass=true','opacity 95ms ease','opacity 170ms ease'])if(js.includes(bad))throw Error('Old stepped menu fade still present: '+bad);
           const index=fs.readFileSync('index.html','utf8');
           const fade=index.indexOf('evia-menu-fade-v140.js?v=140'),staged=index.indexOf('evia-staged-evidence-v132.js?v=138');
           if(fade<0||staged<0||fade>staged)throw Error('Menu fade must load before staged click handling');
