@@ -2,91 +2,91 @@ syntax=success
 wiring=success
 manifests=success
 stages=success
-tests=failure
+tests=success
 assets=success
 --- syntax ---
 --- wiring ---
 --- manifests ---
 --- stages ---
 --- tests ---
-  duration_ms: 3.475287
+ok 6 - review status is simplified to on track or off track
+  ---
+  duration_ms: 2.994134
+  type: 'test'
+  ...
+# Subtest: Targets permanently exposes the locally stored next assessor visit
+ok 7 - Targets permanently exposes the locally stored next assessor visit
+  ---
+  duration_ms: 0.234859
+  type: 'test'
+  ...
+# Subtest: next-visit feature remains enabled in the current Evia shell
+ok 8 - next-visit feature remains enabled in the current Evia shell
+  ---
+  duration_ms: 0.356988
+  type: 'test'
+  ...
+# Subtest: Evia keeps one mounted interaction shell
+ok 9 - Evia keeps one mounted interaction shell
+  ---
+  duration_ms: 3.166648
   type: 'test'
   ...
 # Subtest: Evia motion is compositor-only and follows the Milos path
 ok 10 - Evia motion is compositor-only and follows the Milos path
   ---
-  duration_ms: 0.367346
+  duration_ms: 0.380032
   type: 'test'
   ...
 # Subtest: Evia has one service-worker owner and one current cache
 ok 11 - Evia has one service-worker owner and one current cache
   ---
-  duration_ms: 0.28263
+  duration_ms: 0.360825
   type: 'test'
   ...
 # Subtest: duplicate motion and production audit layers stay removed
-not ok 12 - duplicate motion and production audit layers stay removed
+ok 12 - duplicate motion and production audit layers stay removed
   ---
-  duration_ms: 1.802966
+  duration_ms: 0.354534
   type: 'test'
-  location: '/home/runner/work/Evia_beta/Evia_beta/tests/performance-current.test.mjs:43:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    evia-avatar-life must not be loaded
-    
-    true !== false
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: false
-  actual: true
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (file:///home/runner/work/Evia_beta/Evia_beta/tests/performance-current.test.mjs:45:12)
-    Test.runInAsyncScope (node:async_hooks:214:14)
-    Test.run (node:internal/test_runner/test:1047:25)
-    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
-    Test.postRun (node:internal/test_runner/test:1173:19)
-    Test.run (node:internal/test_runner/test:1101:12)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
   ...
 # Subtest: runtime, manifest and offline cache agree
 ok 13 - runtime, manifest and offline cache agree
   ---
-  duration_ms: 0.275298
+  duration_ms: 0.433952
   type: 'test'
   ...
 # Subtest: Evia shows a persistent update available notification
 ok 14 - Evia shows a persistent update available notification
   ---
-  duration_ms: 0.821169
+  duration_ms: 0.868977
   type: 'test'
   ...
 # Subtest: Evia checks uncached update and index manifests
 ok 15 - Evia checks uncached update and index manifests
   ---
-  duration_ms: 0.880156
+  duration_ms: 0.89733
   type: 'test'
   ...
 # Subtest: Evia no longer silently refreshes when the next cache is ready
 ok 16 - Evia no longer silently refreshes when the next cache is ready
   ---
-  duration_ms: 0.308117
+  duration_ms: 0.303839
   type: 'test'
   ...
 # Subtest: current Evia shell, public assets and manifest agree
 ok 17 - current Evia shell, public assets and manifest agree
   ---
-  duration_ms: 0.202741
+  duration_ms: 0.21379
   type: 'test'
   ...
 1..17
 # tests 17
 # suites 0
-# pass 16
-# fail 1
+# pass 17
+# fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 130.350906
+# duration_ms 150.9552
 --- assets ---
