@@ -1,0 +1,19 @@
+{
+  "version": "126",
+  "title": "Property Maintenance QR sharing fixed",
+  "details": [
+    "Property Maintenance ST0171 learners can now create and share their Evia progress QR",
+    "The shared QR uses the same anonymous progress format as the existing Bricklayer, Carpentry and Trowel routes",
+    "ST0171 progress sharing includes course dates, OTJ progress, covered KSBs, evidence-source coverage and current Milos targets without learner personal data",
+    "The QR remains compatible with Milos, Symi and Tinos course-progress exchange"
+  ],
+  "summary": "Evia v126 fixes the missing ST0171 route in the Share QR flow so Property Maintenance learners can share their course progress normally.",
+  "changes": [
+    "Added ST0171 to Evia progress QR routing",
+    "Added Property Maintenance progress payload creation",
+    "Preserved the existing QR behaviour for all previously supported courses",
+    "Added the ST0171 sharing controller to the offline shell",
+    "Moved Evia and its offline cache to v126",
+    "Published a new in-app update notification"
+  ]
+}

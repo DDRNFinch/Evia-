@@ -1,0 +1,191 @@
+name: Verify Evia
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Read current Evia version
+        shell: bash
+        run: |
+          VERSION=$(node -e "const fs=require('fs');process.stdout.write(String(JSON.parse(fs.readFileSync('update.json','utf8')).version))")
+          echo "EVIA_VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Check active JavaScript syntax
+        run: |
+          node --check assets/evia-updater.js
+          node --check assets/evia-selfobs-live.js
+          node --check assets/evia-next-visit-v95.js
+          node --check assets/evia-milos-review-sync-v97.js
+          node --check assets/evia-targets.js
+          node --check assets/evia-targets-milos-only-v123.js
+          node --check assets/evia-home-brand-v114.js
+          node --check assets/evia-avatar-life-v108.js
+          node --check assets/evia-evidence-media-v115.js
+          node --check assets/evia-evidence-media-v122.js
+          node --check assets/evia-folder-completion-v116.js
+          node --check assets/evia-arp-integrity-v118.js
+          node --check assets/evia-arp-distractors-v123.js
+          node --check assets/evia-arp-integrity-watch-v119.js
+          node --check assets/evia-arp-marking-v121.js
+          node --check assets/evia-qr-neutral-v122.js
+          node --check assets/evia-welcome-v120.js
+          node --check assets/evia-st0171-meta-v124.js
+          node --check assets/evia-st0171-map-v124.js
+          node --check assets/evia-st0171-v124.js
+          node --check assets/evia-course-enrolment.js
+          node --check course-delivery/course-registry.js
+          node --check "assets/evia-version-v${EVIA_VERSION}.js"
+          node --check sw.js
+          node --check public/sw.js
+      - name: Verify ST0171 course map
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const context={window:{}};vm.createContext(context);
+          vm.runInContext(fs.readFileSync('assets/evia-st0171-meta-v124.js','utf8'),context);
+          vm.runInContext(fs.readFileSync('assets/evia-st0171-map-v124.js','utf8'),context);
+          const pack=context.window.EviaST0171Pack.build();
+          if(pack.id!=='st0171-v1-1'||pack.standardId!=='ST0171')throw Error('ST0171 identity mismatch');
+          if(pack.codes.length!==62)throw Error(`ST0171 expected 62 KSBs, got ${pack.codes.length}`);
+          const mapped=new Set();
+          for(const category of pack.siteData||[])for(const job of category.jobs||[])for(const opp of job.opps||[])for(const code of opp.codes||[])mapped.add(String(code));
+          const missing=pack.codes.filter(code=>!mapped.has(code));
+          if(missing.length)throw Error(`Unmapped ST0171 KSBs: ${missing.join(', ')}`);
+          const registry=JSON.parse(fs.readFileSync('course-delivery/registry-v1.json','utf8'));
+          const item=registry.courses.find(c=>c.enrolmentId==='ST0171');
+          if(!item||item.qrPayload!=='EVIA1:ST0171'||item.packageId!==pack.id||item.publishable!==true)throw Error('ST0171 registry entry is incomplete');
+          const qr=fs.readFileSync('course-delivery/qr/ST0171.svg','utf8');
+          if(!qr.includes('<svg'))throw Error('ST0171 QR asset is invalid');
+          NODE
+      - name: Run current regression checks
+        run: node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs
+      - name: Verify clean runtime and update source
+        shell: bash
+        run: |
+          node -e "const fs=require('fs');const a=fs.readFileSync('sw.js','utf8').trimEnd(),b=fs.readFileSync('public/sw.js','utf8').trimEnd();if(a!==b)process.exit(1)"
+          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));if(JSON.stringify(a)!==JSON.stringify(b))process.exit(1)"
+          grep -q "evia-app-version\" content=\"${EVIA_VERSION}" index.html
+          grep -q "evia-version-v${EVIA_VERSION}.js" index.html
+          grep -q "evia-shell-v${EVIA_VERSION}" sw.js
+          grep -q "evia-arp-integrity-v118.js" index.html
+          grep -q "evia-arp-integrity-v118.js" sw.js
+          grep -q "evia-arp-distractors-v123.js" index.html
+          grep -q "evia-arp-distractors-v123.js" sw.js
+          grep -q "evia-arp-integrity-watch-v119.js" index.html
+          grep -q "evia-arp-integrity-watch-v119.js" sw.js
+          grep -q "evia-arp-marking-v121.js" index.html
+          grep -q "evia-arp-marking-v121.js" sw.js
+          grep -q "evia-targets-milos-only-v123.js" index.html
+          grep -q "evia-targets-milos-only-v123.js" sw.js
+          grep -q "evia-qr-neutral-v122.js" index.html
+          grep -q "evia-qr-neutral-v122.js" sw.js
+          grep -q "evia-evidence-media-v122.js" index.html
+          grep -q "evia-evidence-media-v122.js" sw.js
+          grep -q "evia-welcome-v120.js" index.html
+          grep -q "evia-welcome-v120.js" sw.js
+          grep -q "evia-st0171-meta-v124.js" index.html
+          grep -q "evia-st0171-meta-v124.js" sw.js
+          grep -q "evia-st0171-map-v124.js" index.html
+          grep -q "evia-st0171-map-v124.js" sw.js
+          grep -q "evia-st0171-v124.js" index.html
+          grep -q "evia-st0171-v124.js" sw.js
+          grep -q "course-delivery/qr/ST0171.svg" sw.js
+          grep -q '"enrolmentId": "ST0171"' course-delivery/registry-v1.json
+          grep -q '"qrPayload": "EVIA1:ST0171"' course-delivery/registry-v1.json
+          test ! -d .v42-transfer
+          for path in \
+            assets/evia-premium-motion.css \
+            assets/evia-avatar-motion.css \
+            assets/evia-avatar-motion.js \
+            assets/evia-avatar-life.js \
+            assets/evia-v73-page-handoff.js \
+            assets/evia-version-v94.js \
+            assets/evia-version-v96.js \
+            assets/evia-version-v97.js \
+            assets/evia-version-v98.js \
+            assets/evia-version-v99.js \
+            assets/evia-count-display.js \
+            assets/evia-milos-observed-arch-v91.js \
+            assets/evia-milos-observed-arch-v92.js \
+            assets/evia-arp-home-score-v93.js \
+            assets/evia-nvq.js \
+            assets/evia-arp.js \
+            assets/evia-6570-qa.js \
+            assets/evia-6570-smoke.js \
+            assets/evia-beta-isolation.js \
+            assets/evia-camera-split.css \
+            assets/evia-camera-split.js \
+            assets/evia-course-epa-guard.js \
+            assets/evia-otj-pace.js \
+            assets/index-Bv8ZljA6.js; do
+              test ! -e "$path"
+          done
+          ! grep -q 'evia-avatar-motion\|evia-premium-motion\|evia-avatar-life\.js\|evia-v73-page-handoff\|evia-6570-smoke' index.html
+          ! grep -q 'open=!open.*mount()' assets/evia-selfobs-live.js
+          ! grep -q 'serviceWorker.register' assets/evia-selfobs-live.js
+          grep -q 'serviceWorker.register' assets/evia-updater.js
+          ! grep -q 'evia-beta-shell-v' assets/evia-updater.js
+          ! grep -q 'LEGACY_READY_CACHE\|migrateOldShell' sw.js
+      - name: Verify production asset references
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, sys
+
+          index = Path('index.html').read_text(encoding='utf-8')
+          missing=[]
+          for raw in re.findall(r'(?:src|href)=["\']([^"\']+)["\']', index):
+              path=raw.split('?',1)[0]
+              if path.startswith('/Evia/'):
+                  local=Path(path[len('/Evia/'):])
+              elif path.startswith('./'):
+                  local=Path(path[2:])
+              else:
+                  continue
+              if not local.exists():
+                  missing.append(str(local))
+          if missing:
+              print('Missing production references:')
+              print('\n'.join(sorted(set(missing))))
+              sys.exit(1)
+
+          surfaces=[Path('index.html'),Path('sw.js')]
+          for root in (Path('assets'),Path('app'),Path('course-delivery')):
+              if root.exists():
+                  surfaces.extend(p for p in root.rglob('*') if p.is_file() and p.suffix.lower() in {'.js','.css','.ts','.tsx','.html'})
+          text={}
+          for p in surfaces:
+              try:text[p]=p.read_text(encoding='utf-8',errors='ignore')
+              except Exception:text[p]=''
+
+          orphaned=[]
+          for asset in sorted(Path('assets').iterdir()):
+              if not asset.is_file() or asset.suffix.lower() not in {'.js','.css'}:
+                  continue
+              name=asset.name
+              if not any(p!=asset and name in body for p,body in text.items()):
+                  orphaned.append(str(asset))
+          if orphaned:
+              print('Unreferenced production assets:')
+              print('\n'.join(orphaned))
+              sys.exit(1)
+          PY
+      - name: Validate manifests
+        run: |
+          python -m json.tool update.json >/dev/null
+          python -m json.tool public/update.json >/dev/null
+          python -m json.tool course-delivery/registry-v1.json >/dev/null
