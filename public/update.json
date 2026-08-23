@@ -1,19 +1,22 @@
 {
-  "version": "126",
-  "title": "Property Maintenance QR sharing fixed",
+  "version": "127",
+  "title": "Stronger staged evidence collection",
   "details": [
-    "Property Maintenance ST0171 learners can now create and share their Evia progress QR",
-    "The shared QR uses the same anonymous progress format as the existing Bricklayer, Carpentry and Trowel routes",
-    "ST0171 progress sharing includes course dates, OTJ progress, covered KSBs, evidence-source coverage and current Milos targets without learner personal data",
-    "The QR remains compatible with Milos, Symi and Tinos course-progress exchange"
+    "Property Maintenance repair tasks now break useful process evidence into clear stages instead of relying on one weak final image",
+    "Every evidence stage can use either a photo or a video while keeping Evia's existing learner UI",
+    "Photos now lead straight to a required written explanation",
+    "Videos record camera and microphone together and guide the learner through prompts without stopping the recording",
+    "Each video prompt change is timestamped and stored with the evidence, with optional extra written text afterwards",
+    "Photo and video capture use a large 1:1 working area and unfinished media is kept locally so the learner can return to it"
   ],
-  "summary": "Evia v126 fixes the missing ST0171 route in the Share QR flow so Property Maintenance learners can share their course progress normally.",
+  "summary": "Evia v127 strengthens practical evidence while preserving the existing Evia interface and one-stage-at-a-time learner flow.",
   "changes": [
-    "Added ST0171 to Evia progress QR routing",
-    "Added Property Maintenance progress payload creation",
-    "Preserved the existing QR behaviour for all previously supported courses",
-    "Added the ST0171 sharing controller to the offline shell",
-    "Moved Evia and its offline cache to v126",
-    "Published a new in-app update notification"
+    "Added staged evidence for key Property Maintenance repair tasks",
+    "Added required explanations after photo evidence",
+    "Added guided continuous video recording with audio prompts and timestamps",
+    "Added optional extra text after video evidence",
+    "Added local draft persistence and resume for unfinished evidence",
+    "Added square 1:1 photo and video capture surfaces",
+    "Moved Evia's offline evidence cache to v127"
   ]
 }
