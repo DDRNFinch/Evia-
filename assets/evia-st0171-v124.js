@@ -1,19 +1,47 @@
 (()=>{
 'use strict';
-const VERSION=124,QR_FILE='./course-delivery/qr/ST0171.svg';
+const VERSION=132,QR_FILE='./course-delivery/qr/ST0171.svg',PACK_KEY='nisi-installed-course-packs-v1';
 const nativeFetch=window.fetch.bind(window);
+
+const STAGES={
+  plumbing_fault:[{title:'Plumbing fault',instruction:'Show the plumbing fault or affected component before the repair begins.'},{title:'Isolation & preparation',instruction:'Show how the water supply has been isolated and the repair area prepared safely.'},{title:'Repair or replacement',instruction:'Show the component being repaired or replaced and the method being used.'},{title:'Completed repair & test',instruction:'Show the completed repair and the final check for leaks or correct operation.'}],
+  drainage_fault:[{title:'Drainage problem',instruction:'Show the drainage problem or affected area before work begins.'},{title:'Access & preparation',instruction:'Show the access point and how the area has been prepared safely.'},{title:'Clearance or repair',instruction:'Show the blockage being cleared or the component being repaired or replaced.'},{title:'Completed & flowing',instruction:'Show the completed work and the final check that the drainage is operating correctly.'}],
+  energy_fault:[{title:'System or component',instruction:'Show the environmental or energy-management component before maintenance begins.'},{title:'Isolation & preparation',instruction:'Show how the system has been made safe and prepared for maintenance.'},{title:'Maintenance or repair',instruction:'Show the maintenance, adjustment or replacement work being carried out.'},{title:'Operational check',instruction:'Show the completed work or final operational check.'}],
+  door_window:[{title:'Defect before repair',instruction:'Show the door, window, frame, glazing unit or fitting and the defect before work starts.'},{title:'Repair in progress',instruction:'Show the repair, adjustment or replacement work being carried out.'},{title:'Finished fit & operation',instruction:'Show the completed repair and how the door, window or fitting now fits and operates.'}],
+  plaster_repair:[{title:'Plaster defect',instruction:'Show the damaged plaster before you begin.'},{title:'Preparation',instruction:'Show the damaged area after loose material has been removed and the surface prepared.'},{title:'Materials & repair',instruction:'Show the repair material or compound being mixed, fixed or applied.'},{title:'Finished repair',instruction:'Show the completed plaster repair and finish.'}],
+  paint_repair:[{title:'Surface condition',instruction:'Show the defect or surface condition before preparation.'},{title:'Preparation',instruction:'Show the surface after it has been prepared for decoration.'},{title:'Coating or sealing',instruction:'Show the paint, coating or sealant being applied.'},{title:'Finished decoration',instruction:'Show the completed decorated or sealed surface.'}],
+  tile_repair:[{title:'Tiling defect',instruction:'Show the damaged or affected tiling before the repair.'},{title:'Preparation & setting out',instruction:'Show the prepared area and how the replacement work has been set out.'},{title:'Cutting & fitting',instruction:'Show cutting, fitting or the work around an obstacle.'},{title:'Finished repair',instruction:'Show the completed tiling repair.'}],
+  floor_repair:[{title:'Flooring defect',instruction:'Show the flooring defect before work begins.'},{title:'Preparation & setting out',instruction:'Show the floor or sub-surface prepared and the replacement material set out.'},{title:'Cutting & fitting',instruction:'Show the flooring material being cut or fitted around the area or an obstacle.'},{title:'Finished repair',instruction:'Show the completed flooring repair.'}],
+  masonry_repair:[{title:'Masonry or damp defect',instruction:'Show the masonry or damp defect before the repair.'},{title:'Preparation & materials',instruction:'Show the area prepared and the mortar, masonry or damp-proofing materials selected or mixed.'},{title:'Repair in progress',instruction:'Show the repair method and materials being used.'},{title:'Finished repair',instruction:'Show the completed masonry or damp-proofing repair.'}],
+  roof_repair:[{title:'Roof defect',instruction:'From a safe position, show the roof defect before work begins.'},{title:'Repair in progress',instruction:'From a safe position, show the temporary or minor remedial repair being carried out.'},{title:'Completed repair',instruction:'From a safe position, show the completed repair and how the area has been left safe.'}],
+  fence_repair:[{title:'Defect',instruction:'Show the fencing or railing defect before the repair.'},{title:'Preparation',instruction:'Show the area prepared and any defective component removed or replacement component ready.'},{title:'Repair in progress',instruction:'Show the repair or replacement work being carried out.'},{title:'Completed repair',instruction:'Show the completed fencing or railing repair.'}],
+  ground_repair:[{title:'External defect',instruction:'Show the groundwork, surface or landscaping defect before work begins.'},{title:'Preparation',instruction:'Show the area excavated, cleared, prepared or set out for the repair.'},{title:'Repair in progress',instruction:'Show the repair process and materials being used.'},{title:'Completed & safe',instruction:'Show the completed repair and how the area has been left safe.'}]
+};
+
+function patchMap(){
+  const data=window.EviaST0171Map;if(!Array.isArray(data))return false;
+  for(const cat of data)for(const job of cat.jobs||[])for(const opp of job.opps||[]){const stages=STAGES[opp.id];if(stages)opp.stages=stages.map((s,i)=>({...s,id:`${opp.id}-stage-${i+1}`}))}
+  return true
+}
+function patchInstalled(){
+  try{
+    const all=JSON.parse(localStorage.getItem(PACK_KEY)||'{}'),pack=all?.['st0171-v1-1'];
+    if(!pack||!Array.isArray(window.EviaST0171Map))return;
+    pack.siteData=window.EviaST0171Map;pack.updatedAt=Date.now();pack.evidenceStagesVersion=VERSION;all['st0171-v1-1']=pack;localStorage.setItem(PACK_KEY,JSON.stringify(all))
+  }catch(error){console.debug('Evia ST0171 staged pack refresh',error)}
+}
+patchMap();patchInstalled();
 window.fetch=async function(input,init){
   const url=typeof input==='string'?input:input?.url||'';
   if(String(url).toUpperCase().startsWith('INLINE:ST0171')){
-    const pack=window.EviaST0171Pack?.build?.();
+    patchMap();const pack=window.EviaST0171Pack?.build?.();
     if(!pack)return new Response(JSON.stringify({error:'ST0171 pack unavailable'}),{status:503,headers:{'Content-Type':'application/json'}});
     return new Response(JSON.stringify(pack),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}})
   }
   return nativeFetch(input,init)
 };
 function copyCode(status){
-  const code='ST0171';
-  const done=()=>{if(status)status.textContent='ST0171 copied.'};
+  const code='ST0171',done=()=>{if(status)status.textContent='ST0171 copied.'};
   if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(done).catch(()=>{if(status)status.textContent='Course code: ST0171'});
   else{const t=document.createElement('textarea');t.value=code;t.readOnly=true;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch{if(status)status.textContent='Course code: ST0171'}t.remove()}
 }
@@ -24,9 +52,10 @@ function patchQr(){
   grid.appendChild(card);card.querySelector('[data-st0171-copy]')?.addEventListener('click',()=>copyCode(document.querySelector('[data-course-qr-status]')))
 }
 function start(){
+  patchMap();patchInstalled();
   try{window.EviaCoursePacks?.normalize?.(window.EviaST0171Pack?.build?.())}catch(error){console.error('Evia ST0171 pack validation failed',error)}
-  patchQr();new MutationObserver(patchQr).observe(document.body,{childList:true,subtree:true});
+  patchQr();new MutationObserver(patchQr).observe(document.body,{childList:true,subtree:true})
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-window.EviaST0171=Object.freeze({version:VERSION,qrPayload:'EVIA1:ST0171',courseCode:'ST0171',build:()=>window.EviaST0171Pack?.build?.()});
+window.EviaST0171=Object.freeze({version:VERSION,qrPayload:'EVIA1:ST0171',courseCode:'ST0171',build:()=>{patchMap();return window.EviaST0171Pack?.build?.()}})
 })();
