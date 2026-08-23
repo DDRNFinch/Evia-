@@ -1,5 +1,5 @@
-// Evia v131 fixes photo capture speed and media handoff.
-const CACHE_NAME = 'evia-shell-v131';
+// Evia v132 stabilises staged evidence and updates Property Maintenance.
+const CACHE_NAME = 'evia-shell-v132';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
