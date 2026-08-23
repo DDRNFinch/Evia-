@@ -1,5 +1,5 @@
-// Evia v147 makes photo/video draft persistence non-blocking; UI and capture behaviour are unchanged.
-const CACHE_NAME = 'evia-shell-v147';
+// Evia v148 reduces only the photo capture encode workload for instant preview.
+const CACHE_NAME = 'evia-shell-v148';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v147.js',
+  './assets/evia-version-v148.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',

@@ -1,17 +1,14 @@
 {
-  "version": "147",
-  "title": "Faster camera save",
+  "version": "148",
+  "title": "Instant photo capture",
   "details": [
-    "Photo Use photo moves to the explanation immediately while the safety draft saves in the background",
-    "Video Finish recording moves to Video complete immediately while the safety draft saves in the background",
-    "Final evidence saving and draft recovery remain intact",
-    "No camera UI, prompts, menus, tiles, layouts or course data changed"
+    "Photo capture now encodes a 1024px evidence image directly instead of creating the larger intermediate frame first",
+    "This removes the remaining shutter-to-preview pause",
+    "Camera UI, prompts, video, saving, menus, evidence flow, tiles and course data are unchanged"
   ],
-  "summary": "Evia v147 removes the wait after photo and video capture without changing the camera experience.",
+  "summary": "Evia v148 removes the remaining photo capture delay.",
   "changes": [
-    "Instant photo handoff",
-    "Instant video handoff",
-    "Background draft persistence",
+    "Instant shutter-to-preview",
     "Nothing else changed"
   ]
 }
