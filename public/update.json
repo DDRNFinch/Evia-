@@ -1,19 +1,19 @@
 {
-  "version": "137",
-  "title": "Guided camera restored",
+  "version": "138",
+  "title": "Camera controls fixed",
   "details": [
-    "Photo and video now stay inside Evia instead of handing control to the phone camera app",
-    "The camera view fills the screen as much as possible while the evidence prompt remains visible",
-    "Video recording keeps the prompt on screen with a timer and Next prompt button",
-    "Each Next prompt press records its exact timestamp without stopping the continuous video",
-    "Photo capture still moves to the required written explanation and video still offers optional extra text or Skip text afterwards"
+    "The full-screen Evia camera now sits above the app header and bottom progress navigation",
+    "Photo capture keeps the evidence prompt visible and the Take photo button accessible",
+    "Video capture keeps the prompt, recording timer and Next prompt button visible on the camera screen",
+    "Next prompt continues the same recording and preserves the exact prompt timestamp",
+    "No Property Maintenance tiles, evidence structure, navigation or other Evia behaviour was changed"
   ],
-  "summary": "Evia v137 restores the full-screen guided photo and video capture flow.",
+  "summary": "Evia v138 fixes the hidden full-screen camera controls.",
   "changes": [
-    "Restored Evia-owned full-screen camera capture",
-    "Kept photo prompts visible while taking evidence",
-    "Kept video prompts, timer and Next prompt visible while recording",
-    "Preserved prompt timestamps for the evidence record",
-    "Moved the offline shell to v137"
+    "Raised the capture layer above all Evia chrome",
+    "Restored visible photo shutter controls",
+    "Restored visible Start, Next prompt and Finish recording controls",
+    "Kept prompt timestamps unchanged",
+    "Moved the offline shell to v138"
   ]
 }
