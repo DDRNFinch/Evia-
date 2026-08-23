@@ -1,0 +1,65 @@
+name: Verify Evia staged evidence v133
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-staged:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check staged evidence JavaScript
+        run: |
+          node --check assets/evia-staged-evidence-v132.js
+          node --check assets/evia-st0171-v124.js
+          node --check assets/evia-export-status.js
+          node --check assets/evia-version-v133.js
+          node --check sw.js
+          node --check public/sw.js
+      - name: Check v133 release wiring
+        shell: bash
+        run: |
+          grep -q 'name="evia-app-version" content="133"' index.html
+          grep -q 'evia-version-v133.js?v=133' index.html
+          grep -q 'evia-staged-evidence-v132.js?v=133' index.html
+          grep -q 'evia-staged-evidence-v132.css?v=133' index.html
+          grep -q "evia-shell-v133" sw.js
+          grep -q "evia-shell-v133" public/sw.js
+          grep -q 'const VERSION=133' assets/evia-st0171-v124.js
+          grep -q 'const VERSION=133' assets/evia-staged-evidence-v132.js
+          grep -q 'document.addEventListener("click",onClick,true)' assets/evia-staged-evidence-v132.js
+          ! grep -q 'evia-evidence-flow-v131' index.html
+          ! grep -q 'evia-staged-evidence-v129' index.html
+          test ! -e assets/evia-evidence-flow-v131.js
+          test ! -e assets/evia-staged-evidence-v129.js
+          test ! -e assets/evia-staged-evidence-v129.css
+          test ! -e assets/evia-version-v132.js
+      - name: Check manifests and offline shell match
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('update.json','utf8'));
+          const b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
+          if(a.version!=='133')throw Error('update.json is not v133');
+          if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
+          const sw=fs.readFileSync('sw.js','utf8').trimEnd();
+          const psw=fs.readFileSync('public/sw.js','utf8').trimEnd();
+          if(sw!==psw)throw Error('service workers differ');
+          NODE
+      - name: Check Property Maintenance stage set
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('assets/evia-st0171-v124.js','utf8');
+          const required=['plumbing_fault','drainage_fault','energy_fault','door_window','plaster_repair','paint_repair','tile_repair','floor_repair','masonry_repair','roof_repair','fence_repair','ground_repair'];
+          for(const id of required)if(!s.includes(id+':['))throw Error('Missing ST0171 stages for '+id);
+          for(const word of ['Plaster defect','Preparation','Materials & repair','Finished repair'])if(!s.includes(word))throw Error('Missing plaster stage '+word);
+          NODE
