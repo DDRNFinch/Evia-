@@ -1,5 +1,5 @@
-// Evia v143 removes cloned menu transitions and keeps the approved app behaviour unchanged.
-const CACHE_NAME = 'evia-shell-v143';
+// Evia v145 keeps the working camera/evidence system and runs menu fades inside Evia core.
+const CACHE_NAME = 'evia-shell-v145';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
