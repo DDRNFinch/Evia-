@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Evia" />
-<meta name="evia-app-version" content="133" />
+<meta name="evia-app-version" content="134" />
 <title>Evia — Apprentice Vocational Assistant</title>
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="./assets/evia-otj.css?v=43" />
 <link rel="stylesheet" href="./assets/evia-toc.css?v=81" />
 <link rel="stylesheet" href="./assets/evia-export-status.css?v=43" />
-<link rel="stylesheet" data-evia-staged-v132="1" href="./assets/evia-staged-evidence-v132.css?v=133" />
+<link rel="stylesheet" data-evia-staged-v132="1" href="./assets/evia-staged-evidence-v132.css?v=134" />
 <link rel="stylesheet" href="./assets/evia-v21.css?v=43" />
 <link rel="stylesheet" href="./assets/evia-nvq.css?v=43" />
 <link rel="stylesheet" href="./assets/evia-nvq-ac-browser-v90.css?v=90" />
@@ -47,9 +47,9 @@
 <script defer src="./assets/evia-6570-v91-remap.js?v=91"></script>
 <script defer src="./assets/evia-course-context.js?v=76"></script>
 <script defer src="./assets/evia-st0171-meta-v124.js?v=124"></script>
-<script defer src="./assets/evia-st0171-map-v124.js?v=124"></script>
+<script defer src="./assets/evia-st0171-map-v124.js?v=134"></script>
 <script defer src="./course-delivery/course-registry.js?v=124"></script>
-<script defer src="./assets/evia-st0171-v124.js?v=133"></script>
+<script defer src="./assets/evia-st0171-v124.js?v=134"></script>
 <script defer src="./assets/evia-st0264-epa-enable.js?v=65"></script>
 <script defer src="./assets/evia-6570-pack-cutover.js?v=44"></script>
 <script defer src="./assets/evia-brick-pack-migration.js?v=43"></script>
@@ -71,7 +71,7 @@
 <script defer src="./assets/evia-arp-integrity-watch-v119.js?v=123"></script>
 <script defer src="./assets/evia-arp-marking-v121.js?v=123"></script>
 <script defer src="./assets/evia-mini-milos-v86.js?v=97"></script>
-<script defer src="./assets/evia-version-v133.js?v=133"></script>
+<script defer src="./assets/evia-version-v134.js?v=134"></script>
 <script defer data-evia-next-visit-v95="1" src="./assets/evia-next-visit-v95.js?v=97"></script>
 <script defer src="./assets/evia-qr-exchange-v107.js?v=126"></script>
 <script defer src="./assets/evia-qr-st0171-v126.js?v=126"></script>
@@ -79,7 +79,7 @@
 <script defer src="./assets/evia-v69-interaction-fixes.js?v=72"></script>
 <script defer src="./assets/evia-selfobs-fixes.js?v=105"></script>
 <script defer src="./assets/evia-evidence-media-v122.js?v=122"></script>
-<script defer data-evia-staged-v132="1" src="./assets/evia-staged-evidence-v132.js?v=133"></script>
+<script defer data-evia-staged-v132="1" src="./assets/evia-staged-evidence-v132.js?v=134"></script>
 <script defer src="./assets/evia-nvq-ac-browser-v90.js?v=105"></script>
 <script defer src="./assets/evia-milos-observed-arch-v94.js?v=105"></script>
 <script defer src="./assets/evia-nvq-v94.js?v=105"></script>
@@ -108,7 +108,7 @@
 <script defer src="./assets/evia-avatar-life-v108.js?v=120"></script>
 <script defer src="./assets/evia-qr-neutral-v122.js?v=122"></script>
 <script defer src="./assets/evia-welcome-v120.js?v=120"></script>
-<script defer src="./assets/evia-updater.js?v=133"></script>
+<script defer src="./assets/evia-updater.js?v=134"></script>
 </head>
 <body><div id="root"></div>
 <script>
@@ -118,7 +118,7 @@
   function openNativeCapture(kind){var input=document.getElementById('selfPhoto');if(!input)return;if(kind==='video'&&window.EviaVideoCapture&&typeof window.EviaVideoCapture.open==='function'){window.EviaVideoCapture.open(input);return}try{input.value=''}catch(e){}input.setAttribute('type','file');if(kind==='gallery'){input.removeAttribute('capture');input.setAttribute('accept','image/*');input.click();return}input.setAttribute('capture','environment');input.setAttribute('accept',kind==='video'?'video/*':'image/*');input.click()}
   function makeButton(label,kind){var b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('data-evia-native-'+kind,'1');b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();openNativeCapture(kind)},true);return b}
   function makeGalleryButton(){var b=document.createElement('button');b.type='button';b.className='evia-gallery-upload';b.setAttribute('data-evia-native-gallery','1');b.setAttribute('aria-label','Choose one image from gallery');b.setAttribute('title','Choose image from gallery');b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="M5.5 17l4.2-4.1 3.2 3 2.3-2.2 3.3 3.3"></path></svg>';b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();openNativeCapture('gallery')},true);return b}
-  function repairCaptureScreen(){repairQueued=false;var card=document.querySelector('.self-card.photo');if(!card)return;var legacy=card.querySelectorAll('[data-pick]');for(var i=0;i<legacy.length;i++)legacy[i].remove();var controls=card.querySelector('.evia-native-capture');if(!controls){controls=document.createElement('div');controls.className='evia-native-capture';controls.appendChild(makeButton('Take photo','photo'));controls.appendChild(makeButton('Record video','video'));controls.appendChild(makeGalleryButton());var label=card.querySelector('span');if(label&&label.nextSibling)card.insertBefore(controls,label.nextSibling);else if(label)card.appendChild(controls);else card.insertBefore(controls,card.firstChild)}else if(!controls.querySelector('[data-evia-native-gallery]'))controls.appendChild(makeGalleryButton())}
+  function repairCaptureScreen(){repairQueued=false;if(document.querySelector('.menu-stage.evia-stage-managed-v132')){document.querySelectorAll('.self-panel .evia-native-capture').forEach(function(node){node.remove()});return}var card=document.querySelector('.self-card.photo');if(!card)return;var legacy=card.querySelectorAll('[data-pick]');for(var i=0;i<legacy.length;i++)legacy[i].remove();var controls=card.querySelector('.evia-native-capture');if(!controls){controls=document.createElement('div');controls.className='evia-native-capture';controls.appendChild(makeButton('Take photo','photo'));controls.appendChild(makeButton('Record video','video'));controls.appendChild(makeGalleryButton());var label=card.querySelector('span');if(label&&label.nextSibling)card.insertBefore(controls,label.nextSibling);else if(label)card.appendChild(controls);else card.insertBefore(controls,card.firstChild)}else if(!controls.querySelector('[data-evia-native-gallery]'))controls.appendChild(makeGalleryButton())}
   function queueRepair(){if(repairQueued)return;repairQueued=true;requestAnimationFrame(repairCaptureScreen)}
   function relevant(node){return node&&node.nodeType===1&&(node.matches&&node.matches('.self-card.photo,[data-pick],.evia-native-capture')||node.querySelector&&node.querySelector('.self-card.photo,[data-pick],.evia-native-capture'))}
   document.addEventListener('click',function(e){var target=e.target;while(target&&target!==document){if(target.getAttribute&&target.getAttribute('data-pick')!==null){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();target.remove();queueRepair();return false}target=target.parentNode}},true);
