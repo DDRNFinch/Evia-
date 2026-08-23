@@ -35,4 +35,10 @@ function startRecording(input){
 function restart(input,recorder){if(!active)return;clearInterval(active.timer);active.timer=null;try{recorder.onstop=null;if(recorder.state!=="inactive")recorder.stop()}catch{}stopTracks(active.stream);const layer=active.layer;active=null;layer.remove();setTimeout(()=>open(input),80)}
 function finishRecorder(recorder){if(!active||recorder.state==="inactive")return;const next=active.layer.querySelector("[data-video-next]");if(next){next.disabled=true;next.textContent="Saving video…"}recorder.stop()}
 window.EviaVideoCapture={open,videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND,getLastMeta:()=>lastMeta};
+function bootV127(){
+  const meta=document.querySelector('meta[name="evia-app-version"]');if(meta)meta.setAttribute("content","127");window.EviaAppVersion=127;
+  if(!document.querySelector('link[data-evia-staged-v127]')){const link=document.createElement("link");link.rel="stylesheet";link.href="./assets/evia-staged-evidence-v127.css?v=127";link.dataset.eviaStagedV127="1";document.head.appendChild(link)}
+  if(!document.querySelector('script[data-evia-staged-v127]')){const script=document.createElement("script");script.src="./assets/evia-staged-evidence-v127.js?v=127";script.dataset.eviaStagedV127="1";document.head.appendChild(script)}
+}
+bootV127();
 })();
