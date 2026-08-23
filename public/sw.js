@@ -1,5 +1,5 @@
-// Evia v132 stabilises staged evidence and updates Property Maintenance.
-const CACHE_NAME = 'evia-shell-v132';
+// Evia v133 stabilises staged evidence and updates Property Maintenance.
+const CACHE_NAME = 'evia-shell-v133';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v132.js',
+  './assets/evia-version-v133.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-export-status.js',
