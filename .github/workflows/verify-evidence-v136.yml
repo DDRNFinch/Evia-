@@ -1,4 +1,4 @@
-name: Verify Evia menu fade v141
+name: Verify Evia menu fade v142
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-v141:
+  verify-v142:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,11 +23,11 @@ jobs:
           node --check assets/evia-staged-evidence-v132.js
           node --check assets/evia-stage-save-v139.js
           node --check assets/evia-photo-fast-v140.js
-          node --check assets/evia-menu-fade-v141.js
+          node --check assets/evia-menu-fade-v142.js
           node --check assets/evia-evidence-media-v122.js
           node --check assets/evia-st0171-v124.js
           node --check assets/evia-selfobs-live.js
-          node --check assets/evia-version-v141.js
+          node --check assets/evia-version-v142.js
           node --check sw.js
           node --check public/sw.js
       - name: Keep approved camera save and photo speed unchanged
@@ -36,25 +36,29 @@ jobs:
           test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "31e544a5ccd5b009efe652ecadec1bcd13b5dcc5"
           test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
           test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
-      - name: Verify fade only
+      - name: Verify immediate crossfade only
         run: |
-          grep -q 'OUT_MS=55,IN_MS=115' assets/evia-menu-fade-v141.js
-          grep -q 'prefers-reduced-motion' assets/evia-menu-fade-v141.js
-          grep -q 'name="evia-app-version" content="141"' index.html
+          node - <<'NODE'
+          const fs=require('fs');
+          const js=fs.readFileSync('assets/evia-menu-fade-v142.js','utf8');
+          for(const x of ['ghostOf(panel)','panel.style.opacity="0"','mode:"immediate-crossfade"','const DURATION=130','prefers-reduced-motion'])if(!js.includes(x))throw Error('Missing immediate crossfade behaviour: '+x);
+          for(const bad of ['preventDefault()','stopPropagation()','stopImmediatePropagation()','button.click()','OUT_MS=','IN_MS='])if(js.includes(bad))throw Error('Old delayed navigation behaviour still present: '+bad);
+          NODE
+          grep -q 'name="evia-app-version" content="142"' index.html
           grep -q 'evia-photo-fast-v140.js?v=140' index.html
-          grep -q 'evia-menu-fade-v141.js?v=141' index.html
+          grep -q 'evia-menu-fade-v142.js?v=142' index.html
           grep -q 'evia-staged-evidence-v132.js?v=138' index.html
           grep -q 'evia-stage-save-v139.js?v=139' index.html
-          grep -q 'evia-version-v141.js?v=141' index.html
-          grep -q 'evia-updater.js?v=141' index.html
-          grep -q 'evia-shell-v141' sw.js
-          grep -q 'evia-shell-v141' public/sw.js
+          grep -q 'evia-version-v142.js?v=142' index.html
+          grep -q 'evia-updater.js?v=142' index.html
+          grep -q 'evia-shell-v142' sw.js
+          grep -q 'evia-shell-v142' public/sw.js
       - name: Check manifests and offline shell match
         run: |
           node - <<'NODE'
           const fs=require('fs');
           const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
-          if(a.version!=='141')throw Error('update.json is not v141');
+          if(a.version!=='142')throw Error('update.json is not v142');
           if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
           if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
           NODE
