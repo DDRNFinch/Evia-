@@ -12,7 +12,7 @@ const clock=s=>`${String(Math.floor(Math.max(0,s)/60)).padStart(2,"0")}:${String
 const course=()=>window.EviaCourseContext?.current?.()||{};
 function siteData(){const a=window.EviaCoursePacks?.active?.(),data=a?.pathway?.siteData||a?.pack?.siteData;if(Array.isArray(data)&&data.length)return data;if(Array.isArray(window.EviaST0171Map)&&window.EviaST0171Map.length)return window.EviaST0171Map;return[]}
 function contextFor(oppId){for(const cat of siteData())for(const job of cat.jobs||[])for(const opp of job.opps||[])if(String(opp.id)===String(oppId))return{cat,job,opp};return null}
-function stagesFor(opp){return Array.isArray(opp?.stages)?opp.stages.filter(Boolean):[]}
+function stagesFor(opp){const stages=Array.isArray(opp?.stages)?opp.stages.filter(Boolean):[];if(stages.length)return stages;if(!opp)return[];return[{id:`${opp.id||"evidence"}-single`,title:opp.title||"Evidence",instruction:opp.instruction||"Show this evidence clearly."}]}
 function savedStages(oppId){const set=new Set(),xs=read(STORE,[]);if(Array.isArray(xs))xs.forEach(e=>{if(e?.opportunityId===oppId&&Number.isInteger(e?.stageIndex))set.add(e.stageIndex)});return set}
 function firstUnfinished(opp){const stages=stagesFor(opp),done=savedStages(opp.id);for(let i=0;i<stages.length;i++)if(!done.has(i))return i;return-1}
 function makePrompts(stage,opp){if(Array.isArray(stage?.prompts)&&stage.prompts.length)return stage.prompts;const title=stage?.title||opp?.title||"this stage";return[`Show ${title.toLowerCase()} clearly and explain what we are looking at.`,String(opp?.question||"").trim()||`Explain what you are doing at this stage, what method or materials you are using, and why.`,`Explain what you checked at this stage and how you know it is right.`]}

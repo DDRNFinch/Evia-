@@ -1,5 +1,5 @@
-// Evia v145 keeps the working camera/evidence system and runs menu fades inside Evia core.
-const CACHE_NAME = 'evia-shell-v145';
+// Evia v146 routes all visual evidence through the existing Evia prompted camera.
+const CACHE_NAME = 'evia-shell-v146';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v145.js',
+  './assets/evia-version-v146.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
