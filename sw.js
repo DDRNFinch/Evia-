@@ -1,5 +1,5 @@
-// Evia v136 cleans and stabilises the Evidence screen.
-const CACHE_NAME = 'evia-shell-v136';
+// Evia v137 restores the full-screen guided camera and camcorder.
+const CACHE_NAME = 'evia-shell-v137';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
