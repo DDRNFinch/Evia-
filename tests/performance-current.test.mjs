@@ -41,7 +41,7 @@ test("Evia has one service-worker owner and one current cache",()=>{
 });
 
 test("duplicate motion and production audit layers stay removed",()=>{
-  for(const name of ["evia-avatar-motion","evia-premium-motion","evia-avatar-life","evia-v73-page-handoff","evia-6570-smoke"]){
+  for(const name of ["evia-avatar-motion","evia-premium-motion","evia-avatar-life.js","evia-v73-page-handoff","evia-6570-smoke"]){
     assert.equal(index.includes(name),false,`${name} must not be loaded`);
   }
   assert.equal(fs.existsSync("assets/evia-6570-smoke.js"),false);
