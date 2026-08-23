@@ -1,22 +1,18 @@
 {
-  "version": "127",
-  "title": "Stronger staged evidence collection",
+  "version": "128",
+  "title": "Evia beta update routing fixed",
   "details": [
-    "Property Maintenance repair tasks now break useful process evidence into clear stages instead of relying on one weak final image",
-    "Every evidence stage can use either a photo or a video while keeping Evia's existing learner UI",
-    "Photos now lead straight to a required written explanation",
-    "Videos record camera and microphone together and guide the learner through prompts without stopping the recording",
-    "Each video prompt change is timestamped and stored with the evidence, with optional extra written text afterwards",
-    "Photo and video capture use a large 1:1 working area and unfinished media is kept locally so the learner can return to it"
+    "Evia_beta now loads its own local assets instead of accidentally loading the older Evia production assets",
+    "The staged Property Maintenance evidence flow from v127 can now actually load inside Evia_beta",
+    "Photo evidence keeps the required written explanation flow",
+    "Video evidence keeps the guided camera and microphone prompts with timestamps",
+    "The offline cache has been moved to v128 so installed copies replace the incorrectly routed files"
   ],
-  "summary": "Evia v127 strengthens practical evidence while preserving the existing Evia interface and one-stage-at-a-time learner flow.",
+  "summary": "Evia v128 fixes the beta asset routing so the staged evidence update is actually delivered to the installed app.",
   "changes": [
-    "Added staged evidence for key Property Maintenance repair tasks",
-    "Added required explanations after photo evidence",
-    "Added guided continuous video recording with audio prompts and timestamps",
-    "Added optional extra text after video evidence",
-    "Added local draft persistence and resume for unfinished evidence",
-    "Added square 1:1 photo and video capture surfaces",
-    "Moved Evia's offline evidence cache to v127"
+    "Changed Evia_beta asset references to the Evia_beta deployment itself",
+    "Forced a new v128 offline cache",
+    "Preserved the Evia UI and staged evidence workflow",
+    "Forced fresh loading of the staged evidence and video recorder assets"
   ]
 }
