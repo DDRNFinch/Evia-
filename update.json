@@ -1,19 +1,19 @@
 {
-  "version": "135",
-  "title": "Property Maintenance evidence tiles corrected",
+  "version": "136",
+  "title": "Evidence screen cleaned up",
   "details": [
-    "Combined Property Maintenance evidence prompts are now split into separate tiles on the job screen itself",
-    "Tiling repairs now shows four tiles on the same screen: Tiling repair, Setting out, Preparation and Cutting tiles",
-    "Each tile opens one photo-or-video evidence capture instead of hiding several evidence pieces inside one tile",
-    "Plaster, flooring, drainage, doors and windows, masonry, roofing, fencing, groundwork and decorating use the same tile-splitting rule where their prompt contains distinct evidence pieces",
-    "Existing evidence from the earlier staged version is migrated onto the matching separate tile where possible"
+    "Evidence cards now show a compact evidence summary instead of dumping the full saved answer or video timestamp transcript onto the screen",
+    "Guided videos show as Guided video with duration and prompt count while the full prompt timestamps remain stored with the evidence",
+    "Photo evidence shows as Photo + written explanation without filling the card with the learner's full text",
+    "Downloaded evidence uses the same clean card layout so old test notes no longer dominate the screen",
+    "Evidence thumbnails now match records by their exact saved order and evidence ID instead of guessing from similar card text"
   ],
-  "summary": "Evia v135 puts each Property Maintenance evidence item on its own tile.",
+  "summary": "Evia v136 fixes the broken Evidence screen layout and media matching.",
   "changes": [
-    "Split multi-part ST0171 opportunities into separate job-screen tiles",
-    "Kept one photo or video capture per tile",
-    "Preserved the guided photo and video evidence flow",
-    "Migrated saved staged evidence to the matching new opportunity",
-    "Moved the offline shell to v135"
+    "Rebuilt the evidence-card media renderer",
+    "Removed raw answer text from evidence-list cards",
+    "Made video summaries concise",
+    "Stopped legacy thumbnail decoration from owning the same row",
+    "Moved the offline shell to v136"
   ]
 }
