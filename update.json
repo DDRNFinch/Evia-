@@ -1,17 +1,17 @@
 {
-  "version": "141",
-  "title": "Smoother menu fades",
+  "version": "142",
+  "title": "Menu cross-fade fixed",
   "details": [
-    "Only the menu fade timing has changed",
-    "Menus now fade out and back in more quickly and smoothly",
+    "Menu navigation now happens immediately again",
+    "The old and new menu content cross-fade smoothly with no blank pause",
     "The photo speed improvement remains unchanged",
     "Camera, video prompts, timestamps, saving, course tiles and all layouts are unchanged"
   ],
-  "summary": "Evia v141 only smooths the menu fade transition.",
+  "summary": "Evia v142 fixes the menu fade without delaying navigation.",
   "changes": [
-    "Smoother menu fade out",
-    "Smoother menu fade in",
+    "Removed the artificial pre-navigation delay",
+    "Added immediate menu cross-fade",
     "Everything else unchanged",
-    "Moved the offline shell to v141"
+    "Moved the offline shell to v142"
   ]
 }
