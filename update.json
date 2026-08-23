@@ -1,18 +1,19 @@
 {
-  "version": "131",
-  "title": "Evidence capture handoff fixed",
+  "version": "132",
+  "title": "Property Maintenance staged evidence rebuilt",
   "details": [
-    "Photo capture now takes the live 1:1 camera frame directly, removing the long Capturing delay shown on Android",
-    "After Use photo, Evia now immediately opens the required written explanation for that photo",
-    "After Finish recording, Evia now immediately opens the optional extra-text screen without showing the black media preview or another Continue step",
-    "The existing Evia learner UI, guided video prompts, audio recording and prompt timestamps are unchanged"
+    "Property Maintenance practical repairs now use real one-stage-at-a-time evidence packs instead of the old single-photo instructions",
+    "The staged evidence screen stays fixed in Evia's existing evidence area so photo, video, explanation and save steps no longer resize and jump between different layouts",
+    "Photo evidence uses a large 1:1 camera, then goes directly to its required written explanation",
+    "Guided video stays as one continuous recording with audio, Next prompt timestamp markers and optional extra text afterwards",
+    "Accepted evidence and the current unfinished stage are kept locally so Evia can resume the same task later"
   ],
-  "summary": "Evia v131 fixes the exact photo and video handoff faults shown in the latest test recording.",
+  "summary": "Evia v132 rebuilds staged evidence as one stable Evia flow and updates Property Maintenance itself.",
   "changes": [
-    "Replaced the slow photo frame path with direct live-frame capture",
-    "Tied accepted photos directly to their explanation step",
-    "Tied finished guided videos directly to optional text",
-    "Removed the failed v130 auto-advance approach from the active app",
-    "Moved the offline shell to v131"
+    "Added staged evidence data directly to the Property Maintenance ST0171 course",
+    "Replaced the competing photo and video handoff scripts with one fixed staged evidence controller",
+    "Kept the staged flow anchored inside Evia's existing learner UI",
+    "Added local stage and accepted-media resume support",
+    "Moved the offline shell to v132"
   ]
 }
