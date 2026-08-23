@@ -1,1 +1,0 @@
-Evia v140 photo speed and menu fade verification passed.
