@@ -1,19 +1,19 @@
 {
-  "version": "138",
-  "title": "Camera controls fixed",
+  "version": "139",
+  "title": "Evidence saving fixed",
   "details": [
-    "The full-screen Evia camera now sits above the app header and bottom progress navigation",
-    "Photo capture keeps the evidence prompt visible and the Take photo button accessible",
-    "Video capture keeps the prompt, recording timer and Next prompt button visible on the camera screen",
-    "Next prompt continues the same recording and preserves the exact prompt timestamp",
-    "No Property Maintenance tiles, evidence structure, navigation or other Evia behaviour was changed"
+    "Keeps the full-screen photo and video camera exactly as it is in v138",
+    "Photos now save after the required written explanation",
+    "Videos now save after Skip text or Save with text",
+    "Guided video prompts, Next prompt and timestamp markers are unchanged",
+    "No course tiles, camera styling, navigation or evidence layout was changed"
   ],
-  "summary": "Evia v138 fixes the hidden full-screen camera controls.",
+  "summary": "Evia v139 fixes photo and video saving without changing the approved capture screen.",
   "changes": [
-    "Raised the capture layer above all Evia chrome",
-    "Restored visible photo shutter controls",
-    "Restored visible Start, Next prompt and Finish recording controls",
-    "Kept prompt timestamps unchanged",
-    "Moved the offline shell to v138"
+    "Fixed staged photo save handoff",
+    "Fixed staged video save handoff",
+    "Preserved media in the existing evidence store",
+    "Kept v138 camera UI unchanged",
+    "Moved the offline shell to v139"
   ]
 }
