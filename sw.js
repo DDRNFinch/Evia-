@@ -1,5 +1,5 @@
-// Evia v126 adds Property Maintenance progress QR sharing.
-const CACHE_NAME = 'evia-shell-v126';
+// Evia v127 adds staged photo and guided video evidence.
+const CACHE_NAME = 'evia-shell-v127';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -22,6 +22,9 @@ const CRITICAL = [
   './assets/evia-updater.js',
   './assets/evia-updater.css',
   './assets/evia-version-v126.js',
+  './assets/evia-video-recorder.js',
+  './assets/evia-staged-evidence-v127.js',
+  './assets/evia-staged-evidence-v127.css',
   './assets/evia-folder-completion-v116.js',
   './assets/evia-mini-milos-v86.js',
   './assets/evia-qr-exchange-v107.js',
