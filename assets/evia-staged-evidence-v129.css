@@ -1,0 +1,27 @@
+/* Evia v129 staged evidence: keeps camera and video inside the existing Evia shell. */
+.selfobs .evia-stage-kicker-v129{margin:.15rem 0 .45rem;text-align:center;color:#aa9360;font-size:.62rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+.selfobs .self-card.photo>span{font-weight:500}
+.selfobs .self-card.photo img.evia-square-evidence-preview-v129,.selfobs .self-card.photo video.evia-square-evidence-preview-v129{display:block;width:min(100%,31rem)!important;aspect-ratio:1/1!important;height:auto!important;max-height:none!important;object-fit:cover!important;margin:.72rem auto 0!important;border-radius:1.15rem!important;background:#111!important}
+.selfobs .self-panel.evia-capture-active-v129>:not(.evia-inline-capture-v129){display:none!important}
+.selfobs .evia-inline-capture-v129{width:100%;display:block!important;padding:0 .05rem .45rem!important;color:inherit!important}
+.selfobs .evia-inline-capture-v129>.self-back{margin-bottom:.5rem!important}
+.selfobs .evia-inline-capture-v129>.self-title{text-align:center!important;margin-top:.15rem!important}
+.selfobs .evia-inline-capture-v129>.self-copy{text-align:center!important;max-width:28rem!important;margin-left:auto!important;margin-right:auto!important}
+.selfobs .evia-camera-status{min-height:16rem;display:grid;place-items:center;text-align:center;color:#8e8773;font-size:.78rem}
+.selfobs .evia-camera-square-v129,.selfobs .evia-video-square-v129{position:relative;width:min(100%,31rem);aspect-ratio:1/1;margin:.8rem auto .55rem;border-radius:1.15rem;overflow:hidden;background:#0b0b0b;box-shadow:0 8px 28px rgba(129,110,35,.08)}
+.selfobs .evia-camera-square-v129 video,.selfobs .evia-camera-square-v129 img,.selfobs .evia-video-square-v129 video{display:block;width:100%;height:100%;object-fit:cover;background:#0b0b0b}
+.selfobs .evia-camera-square-v129:after,.selfobs .evia-video-square-v129:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(90deg,transparent 33.1%,rgba(255,255,255,.14) 33.33%,transparent 33.55%,transparent 66.45%,rgba(255,255,255,.14) 66.66%,transparent 66.9%),linear-gradient(transparent 33.1%,rgba(255,255,255,.14) 33.33%,transparent 33.55%,transparent 66.45%,rgba(255,255,255,.14) 66.66%,transparent 66.9%)}
+.selfobs .evia-camera-hint-v129{text-align:center;color:#908873;font-size:.68rem;line-height:1.35;margin:.15rem auto .55rem;max-width:24rem}
+.selfobs .evia-camera-actions-v129{margin-top:.5rem!important}
+.selfobs .evia-camera-actions-v129 .self-button{min-height:2.95rem!important}
+.selfobs .evia-video-time-v129{position:absolute;z-index:4;left:50%;top:.7rem;transform:translateX(-50%);padding:.34rem .58rem;border-radius:999px;background:rgba(20,20,20,.66);color:#fff;font-size:.66rem;font-variant-numeric:tabular-nums;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.selfobs .evia-video-prompt-v129{display:grid!important;gap:.28rem!important;margin:.6rem 0 .15rem!important;padding:.72rem .82rem!important;background:#fff9dc!important;border:1px solid #ecda84!important;border-radius:1rem!important;color:#51482d!important}
+.selfobs .evia-video-prompt-v129 small{font-size:.57rem!important;color:#9d872e!important;font-weight:750!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.selfobs .evia-video-prompt-v129 strong{font-size:.79rem!important;line-height:1.4!important;color:#47402c!important}
+.selfobs .evia-video-prompt-v129 span{font-size:.59rem!important;color:#91876b!important}
+.selfobs .evia-camera-error-v129{display:grid!important;gap:.65rem!important;text-align:center!important;margin-top:1rem!important}
+.selfobs .evia-camera-error-v129>strong{font-size:.95rem!important}.selfobs .evia-camera-error-v129>span{font-size:.72rem!important;line-height:1.45!important;color:#817a68!important}
+.selfobs .evia-video-summary-v129{display:grid!important;gap:.35rem!important;margin-bottom:.7rem!important}
+.selfobs .evia-video-summary-v129>strong{font-size:.92rem!important}.selfobs .evia-video-summary-v129>small{font-size:.68rem!important;color:#91866e!important}.selfobs .evia-video-summary-v129>div{display:grid;gap:.45rem;margin-top:.35rem}
+.selfobs .evia-video-summary-v129 p{display:grid!important;grid-template-columns:3.2rem 1fr!important;gap:.55rem!important;margin:0!important;padding:.48rem .58rem!important;border-radius:.8rem!important;background:#fff9df!important;color:#5c5543!important;font-size:.7rem!important;line-height:1.35!important}.selfobs .evia-video-summary-v129 p b{color:#a48619!important}.selfobs .evia-video-summary-v129 p span{min-width:0!important}
+@media(max-width:420px){.selfobs .evia-camera-square-v129,.selfobs .evia-video-square-v129{width:100%;border-radius:1.05rem}.selfobs .evia-inline-capture-v129{padding-left:0!important;padding-right:0!important}.selfobs .evia-video-summary-v129 p{grid-template-columns:2.8rem 1fr!important}}
