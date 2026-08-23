@@ -1,0 +1,28 @@
+(()=>{
+"use strict";
+const VERSION=149;
+const ENTRY_KEY="evia-otj-entries";
+const EVIDENCE_KEY="evia-selfobs-live-v3";
+let session=null;
+const read=(key,fallback)=>{try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch{return fallback}};
+const write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch{return false}};
+const todayISO=()=>{const d=new Date(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${d.getFullYear()}-${m}-${day}`};
+const minutesOf=e=>Number.isFinite(Number(e?.durationMinutes))?Math.max(0,Math.round(Number(e.durationMinutes))):Math.max(0,Math.round((Number(e?.hours)||0)*60));
+function latestEvidence(){const xs=read(EVIDENCE_KEY,[]);if(!Array.isArray(xs)||!xs.length)return null;return xs.slice().filter(Boolean).sort((a,b)=>Number(b.createdAt||0)-Number(a.createdAt||0))[0]||null}
+function begin(){const e=latestEvidence();session={evidence:e,learned:"",date:todayISO(),hours:null,minutes:null,durationMinutes:0,startedAt:Date.now()};return session}
+function outsideOtj(target){return !target?.closest?.(".evia-otj-layer")}
+function rootFor(target){return target?.closest?.(".evia-tools-layer,.evia-stage-overlay-v132,.self-panel,.menu-stage,[role='dialog'],form,section,main")||document.body}
+function fieldKey(input){const label=input?.closest?.("label")?.textContent||"";return `${label} ${input?.name||""} ${input?.id||""} ${input?.getAttribute?.("data-field")||""} ${input?.placeholder||""}`.toLowerCase()}
+function parseDurationText(text){const s=String(text||"").toLowerCase();const h=s.match(/(?:^|\s)(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|hr)\b/),m=s.match(/(?:^|\s)(\d+)\s*(?:minutes?|mins?|min)\b/);if(!h&&!m)return 0;return Math.max(0,Math.round((h?Number(h[1])*60:0)+(m?Number(m[1]):0)))}
+function updateDuration(){if(!session)return;const h=Number(session.hours),m=Number(session.minutes);if(Number.isFinite(h)||Number.isFinite(m))session.durationMinutes=Math.max(0,Math.round((Number.isFinite(h)?h:0)*60+(Number.isFinite(m)?m:0)))}
+function capture(root,target=null){if(!session||!root)return;const copy=(root.textContent||"").toLowerCase();const inputs=target?.matches?.("input,textarea")?[target]:[...root.querySelectorAll("input,textarea")];for(const input of inputs){const key=fieldKey(input),value=String(input.value||"").trim();if(input.matches("textarea")&&(/what.*learn/.test(copy)||/learn/.test(key))&&value)session.learned=value;else if(input.type==="date"&&value)session.date=value;else if(input.type==="number"||input.inputMode==="numeric"||input.inputMode==="decimal"){const n=Number(value);if(!Number.isFinite(n))continue;if(/minute|min\b/.test(key))session.minutes=n;else if(/hour|hr\b/.test(key))session.hours=n;else if(/duration/.test(key)){session.durationMinutes=/minute|min\b/.test(key)?Math.round(n):Math.round(n*60)}}}updateDuration()}
+function context(){const e=session?.evidence||latestEvidence()||{};return{e,area:String(e.categoryTitle||e.categoryId||"Workplace learning"),topic:String(e.jobTitle||e.stageTitle||e.title||"Task learning"),codes:Array.isArray(e.codes)?[...e.codes]:[]}}
+function record(data={}){const learned=String(data.learned??session?.learned??"").trim(),durationMinutes=Math.max(0,Math.round(Number(data.durationMinutes??session?.durationMinutes)||0));if(!learned||durationMinutes<=0)return false;const {e,area,topic,codes}=context(),date=String(data.date||session?.date||todayISO()),all=read(ENTRY_KEY,[]),xs=Array.isArray(all)?all:[];const duplicate=xs.some(x=>String(x?.learned||x?.whatLearned||x?.description||"").trim()===learned&&minutesOf(x)===durationMinutes&&String(x?.date||"")===date&&(e?.id?String(x?.sourceEvidenceId||"")===String(e.id):true));if(!duplicate){const now=Date.now();xs.push({id:`otj-evidence-${now}-${Math.random().toString(36).slice(2,7)}`,type:"Workplace training",date,area,topic,durationMinutes,hours:Number((durationMinutes/60).toFixed(2)),learned,codes,source:"post-evidence",sourceEvidenceId:e?.id||null,jobId:e?.jobId||null,opportunityId:e?.opportunityId||null,createdAt:now,updatedAt:now});if(!write(ENTRY_KEY,xs))return false}window.EviaOTJ?.refresh?.();window.dispatchEvent(new CustomEvent("evia:otj-updated",{detail:{source:"post-evidence"}}));session=null;return true}
+function isStart(copy){return /did you learn anything new during this task/i.test(copy)}
+function isLearn(copy){return /what exactly did you learn|what did you learn/i.test(copy)}
+function saveButton(label,copy){return /save\s*otj|save\s*(?:off[- ]?the[- ]?job|learning)|add\s*learning/i.test(label)||(/^save$/i.test(label.trim())&&/\botj\b|off[- ]?the[- ]?job/i.test(copy))}
+document.addEventListener("input",event=>{const t=event.target;if(!outsideOtj(t))return;const root=rootFor(t),copy=root.textContent||"";if(isLearn(copy)&&!session)begin();if(session)capture(root,t)},true);
+document.addEventListener("change",event=>{const t=event.target;if(!outsideOtj(t)||!session)return;capture(rootFor(t),t)},true);
+document.addEventListener("click",event=>{const button=event.target?.closest?.("button");if(!button||!outsideOtj(button))return;const root=rootFor(button),copy=root.textContent||"",label=(button.textContent||"").trim();if(isStart(copy)){if(/^yes\b/i.test(label))begin();else if(/^no\b/i.test(label))session=null;return}if(isLearn(copy)&&!session)begin();if(!session)return;capture(root);const picked=parseDurationText(label);if(picked)session.durationMinutes=picked;if(saveButton(label,copy)){capture(root);setTimeout(()=>record(),0)}},true);
+window.EviaPostEvidenceOTJ=Object.freeze({version:VERSION,record});
+})();
