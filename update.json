@@ -1,18 +1,17 @@
 {
-  "version": "146",
-  "title": "Evia camera route restored",
+  "version": "147",
+  "title": "Faster camera save",
   "details": [
-    "Removed the old native phone-camera fallback that was still taking over photo and video evidence",
-    "Single evidence tasks now use the same full-screen Evia camera as staged evidence tasks",
-    "Photo prompts remain visible on the camera screen",
-    "Video keeps the visible prompt, recording timer, Next prompt button and timestamp markers",
-    "Camera styling, saving, photo speed, evidence tiles and menu layout are otherwise unchanged"
+    "Photo Use photo moves to the explanation immediately while the safety draft saves in the background",
+    "Video Finish recording moves to Video complete immediately while the safety draft saves in the background",
+    "Final evidence saving and draft recovery remain intact",
+    "No camera UI, prompts, menus, tiles, layouts or course data changed"
   ],
-  "summary": "Evia v146 restores the full-screen prompted camera for every visual evidence task.",
+  "summary": "Evia v147 removes the wait after photo and video capture without changing the camera experience.",
   "changes": [
-    "Remove native camera takeover",
-    "Use Evia camera for single evidence tasks",
-    "Keep prompts and timestamps",
-    "No other UI changes"
+    "Instant photo handoff",
+    "Instant video handoff",
+    "Background draft persistence",
+    "Nothing else changed"
   ]
 }
