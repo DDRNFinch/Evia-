@@ -1,19 +1,17 @@
 {
-  "version": "140",
-  "title": "Faster photos and smoother menus",
+  "version": "141",
+  "title": "Smoother menu fades",
   "details": [
-    "Keeps the current camera, video prompts, timestamps, evidence saving and course structure unchanged",
-    "Photo capture now uses a faster evidence-sized image encode so the captured image appears much sooner",
-    "Course menu pages now fade smoothly out and back in when moving between them",
-    "The full-screen photo and video camera layout is unchanged",
-    "No Property Maintenance tiles, evidence records, navigation structure or other Evia behaviour was changed"
+    "Only the menu fade timing has changed",
+    "Menus now fade out and back in more quickly and smoothly",
+    "The photo speed improvement remains unchanged",
+    "Camera, video prompts, timestamps, saving, course tiles and all layouts are unchanged"
   ],
-  "summary": "Evia v140 speeds photo capture and adds smooth menu fades without changing the approved workflow.",
+  "summary": "Evia v141 only smooths the menu fade transition.",
   "changes": [
-    "Faster photo processing",
-    "Smooth menu fade transitions",
-    "Kept guided video unchanged",
-    "Kept evidence saving unchanged",
-    "Moved the offline shell to v140"
+    "Smoother menu fade out",
+    "Smoother menu fade in",
+    "Everything else unchanged",
+    "Moved the offline shell to v141"
   ]
 }
