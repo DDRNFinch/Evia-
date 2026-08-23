@@ -1,4 +1,4 @@
-# Trigger exact mirror
+# Direct-ref trigger
 name: Mirror current Evia into Evia_beta
 
 on:
