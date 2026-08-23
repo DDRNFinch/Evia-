@@ -1,4 +1,4 @@
-name: Verify Evia guided camera v138
+name: Verify Evia staged save v139
 
 on:
   push:
@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  verify-camera:
+  verify-save:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,41 +21,43 @@ jobs:
       - name: Check production JavaScript
         run: |
           node --check assets/evia-staged-evidence-v132.js
+          node --check assets/evia-stage-save-v139.js
           node --check assets/evia-evidence-media-v122.js
           node --check assets/evia-st0171-v124.js
           node --check assets/evia-selfobs-live.js
-          node --check assets/evia-version-v138.js
+          node --check assets/evia-version-v139.js
           node --check sw.js
           node --check public/sw.js
-      - name: Verify guided camera behaviour
+      - name: Keep approved v138 camera unchanged
         run: |
+          test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
+          test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "31e544a5ccd5b009efe652ecadec1bcd13b5dcc5"
           node - <<'NODE'
           const fs=require('fs');
           const js=fs.readFileSync('assets/evia-staged-evidence-v132.js','utf8');
           const css=fs.readFileSync('assets/evia-staged-evidence-v132.css','utf8');
-          const mustJs=[
-            'evia-capture-mode-v137',
-            'Photo prompt',
-            'What to talk about',
-            'data-start-video',
-            'data-next-prompt',
-            'markers.push({seconds:Math.floor((Date.now()-startedAt)/1000)',
-            'data-finish-video',
-            'videoPromptMarkers=meta.markers||[]',
-            'width:{ideal:1920}',
-            'ctx.drawImage(video,0,0,w,h,0,0,cw,ch)'
+          const mustJs=['Photo prompt','What to talk about','data-start-video','data-next-prompt','markers.push({seconds:Math.floor((Date.now()-startedAt)/1000)','data-finish-video','videoPromptMarkers=meta.markers||[]'];
+          for(const x of mustJs)if(!js.includes(x))throw Error('Approved camera behaviour missing: '+x);
+          const mustCss=['z-index:2147483000!important','z-index:2147483001!important','height:100dvh!important','evia-stage-capture-prompt-v137','evia-stage-capture-actions-v137'];
+          for(const x of mustCss)if(!css.includes(x))throw Error('Approved camera style missing: '+x);
+          NODE
+      - name: Verify save bridge
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const js=fs.readFileSync('assets/evia-stage-save-v139.js','utf8');
+          const must=[
+            '[data-save-photo],[data-skip-video],[data-save-video]',
+            'prepareCore(route)',
+            'input.onchange({target:{files:[file],value:""}})',
+            'ta.dispatchEvent(new Event("input",{bubbles:true}))',
+            'xs.find(e=>e?.id&&!before.has(e.id))',
+            'entry.mediaKind=kind',
+            'entry.videoPromptMarkers=Array.isArray(meta.markers)?meta.markers:[]',
+            'window.EviaStagedEvidence.openForOpp(route.oppId)'
           ];
-          for(const x of mustJs)if(!js.includes(x))throw Error('Missing camera behaviour: '+x);
-          for(const old of ['data-phone-photo','data-phone-video','phone.click()','aspectRatio:{ideal:1}'])if(js.includes(old))throw Error('Old native/square camera path still active: '+old);
-          const mustCss=[
-            '.menu-stage.evia-stage-managed-v132:has(>.evia-stage-overlay-v132.evia-capture-mode-v137)',
-            'z-index:2147483000!important',
-            'z-index:2147483001!important',
-            'height:100dvh!important',
-            'evia-stage-capture-prompt-v137',
-            'evia-stage-capture-actions-v137'
-          ];
-          for(const x of mustCss)if(!css.includes(x))throw Error('Missing full-screen camera/control style: '+x);
+          for(const x of must)if(!js.includes(x))throw Error('Save bridge requirement missing: '+x);
+          if(js.includes('location.reload')||js.includes('location.replace'))throw Error('Save bridge must not reload the app');
           NODE
       - name: Keep Property Maintenance tiles unchanged
         run: |
@@ -74,23 +76,24 @@ jobs:
           exact(titles('plaster'),['Plaster defect','Preparation','Finished repair'],'Plaster repairs');
           exact(titles('flooring'),['Flooring defect','Preparation','Setting out','Finished repair'],'Flooring repairs');
           NODE
-      - name: Check v138 release wiring
+      - name: Check v139 release wiring
         run: |
-          grep -q 'name="evia-app-version" content="138"' index.html
+          grep -q 'name="evia-app-version" content="139"' index.html
           grep -q 'evia-staged-evidence-v132.js?v=138' index.html
           grep -q 'evia-staged-evidence-v132.css?v=138' index.html
-          grep -q 'evia-version-v138.js?v=138' index.html
-          grep -q 'evia-updater.js?v=138' index.html
-          grep -q "evia-shell-v138" sw.js
-          grep -q "evia-shell-v138" public/sw.js
-          grep -q 'window.EviaAppVersion=138' assets/evia-version-v138.js
-          test ! -e assets/evia-version-v136.js
+          grep -q 'evia-stage-save-v139.js?v=139' index.html
+          grep -q 'evia-version-v139.js?v=139' index.html
+          grep -q 'evia-updater.js?v=139' index.html
+          grep -q "evia-shell-v139" sw.js
+          grep -q "evia-shell-v139" public/sw.js
+          grep -q 'window.EviaAppVersion=139' assets/evia-version-v139.js
+          grep -q './assets/evia-stage-save-v139.js' sw.js
       - name: Check manifests and offline shell match
         run: |
           node - <<'NODE'
           const fs=require('fs');
           const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
-          if(a.version!=='138')throw Error('update.json is not v138');
+          if(a.version!=='139')throw Error('update.json is not v139');
           if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
           if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
           NODE
@@ -111,3 +114,14 @@ jobs:
           if missing:
               print('Missing production references:');print('\n'.join(sorted(set(missing))));sys.exit(1)
           PY
+      - name: Record successful verification
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p .github/verification
+          printf 'Evia v139 photo and video save verification passed.\n' > .github/verification/v139-save-passed.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/verification/v139-save-passed.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Verify Evia v139 staged saving'
+          git push
