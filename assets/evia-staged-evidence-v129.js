@@ -1,66 +1,337 @@
 (()=>{
 "use strict";
-const VERSION=129;
-const STORE="evia-selfobs-live-v3",DRAFTS="evia-evidence-drafts-v127",ROUTE="evia-evidence-route-v127",DB="evia-self-observation-media",DBS="files";
-const VIDEO_BITS_PER_SECOND=1370000,AUDIO_BITS_PER_SECOND=96000;
-let dataIndex=new Map(),route={catId:"",jobId:"",oppId:""},captureKind="",stageIndex=0,lastVideoMeta=null,restoring=false,resumeAttempted=false;
-let captureLayer=null,photoStream=null,photoObjectUrl="",videoState=null;
-const $=q=>document.querySelector(q),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const VERSION=132;
+const STORE="evia-selfobs-live-v3",DB="evia-self-observation-media",DBS="files";
+const DRAFTS="evia-stage-drafts-v132",ROUTE="evia-stage-route-v132";
+let active=null,overlay=null,stream=null,recorder=null,chunks=[],timer=null,objectUrl="",internal=false,videoState=null;
+
+const $=q=>document.querySelector(q);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const read=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
-const currentCourse=()=>window.EviaCourseContext?.current?.()||{};
 const clock=s=>`${String(Math.floor(Math.max(0,s)/60)).padStart(2,"0")}:${String(Math.max(0,s)%60).padStart(2,"0")}`;
-const STAGE_OVERRIDES={plumbing_fault:[["Plumbing fault","Show the plumbing fault or affected component before the repair begins."],["Isolation & preparation","Show how the water has been isolated and the repair area prepared safely."],["Repair","Show the repair or replacement work being carried out."],["Completed repair","Show the completed repair and the final checks for leaks or correct operation."]],drainage_fault:[["Drainage problem","Show the drainage problem before work begins."],["Access & preparation","Show the access point and how the area has been prepared for the repair or clearance."],["Completed repair","Show the completed drainage repair or cleared system."]],energy_fault:[["System or component","Show the environmental or energy-management component before maintenance."],["Maintenance or repair","Show the maintenance or repair being carried out."],["Completed check","Show the completed work or final operational check."]],door_window:[["Defect before repair","Show the door, window, frame, glazing unit or fitting and the defect before work starts."],["Repair in progress","Show the repair, adjustment or replacement work being carried out."],["Finished repair","Show the completed repair and finished fit or operation."]],plaster_repair:[["Plaster defect","Show the damaged plaster before you begin."],["Preparation","Show the damaged area prepared and ready for the repair."],["Finished repair","Show the completed plaster repair and finish."]],paint_repair:[["Surface condition","Show the defect or surface condition before preparation."],["Preparation","Show the surface after it has been prepared for decoration."],["Coating or sealing","Show the coating, paint or sealing work being applied."],["Finished decoration","Show the completed decorated or sealed surface."]],tile_repair:[["Tiling defect","Show the damaged or affected tiling before the repair."],["Preparation & setting out","Show the prepared area and how the replacement work has been set out."],["Cutting or fitting","Show any cutting, fitting or work around obstacles."],["Finished repair","Show the completed tiling repair."]],floor_repair:[["Flooring defect","Show the flooring defect before work begins."],["Preparation","Show the floor or sub-surface prepared for the repair."],["Setting out & fitting","Show the material being set out, cut or fitted."],["Finished repair","Show the completed flooring repair."]],masonry_repair:[["Masonry or damp defect","Show the masonry or damp defect before the repair."],["Repair in progress","Show the repair method and materials being used."],["Finished repair","Show the completed masonry or damp repair."]],fence_repair:[["Defect","Show the fencing or railing defect before the repair."],["Repair in progress","Show the repair or replacement work being carried out."],["Completed repair","Show the completed fencing or railing repair."]],ground_repair:[["External defect","Show the groundwork, surface or landscaping defect before work begins."],["Repair in progress","Show the repair process and materials being used."],["Completed & safe","Show the completed repair and how the area has been left safe."]]};
-function contextFor(id=route.oppId){return dataIndex.get(String(id||""))||null}
-function makePrompts(ctx,stage){const q=String(ctx?.opp?.question||"").trim(),title=stage?.title||ctx?.opp?.title||"this stage",specific=stage?.prompt||stage?.instruction||ctx?.opp?.instruction||"";return[`Show ${title.toLowerCase()} clearly and explain what we are looking at.`,q||`Explain what you are doing at this stage, the method or materials you are using, and why.`,specific?`Explain how you completed or checked this stage: ${specific}`:`Explain what you checked and how you know this stage is correct.`]}
-function stagesFor(ctx){if(!ctx?.opp)return[];const raw=STAGE_OVERRIDES[ctx.opp.id];if(raw)return raw.map((x,i)=>({id:`${ctx.opp.id}-stage-${i+1}`,title:x[0],instruction:x[1]}));if(Array.isArray(ctx.opp.stages)&&ctx.opp.stages.length)return ctx.opp.stages.map((s,i)=>({id:s.id||`${ctx.opp.id}-stage-${i+1}`,title:s.title||`Stage ${i+1}`,instruction:s.instruction||ctx.opp.instruction,prompts:s.prompts}));return[{id:`${ctx.opp.id}-stage-1`,title:ctx.opp.title,instruction:ctx.opp.instruction||"Collect one clear piece of evidence for this stage."}]}
-function savedStageIndexes(oppId){const xs=read(STORE,[]),set=new Set();if(Array.isArray(xs))xs.forEach(e=>{if(e?.opportunityId===oppId&&Number.isInteger(e?.stageIndex))set.add(e.stageIndex)});return set}
-function firstUnfinishedStage(ctx){const ss=stagesFor(ctx),done=savedStageIndexes(ctx?.opp?.id);for(let i=0;i<ss.length;i++)if(!done.has(i))return i;return Math.max(0,ss.length-1)}
-function activeStage(){const ctx=contextFor(),ss=stagesFor(ctx);return ss[Math.max(0,Math.min(stageIndex,ss.length-1))]||null}
-function updateGlobalContext(){const ctx=contextFor(),stage=activeStage();window.EviaGuidedEvidenceContext={version:VERSION,courseId:String(currentCourse().courseId||""),categoryId:ctx?.cat?.id||route.catId,jobId:ctx?.job?.id||route.jobId,opportunityId:ctx?.opp?.id||route.oppId,title:stage?.title||ctx?.opp?.title||$(".self-title")?.textContent||"Evidence video",instruction:stage?.instruction||ctx?.opp?.instruction||"",question:ctx?.opp?.question||"",prompts:Array.isArray(stage?.prompts)&&stage.prompts.length?stage.prompts:makePrompts(ctx,stage),stageIndex,stageCount:stagesFor(ctx).length}}
-async function loadIndex(){try{const active=window.EviaCoursePacks?.active?.();let data=active?.pathway?.siteData||active?.pack?.siteData||[];if(!Array.isArray(data)||!data.length){const c=currentCourse(),prefix=c.dataPrefix||"evia-site-data";const parts=await Promise.all([1,2,3].map(async n=>{const t=await fetch(`./app/${prefix}-${n}.ts?v=${VERSION}`,{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(String(r.status));return r.text()});const m=t.match(/export const SITE_DATA_\d+:SiteCategory\[\]=(.*);\s*$/s);return m?JSON.parse(m[1]):[]}));data=parts.flat()}dataIndex=new Map();data.forEach(cat=>cat?.jobs?.forEach(job=>job?.opps?.forEach(opp=>dataIndex.set(String(opp.id),{cat,job,opp}))))}catch(e){console.debug("Evia staged evidence index",e)}}
-function openDb(){return new Promise((resolve,reject)=>{const q=indexedDB.open(DB);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(DBS))q.result.createObjectStore(DBS,{keyPath:"id"})};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)})}
-async function putDraftFile(id,file){const db=await openDb();try{await new Promise((res,rej)=>{const tx=db.transaction(DBS,"readwrite");tx.objectStore(DBS).put({id,blob:file,name:file.name||id,type:file.type||"application/octet-stream",createdAt:Date.now()});tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}finally{db.close()}}
-async function getDraftFile(id){const db=await openDb();try{return await new Promise((res,rej)=>{const q=db.transaction(DBS,"readonly").objectStore(DBS).get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}finally{db.close()}}
-async function deleteDraftFile(id){if(!id)return;const db=await openDb();try{await new Promise((res,rej)=>{const tx=db.transaction(DBS,"readwrite");tx.objectStore(DBS).delete(id);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}finally{db.close()}}
-function draftKey(){return`${currentCourse().courseId||"course"}::${route.oppId||"opp"}::${stageIndex}`}
-async function rememberDraft(file){if(!file||!route.oppId)return;const kind=file.type?.startsWith("video/")?"video":"photo",id=`draft-v129-${draftKey()}`;await putDraftFile(id,file);const all=read(DRAFTS,{});all[draftKey()]={id,kind,route:{...route},stageIndex,videoMeta:kind==="video"?(lastVideoMeta||null):null,updatedAt:Date.now()};write(DRAFTS,all);write(ROUTE,{...route,stageIndex})}
-async function clearDraft(){const all=read(DRAFTS,{}),k=draftKey(),d=all[k];if(d?.id)await deleteDraftFile(d.id).catch(()=>{});delete all[k];write(DRAFTS,all);const remaining=Object.values(all).some(x=>x?.route?.oppId===route.oppId);if(!remaining)localStorage.removeItem(ROUTE)}
-function deliverToBase(file,isRestore=false){const input=$("#selfPhoto");if(!input||!file)return false;if(!isRestore)setTimeout(()=>rememberDraft(file),0);restoring=true;try{if(typeof input.onchange==="function"){input.onchange({target:{files:[file],value:""}});return true}const dt=new DataTransfer();dt.items.add(file);input.files=dt.files;input.dispatchEvent(new Event("change",{bubbles:true}));return true}catch(e){console.error("Evia media delivery",e);return false}finally{setTimeout(()=>{restoring=false},60)}}
-async function restoreDraft(){const d=read(DRAFTS,{})[draftKey()];if(!d)return false;try{const rec=await getDraftFile(d.id);if(!rec?.blob)return false;captureKind=d.kind||(/video/.test(rec.type)?"video":"photo");lastVideoMeta=d.videoMeta||null;const f=new File([rec.blob],rec.name||`evidence.${captureKind==="video"?"webm":"jpg"}`,{type:rec.type||rec.blob.type||"application/octet-stream",lastModified:Date.now()});return deliverToBase(f,true)}catch{return false}}
-function toast(message){const t=$(".app-toast");if(!t)return;t.textContent=message;t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2600)}
-function stopTracks(stream){try{stream?.getTracks?.().forEach(track=>track.stop())}catch{}}
-function clearPhotoObjectUrl(){if(photoObjectUrl){try{URL.revokeObjectURL(photoObjectUrl)}catch{}photoObjectUrl=""}}
-function cleanupInline(){stopTracks(photoStream);photoStream=null;clearPhotoObjectUrl();if(videoState){clearInterval(videoState.timer);try{if(videoState.recorder){videoState.recorder.onstop=null;if(videoState.recorder.state!=="inactive")videoState.recorder.stop()}}catch{}stopTracks(videoState.stream);videoState=null}const layer=captureLayer;captureLayer=null;if(layer?.isConnected){const panel=layer.parentElement;layer.remove();panel?.classList.remove("evia-capture-active-v129")}document.querySelector(".self-panel.evia-capture-active-v129")?.classList.remove("evia-capture-active-v129")}
-function mountInline(kind,title,instruction){cleanupInline();const panel=$(".self-panel");if(!panel)return null;const stage=activeStage(),count=stagesFor(contextFor()).length,layer=document.createElement("section");layer.className=`evia-inline-capture-v129 ${kind}`;layer.innerHTML=`<button type="button" class="self-back" data-capture-back>‹ Back</button>${count>1?`<div class="evia-stage-kicker-v129">Stage ${stageIndex+1} of ${count}</div>`:""}<h2 class="self-title">${esc(title)}</h2><p class="self-copy">${esc(instruction)}</p><div data-capture-body></div>`;panel.appendChild(layer);panel.classList.add("evia-capture-active-v129");captureLayer=layer;layer.querySelector("[data-capture-back]").onclick=cleanupInline;return layer}
-function nativePhotoFallback(input){cleanupInline();try{input.value=""}catch{}input.type="file";input.setAttribute("capture","environment");input.setAttribute("accept","image/*");input.click()}
-function nativeVideoFallback(input){cleanupInline();lastVideoMeta=null;try{input.value=""}catch{}input.type="file";input.setAttribute("capture","environment");input.setAttribute("accept","video/*");input.click()}
-function waitForVideoFrame(video,timeout=5000){return new Promise((resolve,reject)=>{if(video.readyState>=2&&video.videoWidth>0&&video.videoHeight>0){resolve();return}let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timer);video.removeEventListener("loadeddata",onReady);video.removeEventListener("playing",onReady);ok?resolve():reject(Error("camera frame unavailable"))},onReady=()=>{if(video.videoWidth>0&&video.videoHeight>0)finish(true)},timer=setTimeout(()=>finish(false),timeout);video.addEventListener("loadeddata",onReady);video.addEventListener("playing",onReady)})}
-function canvasBlob(canvas,type="image/jpeg",quality=.9){return new Promise(resolve=>canvas.toBlob(resolve,type,quality))}
-async function squareBlobFromSource(source,w,h){const side=Math.min(w,h),sx=Math.max(0,(w-side)/2),sy=Math.max(0,(h-side)/2),size=Math.min(1440,Math.max(720,side)),canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;const ctx=canvas.getContext("2d",{alpha:false});if(!ctx)throw Error("camera canvas unavailable");ctx.fillStyle="#fff";ctx.fillRect(0,0,size,size);ctx.drawImage(source,sx,sy,side,side,0,0,size,size);const blob=await canvasBlob(canvas);if(!blob||blob.size<1000)throw Error("photo capture empty");return blob}
-async function capturePhotoFrame(input,video,button){button.disabled=true;button.textContent="Capturing…";try{const track=photoStream?.getVideoTracks?.()[0];let blob=null;if(track&&typeof ImageCapture!=="undefined"){try{const bitmap=await new ImageCapture(track).grabFrame();blob=await squareBlobFromSource(bitmap,bitmap.width,bitmap.height);bitmap.close?.()}catch{}}if(!blob){await waitForVideoFrame(video);blob=await squareBlobFromSource(video,video.videoWidth,video.videoHeight)}const file=new File([blob],`evia-photo-${Date.now()}.jpg`,{type:"image/jpeg",lastModified:Date.now()});showPhotoReview(input,file)}catch(error){console.error("Evia photo capture",error);button.disabled=false;button.textContent="Take photo";toast("The photo did not capture. Try again or use your phone camera.")}}
-async function openPhoto(input){captureKind="photo";updateGlobalContext();const stage=activeStage();if(!stage)return;if(!navigator.mediaDevices?.getUserMedia){nativePhotoFallback(input);return}const layer=mountInline("photo",stage.title,stage.instruction);if(!layer)return nativePhotoFallback(input);const body=layer.querySelector("[data-capture-body]");body.innerHTML=`<div class="evia-camera-status">Opening camera…</div>`;let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1440},height:{ideal:1440},aspectRatio:{ideal:1}},audio:false})}catch{return nativePhotoFallback(input)}if(captureLayer!==layer){stopTracks(stream);return}photoStream=stream;body.innerHTML=`<div class="evia-camera-square-v129"><video autoplay muted playsinline aria-label="Photo camera preview"></video></div><p class="evia-camera-hint-v129">Keep the useful detail inside the square.</p><div class="self-actions evia-camera-actions-v129"><button type="button" class="self-button" data-photo-phone>Use phone camera</button><button type="button" class="self-button primary" data-photo-shutter disabled>Opening camera…</button></div>`;const video=body.querySelector("video"),shutter=body.querySelector("[data-photo-shutter]");video.srcObject=stream;const ready=async()=>{try{await video.play();await waitForVideoFrame(video);if(captureLayer===layer){shutter.disabled=false;shutter.textContent="Take photo"}}catch{shutter.disabled=false;shutter.textContent="Take photo"}};ready();body.querySelector("[data-photo-phone]").onclick=()=>nativePhotoFallback(input);shutter.onclick=()=>capturePhotoFrame(input,video,shutter)}
-function showPhotoReview(input,file){if(!captureLayer)return;stopTracks(photoStream);photoStream=null;clearPhotoObjectUrl();photoObjectUrl=URL.createObjectURL(file);const body=captureLayer.querySelector("[data-capture-body]");body.innerHTML=`<div class="evia-camera-square-v129"><img src="${photoObjectUrl}" alt="Captured evidence preview"></div><p class="evia-camera-hint-v129">Check the stage is clear before you use it.</p><div class="self-actions evia-camera-actions-v129"><button type="button" class="self-button" data-photo-retake>Retake</button><button type="button" class="self-button primary" data-photo-use>Use photo</button></div>`;body.querySelector("[data-photo-retake]").onclick=()=>openPhoto(input);body.querySelector("[data-photo-use]").onclick=()=>{const ok=deliverToBase(file);cleanupInline();if(!ok)nativePhotoFallback(input)}}
-function preferredMime(){if(typeof MediaRecorder==="undefined")return"";const types=['video/mp4;codecs="avc1.42E01E,mp4a.40.2"',"video/mp4","video/webm;codecs=vp8,opus","video/webm;codecs=vp9,opus","video/webm"];return types.find(type=>!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(type))||""}
-function extension(type){return String(type||"").includes("mp4")?"mp4":"webm"}
-function videoPromptMarkup(state){const i=state.promptIndex,p=state.ctx.prompts[i];return`<div class="self-card evia-video-prompt-v129"><small>What to talk about</small><strong data-video-prompt>${esc(p)}</strong><span data-video-prompt-count>Prompt ${i+1} of ${state.ctx.prompts.length}</span></div>`}
-function videoError(message,input){if(!captureLayer)return;const body=captureLayer.querySelector("[data-capture-body]");body.innerHTML=`<div class="self-card evia-camera-error-v129"><strong>Camera unavailable</strong><span>${esc(message)}</span><div class="self-actions"><button type="button" class="self-button" data-video-cancel>Back</button><button type="button" class="self-button primary" data-video-phone>Use phone camera</button></div></div>`;body.querySelector("[data-video-cancel]").onclick=cleanupInline;body.querySelector("[data-video-phone]").onclick=()=>nativeVideoFallback(input)}
-async function openVideo(input){captureKind="video";lastVideoMeta=null;updateGlobalContext();if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined")return nativeVideoFallback(input);const ctx={...(window.EviaGuidedEvidenceContext||{})},layer=mountInline("video",ctx.title||"Video evidence",ctx.instruction||"Record this stage and explain it as you go.");if(!layer)return nativeVideoFallback(input);const body=layer.querySelector("[data-capture-body]");body.innerHTML=`<div class="evia-camera-status">Opening camera and microphone…</div>`;let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280,max:1440},height:{ideal:1280,max:1440},aspectRatio:{ideal:1},frameRate:{ideal:30,max:30}},audio:{channelCount:{ideal:1},echoCancellation:true,noiseSuppression:true}})}catch{return videoError("Allow Evia to use the camera and microphone, or use the phone camera instead.",input)}if(captureLayer!==layer){stopTracks(stream);return}if(!stream.getVideoTracks().length||!stream.getAudioTracks().length){stopTracks(stream);return videoError("Evia needs both camera and microphone access for guided video evidence.",input)}const state={input,layer,stream,recorder:null,timer:null,ctx:{...ctx,prompts:Array.isArray(ctx.prompts)&&ctx.prompts.length?ctx.prompts:makePrompts(contextFor(),activeStage())},promptIndex:0,markers:[],startedAt:0,chunks:[]};videoState=state;body.innerHTML=`<div class="evia-video-square-v129"><video autoplay muted playsinline aria-label="Video camera preview"></video><div class="evia-video-time-v129" data-video-time>00:00</div></div>${videoPromptMarkup(state)}<div class="self-actions evia-camera-actions-v129" data-video-actions><button type="button" class="self-button" data-video-phone>Use phone camera</button><button type="button" class="self-button primary" data-video-start disabled>Opening camera…</button></div>`;const preview=body.querySelector("video"),start=body.querySelector("[data-video-start]");preview.srcObject=stream;try{await preview.play();await waitForVideoFrame(preview);start.disabled=false;start.textContent="Start recording"}catch{start.disabled=false;start.textContent="Start recording"}body.querySelector("[data-video-phone]").onclick=()=>nativeVideoFallback(input);start.onclick=()=>startVideoRecording(state)}
-function setVideoPrompt(state,index){state.promptIndex=index;const p=state.layer.querySelector("[data-video-prompt]"),n=state.layer.querySelector("[data-video-prompt-count]");if(p)p.textContent=state.ctx.prompts[index];if(n)n.textContent=`Prompt ${index+1} of ${state.ctx.prompts.length}`}
-function renderVideoActions(state){const box=state.layer.querySelector("[data-video-actions]");if(!box)return;const last=state.promptIndex>=state.ctx.prompts.length-1;box.innerHTML=`<button type="button" class="self-button" data-video-restart>Restart</button><button type="button" class="self-button primary" data-video-next>${last?"Finish recording":"Next prompt"}</button>`;box.querySelector("[data-video-restart]").onclick=()=>restartVideo(state);box.querySelector("[data-video-next]").onclick=()=>{if(videoState!==state)return;if(last)finishVideo(state);else{const next=state.promptIndex+1,seconds=Math.max(0,Math.floor((Date.now()-state.startedAt)/1000));state.markers.push({seconds,prompt:state.ctx.prompts[next]});setVideoPrompt(state,next);renderVideoActions(state)}}}
-function startVideoRecording(state){if(videoState!==state||!state.stream)return;const mime=preferredMime(),options={videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND};if(mime)options.mimeType=mime;let recorder;try{recorder=new MediaRecorder(state.stream,options)}catch{try{recorder=new MediaRecorder(state.stream)}catch{return videoError("This phone could not start the guided recorder. Use the phone camera instead.",state.input)}}state.recorder=recorder;state.chunks=[];state.startedAt=Date.now();state.promptIndex=0;state.markers=[{seconds:0,prompt:state.ctx.prompts[0]}];setVideoPrompt(state,0);const time=state.layer.querySelector("[data-video-time]"),tick=()=>{if(time&&videoState===state)time.textContent=clock(Math.floor((Date.now()-state.startedAt)/1000))};tick();state.timer=setInterval(tick,250);recorder.ondataavailable=e=>{if(e.data?.size)state.chunks.push(e.data)};recorder.onerror=()=>{clearInterval(state.timer);state.timer=null;videoError("The recording stopped unexpectedly. Please try again.",state.input)};recorder.onstop=()=>completeVideoRecording(state,mime);recorder.start(750);renderVideoActions(state)}
-function restartVideo(state){if(videoState!==state)return;clearInterval(state.timer);state.timer=null;try{if(state.recorder){state.recorder.onstop=null;if(state.recorder.state!=="inactive")state.recorder.stop()}}catch{}stopTracks(state.stream);const input=state.input;cleanupInline();setTimeout(()=>openVideo(input),90)}
-function finishVideo(state){if(videoState!==state||!state.recorder||state.recorder.state==="inactive")return;const next=state.layer.querySelector("[data-video-next]");if(next){next.disabled=true;next.textContent="Saving video…"}state.recorder.stop()}
-function completeVideoRecording(state,mime){if(videoState!==state)return;clearInterval(state.timer);state.timer=null;stopTracks(state.stream);const type=state.recorder?.mimeType||mime||state.chunks[0]?.type||"video/webm",blob=new Blob(state.chunks,{type});if(blob.size<1024){videoState=null;return videoError("The recording could not be saved. Please try again or use the phone camera.",state.input)}const finishedAt=Date.now();lastVideoMeta={startedAt:state.startedAt,finishedAt,durationSeconds:Math.max(0,Math.floor((finishedAt-state.startedAt)/1000)),markers:[...state.markers],title:state.ctx.title,stageIndex:state.ctx.stageIndex??stageIndex,stageCount:state.ctx.stageCount??1,opportunityId:state.ctx.opportunityId||route.oppId};const file=new File([blob],`evia-video-${Date.now()}.${extension(type)}`,{type,lastModified:Date.now()}),input=state.input;videoState=null;const ok=deliverToBase(file);cleanupInline();if(!ok)nativeVideoFallback(input)}
-function stageDecorate(){const panel=$(".self-panel");if(!panel||!route.oppId||panel.classList.contains("evia-capture-active-v129"))return;const ctx=contextFor(),stages=stagesFor(ctx),stage=stages[stageIndex];if(!stage)return;const captureCard=panel.querySelector(".self-card.photo");if(captureCard){const h=panel.querySelector(".self-title"),p=panel.querySelector(".self-copy");if(h)h.textContent=stage.title;if(p)p.textContent=stage.instruction;if(stages.length>1&&!panel.querySelector(".evia-stage-kicker-v129")){const k=document.createElement("div");k.className="evia-stage-kicker-v129";k.textContent=`Stage ${stageIndex+1} of ${stages.length}`;h?.parentNode?.insertBefore(k,h)}const label=captureCard.querySelector(":scope > span");if(label)label.textContent="One clear photo or video";const preview=captureCard.querySelector("img,video");if(preview)preview.classList.add("evia-square-evidence-preview-v129");if(!captureCard.dataset.eviaDraftChecked){captureCard.dataset.eviaDraftChecked="1";if(!preview&&!restoring)setTimeout(()=>restoreDraft(),30)}}const ta=panel.querySelector("#selfText");if(ta&&captureKind==="photo"){const h=panel.querySelector(".self-title"),p=panel.querySelector(".self-copy");if(h)h.textContent="Tell Evia about it";if(p)p.textContent=`${stage.title}: explain what the photo shows, what you did and why.`;ta.placeholder="What does this photo show? What did you do? Why did you do it this way?"}}
-function videoMetaText(meta,extra=""){if(!meta)return extra.trim()||"Guided video explanation recorded with audio.";const start=new Date(meta.startedAt||Date.now()).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"medium"}),lines=["Guided video explanation","Recording started: "+start,...(meta.markers||[]).map(m=>`${clock(Number(m.seconds)||0)} — ${m.prompt}`)];if(extra.trim())lines.push("","Additional learner note:",extra.trim());return lines.join("\n")}
-function showVideoOptional(nextButton){const panel=$(".self-panel"),ctx=contextFor(),stage=activeStage(),meta=lastVideoMeta||null;if(!panel||!nextButton)return;const originalNext=nextButton.onclick;panel.innerHTML=`<button class="self-back" type="button" data-v129-video-back>‹ Back</button><div class="evia-stage-kicker-v129">Video complete</div><h2 class="self-title">Add anything else?</h2><p class="self-copy">If your spoken explanation covered everything, skip the extra text.</p><div class="self-card evia-video-summary-v129"><strong>${esc(stage?.title||ctx?.opp?.title||"Video evidence")}</strong><small>${meta?.startedAt?`Started ${esc(new Date(meta.startedAt).toLocaleString("en-GB"))}`:"Video recorded with audio"}</small><div>${(meta?.markers||[]).map(m=>`<p><b>${clock(Number(m.seconds)||0)}</b><span>${esc(m.prompt)}</span></p>`).join("")}</div></div><textarea id="eviaVideoExtraV129" placeholder="Optional extra explanation..."></textarea><div class="self-actions"><button class="self-button" type="button" data-v129-skip>Skip text</button><button class="self-button primary" type="button" data-v129-save>Save with text</button></div>`;panel.querySelector("[data-v129-video-back]").onclick=()=>openVideo($("#selfPhoto"));const complete=extra=>saveThroughBase(originalNext,videoMetaText(meta,extra),"video",meta);panel.querySelector("[data-v129-skip]").onclick=()=>complete("");panel.querySelector("[data-v129-save]").onclick=()=>complete(panel.querySelector("#eviaVideoExtraV129")?.value||"")}
-function saveThroughBase(originalNext,text,kind,meta){if(typeof originalNext!=="function")return;captureKind=kind;lastVideoMeta=meta||lastVideoMeta;originalNext();requestAnimationFrame(()=>{const typeBtn=$("[data-mode='type']");if(!typeBtn||typeof typeBtn.onclick!=="function")return;typeBtn.onclick();requestAnimationFrame(()=>{const ta=$("#selfText"),save=$("[data-action='save']");if(!ta||!save||typeof save.onclick!=="function")return;ta.value=text;ta.dispatchEvent(new Event("input",{bubbles:true}));const before=new Set(read(STORE,[]).map(e=>e?.id));watchSaved(before,kind,meta);save.onclick()})})}
-function watchSaved(beforeIds,kind,meta){const oppId=route.oppId,stage=activeStage(),wantedStage=stageIndex;let tries=0;const t=setInterval(async()=>{tries++;const xs=read(STORE,[]),e=Array.isArray(xs)?xs.find(x=>x?.opportunityId===oppId&&!beforeIds.has(x?.id)&&x?.stageIndex===undefined):null;if(e){e.stageIndex=wantedStage;e.stageTitle=stage?.title||"";e.mediaKind=kind;if(stage?.title)e.title=stage.title;if(kind==="video"&&meta){e.videoStartedAt=meta.startedAt||null;e.videoPromptMarkers=meta.markers||[];e.videoDurationSeconds=meta.durationSeconds||null}write(STORE,xs);await clearDraft();clearInterval(t);const ctx=contextFor(oppId),ss=stagesFor(ctx),done=savedStageIndexes(oppId);let next=-1;for(let i=0;i<ss.length;i++)if(!done.has(i)){next=i;break}if(next>=0){stageIndex=next;write(ROUTE,{...route,stageIndex});setTimeout(()=>document.querySelector(`[data-opp="${CSS.escape(oppId)}"]`)?.click(),160)}else localStorage.removeItem(ROUTE);return}if(tries>40)clearInterval(t)},100)}
-function interceptClick(e){const target=e.target?.closest?.("button,[data-cat],[data-job],[data-opp]");if(!target)return;if(target.matches("[data-cat]")){route.catId=target.dataset.cat||route.catId;return}if(target.matches("[data-job]")){route.jobId=target.dataset.job||route.jobId;return}if(target.matches("[data-opp]")){route.oppId=target.dataset.opp||"";const ctx=contextFor();if(ctx){route.catId=ctx.cat.id;route.jobId=ctx.job.id}stageIndex=firstUnfinishedStage(ctx);captureKind="";lastVideoMeta=null;updateGlobalContext();setTimeout(stageDecorate,0);return}if(target.matches("[data-evia-native-photo]")){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openPhoto($("#selfPhoto"));return}if(target.matches("[data-evia-native-video]")){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openVideo($("#selfPhoto"));return}if(target.matches("[data-evia-native-gallery]")){captureKind="photo";updateGlobalContext();return}if(target.matches("[data-action='next']")){if(captureKind==="video"||document.querySelector(".self-card.photo video")){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();showVideoOptional(target);return}if(captureKind==="photo"||document.querySelector(".self-card.photo img")){const original=target.onclick;if(typeof original==="function"){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();captureKind="photo";original();requestAnimationFrame(()=>{const b=$("[data-mode='type']");if(b&&typeof b.onclick==="function")b.onclick();requestAnimationFrame(stageDecorate)});return}}}if(target.matches("[data-action='save']")){const before=new Set(read(STORE,[]).map(x=>x?.id));setTimeout(()=>watchSaved(before,captureKind||"photo",lastVideoMeta),0)}}
-function interceptChange(e){if(e.target?.id!=="selfPhoto")return;const file=e.target.files?.[0];if(!file)return;captureKind=file.type?.startsWith("video/")?"video":"photo";updateGlobalContext();if(!restoring)setTimeout(()=>rememberDraft(file),0);setTimeout(stageDecorate,0)}
-function observe(){const root=$("#root")||document.body;new MutationObserver(()=>requestAnimationFrame(stageDecorate)).observe(root,{childList:true,subtree:true})}
-async function resume(){if(resumeAttempted)return;resumeAttempted=true;const r=read(ROUTE,null);if(!r?.oppId)return;route={catId:r.catId||"",jobId:r.jobId||"",oppId:r.oppId||""};stageIndex=Number.isInteger(r.stageIndex)?r.stageIndex:0;updateGlobalContext();let tries=0;const timer=setInterval(()=>{tries++;const app=$(".evia-app"),avatar=$("[data-evia]");if(!app||!avatar){if(tries>30)clearInterval(timer);return}if(!app.classList.contains("is-open")){avatar.click();return}const catBtn=document.querySelector(`[data-cat="${CSS.escape(route.catId)}"]`);if(catBtn){catBtn.click();return}const jobBtn=document.querySelector(`[data-job="${CSS.escape(route.jobId)}"]`);if(jobBtn){jobBtn.click();return}const oppBtn=document.querySelector(`[data-opp="${CSS.escape(route.oppId)}"]`);if(oppBtn){oppBtn.click();clearInterval(timer);setTimeout(()=>restoreDraft(),100);return}if(tries>30)clearInterval(timer)},180)}
-async function start(){await loadIndex();document.addEventListener("click",interceptClick,true);document.addEventListener("change",interceptChange,true);observe();stageDecorate();setTimeout(resume,500);window.EviaVideoCapture=Object.freeze({open:openVideo,getLastMeta:()=>lastVideoMeta,videoBitsPerSecond:VIDEO_BITS_PER_SECOND,audioBitsPerSecond:AUDIO_BITS_PER_SECOND});window.EviaStagedEvidence=Object.freeze({version:VERSION,context:()=>window.EviaGuidedEvidenceContext||null,stagesForCurrent:()=>stagesFor(contextFor()),openPhoto,openVideo})}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+const course=()=>window.EviaCourseContext?.current?.()||{};
+
+function siteData(){
+  const a=window.EviaCoursePacks?.active?.();
+  const data=a?.pathway?.siteData||a?.pack?.siteData;
+  if(Array.isArray(data)&&data.length)return data;
+  if(Array.isArray(window.EviaST0171Map)&&window.EviaST0171Map.length)return window.EviaST0171Map;
+  return[];
+}
+function contextFor(oppId){
+  for(const cat of siteData())for(const job of cat.jobs||[])for(const opp of job.opps||[])if(String(opp.id)===String(oppId))return{cat,job,opp};
+  return null
+}
+function stagesFor(opp){return Array.isArray(opp?.stages)?opp.stages.filter(Boolean):[]}
+function savedStages(oppId){
+  const set=new Set(),xs=read(STORE,[]);
+  if(Array.isArray(xs))xs.forEach(e=>{if(e?.opportunityId===oppId&&Number.isInteger(e?.stageIndex))set.add(e.stageIndex)});
+  return set
+}
+function firstUnfinished(opp){
+  const stages=stagesFor(opp),done=savedStages(opp.id);
+  for(let i=0;i<stages.length;i++)if(!done.has(i))return i;
+  return -1
+}
+function makePrompts(stage,opp){
+  if(Array.isArray(stage?.prompts)&&stage.prompts.length)return stage.prompts;
+  const title=stage?.title||opp?.title||"this stage";
+  return[
+    `Show ${title.toLowerCase()} clearly and explain what we are looking at.`,
+    String(opp?.question||"").trim()||`Explain what you are doing at this stage, what method or materials you are using, and why.`,
+    `Explain what you checked at this stage and how you know it is right.`
+  ]
+}
+function cleanupMedia(){
+  clearInterval(timer);timer=null;
+  try{if(recorder&&recorder.state!=="inactive"){recorder.onstop=null;recorder.stop()}}catch{}
+  recorder=null;chunks=[];
+  try{stream?.getTracks?.().forEach(t=>t.stop())}catch{}stream=null;
+  if(objectUrl){try{URL.revokeObjectURL(objectUrl)}catch{}objectUrl=""}
+  videoState=null
+}
+function overlayRoot(){
+  const stage=$(".menu-stage");if(!stage)return null;
+  stage.classList.add("evia-stage-managed-v132");
+  if(!overlay){
+    overlay=document.createElement("section");
+    overlay.className="evia-stage-overlay-v132";
+    stage.appendChild(overlay)
+  }
+  return overlay
+}
+function closeOverlay(goBack=true){
+  cleanupMedia();
+  overlay?.remove();overlay=null;
+  $(".menu-stage")?.classList.remove("evia-stage-managed-v132");
+  active=null;
+  if(goBack){
+    internal=true;
+    try{$(".self-panel [data-action='back']")?.click()}finally{internal=false}
+  }
+}
+function persistRoute(){if(active)write(ROUTE,{courseId:course().courseId||"",catId:active.cat.id,jobId:active.job.id,oppId:active.opp.id,stageIndex:active.stageIndex})}
+function stage(){return stagesFor(active?.opp)[active?.stageIndex]||null}
+function header(titleText,copyText){
+  const s=stage(),stages=stagesFor(active?.opp);
+  return `<button class="self-back" type="button" data-stage-back>‹ Back</button>
+  <div class="evia-stage-kicker-v132">Stage ${active.stageIndex+1} of ${stages.length}</div>
+  <h2 class="self-title">${esc(titleText||s?.title||active.opp.title)}</h2>
+  ${copyText?`<p class="self-copy">${esc(copyText)}</p>`:""}`
+}
+function bindBack(){overlay?.querySelector("[data-stage-back]")?.addEventListener("click",()=>closeOverlay(true))}
+function renderChoice(){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  o.innerHTML=header(s.title,s.instruction)+`
+  <div class="self-card evia-stage-method-card-v132">
+    <span>One clear photo or video</span>
+    <div class="evia-stage-methods-v132">
+      <button type="button" class="self-button primary" data-stage-photo>Take photo</button>
+      <button type="button" class="self-button primary" data-stage-video>Record video</button>
+      <button type="button" class="evia-stage-gallery-v132" data-stage-gallery aria-label="Choose existing photo" title="Choose existing photo">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M5.5 17l4.2-4.1 3.2 3 2.3-2.2 3.3 3.3"/></svg>
+      </button>
+    </div>
+  </div>
+  <button type="button" class="self-button primary evia-stage-continue-v132" disabled>Continue</button>
+  <input type="file" accept="image/*" data-stage-file hidden>`;
+  bindBack();
+  o.querySelector("[data-stage-photo]").onclick=openPhoto;
+  o.querySelector("[data-stage-video]").onclick=openVideo;
+  const input=o.querySelector("[data-stage-file]");
+  o.querySelector("[data-stage-gallery]").onclick=()=>{input.removeAttribute("capture");input.click()};
+  input.onchange=()=>{const f=input.files?.[0];input.value="";if(f)renderPhotoReview(f)}
+}
+async function openPhoto(){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  o.innerHTML=header(s.title,s.instruction)+`
+    <div class="evia-stage-camera-v132"><div class="evia-stage-camera-status-v132">Opening camera…</div></div>
+    <p class="evia-stage-hint-v132">Keep the useful detail inside the square.</p>
+    <div class="self-actions"><button type="button" class="self-button" data-phone-photo>Use phone camera</button><button type="button" class="self-button primary" data-shutter disabled>Opening camera…</button></div>
+    <input type="file" accept="image/*" capture="environment" data-phone-file hidden>`;
+  bindBack();
+  const phone=o.querySelector("[data-phone-file]");
+  o.querySelector("[data-phone-photo]").onclick=()=>phone.click();
+  phone.onchange=()=>{const f=phone.files?.[0];phone.value="";if(f)renderPhotoReview(f)};
+  if(!navigator.mediaDevices?.getUserMedia){phone.click();return}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1440},height:{ideal:1440},aspectRatio:{ideal:1}},audio:false});
+    if(!overlay||!active){cleanupMedia();return}
+    const frame=o.querySelector(".evia-stage-camera-v132");
+    frame.innerHTML=`<video autoplay muted playsinline aria-label="Photo camera preview"></video>`;
+    const video=frame.querySelector("video"),shutter=o.querySelector("[data-shutter]");
+    video.srcObject=stream;
+    const ready=()=>{if(video.videoWidth&&video.videoHeight){shutter.disabled=false;shutter.textContent="Take photo"}};
+    video.addEventListener("loadeddata",ready,{once:true});video.addEventListener("playing",ready,{once:true});
+    try{await video.play();ready()}catch{}
+    shutter.onclick=async()=>{
+      if(!video.videoWidth||!video.videoHeight)return;
+      shutter.disabled=true;shutter.textContent="Capturing…";
+      try{
+        const w=video.videoWidth,h=video.videoHeight,side=Math.min(w,h),sx=(w-side)/2,sy=(h-side)/2,size=Math.min(1440,Math.max(720,side));
+        const canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;
+        const ctx=canvas.getContext("2d",{alpha:false});ctx.drawImage(video,sx,sy,side,side,0,0,size,size);
+        const blob=await new Promise(r=>canvas.toBlob(r,"image/jpeg",.9));
+        if(!blob)throw Error("capture");
+        const file=new File([blob],`evia-photo-${Date.now()}.jpg`,{type:"image/jpeg",lastModified:Date.now()});
+        renderPhotoReview(file)
+      }catch{shutter.disabled=false;shutter.textContent="Take photo"}
+    }
+  }catch{phone.click()}
+}
+function renderPhotoReview(file){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  objectUrl=URL.createObjectURL(file);
+  o.innerHTML=header(s.title,s.instruction)+`
+    <div class="evia-stage-camera-v132"><img src="${objectUrl}" alt="Captured evidence preview"></div>
+    <p class="evia-stage-hint-v132">Check this clearly shows the stage before you use it.</p>
+    <div class="self-actions"><button type="button" class="self-button" data-retake>Retake</button><button type="button" class="self-button primary" data-use-photo>Use photo</button></div>`;
+  bindBack();
+  o.querySelector("[data-retake]").onclick=openPhoto;
+  o.querySelector("[data-use-photo]").onclick=async()=>{await saveDraft(file,"photo",null);renderPhotoText(file)}
+}
+function renderPhotoText(file,text=""){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  o.innerHTML=header("Tell Evia about it",`${s.title}: explain what the photo shows, what you did and why.`)+`
+    <textarea data-photo-text maxlength="700" placeholder="What does this photo show? What did you do? Why did you do it this way?">${esc(text)}</textarea>
+    <div class="evia-stage-counter-v132"><span>${text.length}</span>/700</div>
+    <button type="button" class="self-button primary" data-save-photo disabled>Save evidence</button>`;
+  bindBack();const ta=o.querySelector("[data-photo-text]"),save=o.querySelector("[data-save-photo]"),count=o.querySelector(".evia-stage-counter-v132 span");
+  const update=()=>{count.textContent=ta.value.length;save.disabled=(ta.value.trim().match(/\S+/g)||[]).length<3;updateDraftText(ta.value)};
+  ta.oninput=update;update();save.onclick=()=>saveViaCore(file,`Stage: ${s.title}\n${ta.value.trim()}`,"photo",null)
+}
+function preferredMime(){
+  if(typeof MediaRecorder==="undefined")return"";
+  const xs=['video/mp4;codecs="avc1.42E01E,mp4a.40.2"',"video/mp4","video/webm;codecs=vp8,opus","video/webm"];
+  return xs.find(x=>!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(x))||""
+}
+function videoPromptCard(prompts,index){
+  return `<div class="self-card evia-stage-prompt-v132"><small>What to talk about</small><strong data-prompt-text>${esc(prompts[index])}</strong><span data-prompt-count>Prompt ${index+1} of ${prompts.length}</span></div>`
+}
+async function openVideo(){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  const prompts=makePrompts(s,active.opp);
+  o.innerHTML=header(s.title,"Keep one recording running and press Next prompt as you move through the stage.")+`
+    <div class="evia-stage-video-v132"><div class="evia-stage-camera-status-v132">Opening camera and microphone…</div><div class="evia-stage-video-time-v132" data-video-time>00:00</div></div>
+    ${videoPromptCard(prompts,0)}
+    <div class="self-actions" data-video-actions><button type="button" class="self-button" data-phone-video>Use phone camera</button><button type="button" class="self-button primary" data-start-video disabled>Opening camera…</button></div>
+    <input type="file" accept="video/*" capture="environment" data-phone-video-file hidden>`;
+  bindBack();const phone=o.querySelector("[data-phone-video-file]");
+  o.querySelector("[data-phone-video]").onclick=()=>phone.click();
+  phone.onchange=()=>{const f=phone.files?.[0];phone.value="";if(f){const meta={startedAt:Date.now(),durationSeconds:null,markers:[{seconds:0,prompt:prompts[0]}],phoneCamera:true};saveDraft(f,"video",meta).then(()=>renderVideoText(f,meta,""))}};
+  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){phone.click();return}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:1280},aspectRatio:{ideal:1},frameRate:{ideal:30,max:30}},audio:{channelCount:{ideal:1},echoCancellation:true,noiseSuppression:true}});
+    if(!stream.getVideoTracks().length||!stream.getAudioTracks().length)throw Error("tracks");
+    const box=o.querySelector(".evia-stage-video-v132");box.innerHTML=`<video autoplay muted playsinline aria-label="Video camera preview"></video><div class="evia-stage-video-time-v132" data-video-time>00:00</div>`;
+    const preview=box.querySelector("video"),start=o.querySelector("[data-start-video]");preview.srcObject=stream;
+    const ready=()=>{if(preview.videoWidth&&preview.videoHeight){start.disabled=false;start.textContent="Start recording"}};
+    preview.addEventListener("loadeddata",ready,{once:true});preview.addEventListener("playing",ready,{once:true});try{await preview.play();ready()}catch{}
+    start.onclick=()=>startRecording(prompts)
+  }catch{phone.click()}
+}
+function startRecording(prompts){
+  if(!stream)return;
+  const mime=preferredMime(),opts={videoBitsPerSecond:1370000,audioBitsPerSecond:96000};if(mime)opts.mimeType=mime;
+  try{recorder=new MediaRecorder(stream,opts)}catch{try{recorder=new MediaRecorder(stream)}catch{return}}
+  const startedAt=Date.now();chunks=[];let promptIndex=0;let markers=[{seconds:0,prompt:prompts[0]}];
+  videoState={startedAt,prompts,promptIndex,markers};
+  const time=overlay.querySelector("[data-video-time]"),actions=overlay.querySelector("[data-video-actions]");
+  const tick=()=>{if(time)time.textContent=clock(Math.floor((Date.now()-startedAt)/1000))};tick();timer=setInterval(tick,250);
+  recorder.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
+  recorder.onstop=()=>{
+    clearInterval(timer);timer=null;
+    try{stream?.getTracks?.().forEach(t=>t.stop())}catch{}stream=null;
+    const type=recorder?.mimeType||mime||chunks[0]?.type||"video/webm",blob=new Blob(chunks,{type}),finished=Date.now();
+    const meta={startedAt,finishedAt:finished,durationSeconds:Math.max(0,Math.floor((finished-startedAt)/1000)),markers:[...markers]};
+    const ext=type.includes("mp4")?"mp4":"webm",file=new File([blob],`evia-video-${Date.now()}.${ext}`,{type,lastModified:Date.now()});
+    recorder=null;chunks=[];videoState=null;
+    saveDraft(file,"video",meta).then(()=>renderVideoText(file,meta,""))
+  };
+  recorder.start(700);
+  const renderActions=()=>{
+    const last=promptIndex>=prompts.length-1;
+    actions.innerHTML=`<button type="button" class="self-button" data-restart-video>Restart</button><button type="button" class="self-button primary" data-next-video>${last?"Finish recording":"Next prompt"}</button>`;
+    actions.querySelector("[data-restart-video]").onclick=()=>openVideo();
+    actions.querySelector("[data-next-video]").onclick=()=>{
+      if(last){const b=actions.querySelector("[data-next-video]");b.disabled=true;b.textContent="Saving video…";recorder.stop();return}
+      promptIndex++;const seconds=Math.max(0,Math.floor((Date.now()-startedAt)/1000));markers.push({seconds,prompt:prompts[promptIndex]});
+      overlay.querySelector("[data-prompt-text]").textContent=prompts[promptIndex];
+      overlay.querySelector("[data-prompt-count]").textContent=`Prompt ${promptIndex+1} of ${prompts.length}`;
+      renderActions()
+    }
+  };
+  renderActions()
+}
+function videoAnswer(meta,extra){
+  const started=new Date(meta?.startedAt||Date.now()).toLocaleString("en-GB");
+  const lines=[`Stage: ${stage().title}`,"Guided video explanation",`Recording started: ${started}`,...(meta?.markers||[]).map(m=>`${clock(Number(m.seconds)||0)} — ${m.prompt}`)];
+  if(extra.trim())lines.push("","Additional learner note:",extra.trim());
+  return lines.join("\n")
+}
+function renderVideoText(file,meta,text=""){
+  cleanupMedia();const s=stage(),o=overlayRoot();if(!s||!o)return;
+  o.innerHTML=header("Video complete","If your spoken explanation covered everything, skip the extra text. Add more only if it helps the evidence.")+`
+    <div class="self-card evia-stage-summary-v132"><strong>${esc(s.title)}</strong><small>Prompt timestamps saved for the PDF</small><div>${(meta?.markers||[]).map(m=>`<p><b>${clock(Number(m.seconds)||0)}</b><span>${esc(m.prompt)}</span></p>`).join("")}</div></div>
+    <textarea data-video-extra maxlength="700" placeholder="Optional extra explanation...">${esc(text)}</textarea>
+    <div class="evia-stage-counter-v132"><span>${text.length}</span>/700</div>
+    <div class="self-actions evia-stage-three-v132"><button type="button" class="self-button" data-redo-video>Record again</button><button type="button" class="self-button" data-skip-video>Skip text</button><button type="button" class="self-button primary" data-save-video>Save with text</button></div>`;
+  bindBack();const ta=o.querySelector("[data-video-extra]"),count=o.querySelector(".evia-stage-counter-v132 span");
+  ta.oninput=()=>{count.textContent=ta.value.length;updateDraftText(ta.value)};
+  o.querySelector("[data-redo-video]").onclick=async()=>{await clearDraft();openVideo()};
+  o.querySelector("[data-skip-video]").onclick=()=>saveViaCore(file,videoAnswer(meta,""),"video",meta);
+  o.querySelector("[data-save-video]").onclick=()=>saveViaCore(file,videoAnswer(meta,ta.value),"video",meta)
+}
+function openDb(){return new Promise((res,rej)=>{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(DBS))q.result.createObjectStore(DBS,{keyPath:"id"})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+async function putDraft(id,file,kind,meta){const db=await openDb();try{await new Promise((res,rej)=>{const tx=db.transaction(DBS,"readwrite");tx.objectStore(DBS).put({id,blob:file,name:file.name||id,type:file.type||"",kind,meta,createdAt:Date.now()});tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}finally{db.close()}}
+async function getDraft(id){const db=await openDb();try{return await new Promise((res,rej)=>{const q=db.transaction(DBS,"readonly").objectStore(DBS).get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}finally{db.close()}}
+async function deleteDraft(id){if(!id)return;const db=await openDb();try{await new Promise((res,rej)=>{const tx=db.transaction(DBS,"readwrite");tx.objectStore(DBS).delete(id);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}finally{db.close()}}
+function draftKey(){return`${course().courseId||"course"}::${active.opp.id}::${active.stageIndex}`}
+async function saveDraft(file,kind,meta){
+  const key=draftKey(),id=`stage-draft-v132::${key}`;await putDraft(id,file,kind,meta);
+  const all=read(DRAFTS,{});all[key]={id,kind,meta,text:"",updatedAt:Date.now()};write(DRAFTS,all);persistRoute()
+}
+function updateDraftText(text){if(!active)return;const all=read(DRAFTS,{}),d=all[draftKey()];if(d){d.text=text;d.updatedAt=Date.now();write(DRAFTS,all)}}
+async function clearDraft(){if(!active)return;const all=read(DRAFTS,{}),key=draftKey(),d=all[key];if(d?.id)await deleteDraft(d.id).catch(()=>{});delete all[key];write(DRAFTS,all)}
+async function restoreDraft(){
+  if(!active)return false;const d=read(DRAFTS,{})[draftKey()];if(!d?.id)return false;
+  try{const rec=await getDraft(d.id);if(!rec?.blob)return false;const file=new File([rec.blob],rec.name||"evidence",{type:rec.type||rec.blob.type||"",lastModified:Date.now()});if(d.kind==="video")renderVideoText(file,d.meta||rec.meta||{},d.text||"");else renderPhotoText(file,d.text||"");return true}catch{return false}
+}
+function wait(ms=0){return new Promise(r=>setTimeout(r,ms))}
+async function saveViaCore(file,answer,kind,meta){
+  if(!active||!file)return;const o=overlayRoot(),s=stage();if(!o||!s)return;
+  const buttons=o.querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
+  let status=o.querySelector(".evia-stage-saving-v132");if(!status){status=document.createElement("div");status.className="evia-stage-saving-v132";status.textContent="Saving evidence…";o.appendChild(status)}
+  const before=new Set((read(STORE,[])||[]).map(e=>e?.id));
+  try{
+    const input=$("#selfPhoto");if(!input||typeof input.onchange!=="function")throw Error("evidence input unavailable");
+    input.onchange({target:{files:[file],value:""}});
+    await wait(0);
+    const next=$(".self-panel [data-action='next']");if(!next||next.disabled)throw Error("next unavailable");internal=true;next.click();internal=false;
+    await wait(0);
+    const type=$(".self-panel [data-mode='type']");if(!type)throw Error("type unavailable");internal=true;type.click();internal=false;
+    await wait(0);
+    const ta=$("#selfText"),save=$(".self-panel [data-action='save']");if(!ta||!save)throw Error("save unavailable");
+    ta.value=answer;ta.dispatchEvent(new Event("input",{bubbles:true}));
+    internal=true;save.click();internal=false;
+    let entry=null,xs=null;
+    for(let i=0;i<60;i++){await wait(80);xs=read(STORE,[]);entry=Array.isArray(xs)?xs.find(e=>!before.has(e?.id)&&e?.opportunityId===active.opp.id):null;if(entry)break}
+    if(!entry)throw Error("evidence was not saved");
+    entry.stageIndex=active.stageIndex;entry.stageTitle=s.title;entry.title=s.title;entry.mediaKind=kind;entry.stageInstruction=s.instruction;
+    if(kind==="video"&&meta){entry.videoStartedAt=meta.startedAt||null;entry.videoPromptMarkers=meta.markers||[];entry.videoDurationSeconds=meta.durationSeconds??null}
+    write(STORE,xs);await clearDraft();
+    const nextStage=firstUnfinished(active.opp);
+    if(nextStage>=0){
+      active.stageIndex=nextStage;persistRoute();
+      internal=true;$(".self-panel [data-opp='"+CSS.escape(active.opp.id)+"']")?.click();internal=false;
+      await wait(0);renderChoice()
+    }else{
+      localStorage.removeItem(ROUTE);renderComplete()
+    }
+  }catch(error){
+    console.error("Evia staged save",error);status.textContent="That evidence could not be saved. Try again.";buttons.forEach(b=>b.disabled=false)
+  }
+}
+function renderComplete(){
+  cleanupMedia();const o=overlayRoot(),stages=stagesFor(active.opp);if(!o)return;
+  o.innerHTML=`<button class="self-back" type="button" data-stage-back>‹ Back</button><div class="evia-stage-kicker-v132">Evidence complete</div><h2 class="self-title">${esc(active.opp.title)}</h2><p class="self-copy">All ${stages.length} evidence stages are saved with this task.</p><div class="self-card evia-stage-complete-v132"><strong>✓</strong><span>Task evidence saved</span></div><button type="button" class="self-button primary" data-stage-done>Back to job</button>`;
+  o.querySelector("[data-stage-back]").onclick=()=>closeOverlay(false);
+  o.querySelector("[data-stage-done]").onclick=()=>closeOverlay(false)
+}
+async function openForOpp(oppId){
+  const ctx=contextFor(oppId);if(!ctx||!stagesFor(ctx.opp).length)return;
+  cleanupMedia();
+  const route=read(ROUTE,null),first=firstUnfinished(ctx.opp);
+  active={...ctx,stageIndex:first>=0?first:Math.max(0,Math.min(Number(route?.stageIndex)||0,stagesFor(ctx.opp).length-1))};
+  persistRoute();overlayRoot();
+  if(first<0){renderComplete();return}
+  if(await restoreDraft())return;
+  renderChoice()
+}
+function onClick(event){
+  if(internal)return;
+  const b=event.target?.closest?.("[data-opp]");if(!b)return;
+  const ctx=contextFor(b.dataset.opp);if(!ctx||!stagesFor(ctx.opp).length)return;
+  queueMicrotask(()=>openForOpp(b.dataset.opp))
+}
+async function waitFor(selector,tries=40){
+  for(let i=0;i<tries;i++){const el=$(selector);if(el)return el;await wait(120)}
+  return null
+}
+async function resume(){
+  const r=read(ROUTE,null);if(!r?.oppId)return;
+  const ctx=contextFor(r.oppId);if(!ctx||!stagesFor(ctx.opp).length||firstUnfinished(ctx.opp)<0){localStorage.removeItem(ROUTE);return}
+  const app=await waitFor(".evia-app");if(!app)return;
+  if(!app.classList.contains("is-open")){(await waitFor("[data-evia]"))?.click();await wait(180)}
+  const c=await waitFor(`[data-cat="${CSS.escape(r.catId)}"]`);c?.click();await wait(120);
+  const j=await waitFor(`[data-job="${CSS.escape(r.jobId)}"]`);j?.click();await wait(120);
+  const o=await waitFor(`[data-opp="${CSS.escape(r.oppId)}"]`);o?.click()
+}
+function start(){
+  document.addEventListener("click",onClick,false);
+  setTimeout(resume,650);
+  window.EviaStagedEvidence=Object.freeze({version:VERSION,openForOpp,close:()=>closeOverlay(false)})
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start()
 })();
