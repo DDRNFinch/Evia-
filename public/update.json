@@ -1,18 +1,21 @@
 {
-  "version": "128",
-  "title": "Evia beta update routing fixed",
+  "version": "129",
+  "title": "Camera fixed and Evia UI restored",
   "details": [
-    "Evia_beta now loads its own local assets instead of accidentally loading the older Evia production assets",
-    "The staged Property Maintenance evidence flow from v127 can now actually load inside Evia_beta",
-    "Photo evidence keeps the required written explanation flow",
-    "Video evidence keeps the guided camera and microphone prompts with timestamps",
-    "The offline cache has been moved to v128 so installed copies replace the incorrectly routed files"
+    "Photo and video capture now stay inside Evia's normal learner screen instead of opening the detached yellow capture page",
+    "The learner still sees Evia, the current task and the bottom progress arches while collecting evidence",
+    "The square 1:1 photo shutter now waits for a real camera frame before it can be pressed and captures the image reliably",
+    "If the in-app camera cannot capture on a device, Evia offers the phone camera instead of silently doing nothing",
+    "Guided video keeps camera and microphone recording, prompt-by-prompt guidance and timestamp markers",
+    "Photo evidence still requires a written explanation and video extra text remains optional"
   ],
-  "summary": "Evia v128 fixes the beta asset routing so the staged evidence update is actually delivered to the installed app.",
+  "summary": "Evia v129 restores the normal Evia evidence UI and repairs the 1:1 photo shutter.",
   "changes": [
-    "Changed Evia_beta asset references to the Evia_beta deployment itself",
-    "Forced a new v128 offline cache",
-    "Preserved the Evia UI and staged evidence workflow",
-    "Forced fresh loading of the staged evidence and video recorder assets"
+    "Moved photo and video capture into the existing Evia shell",
+    "Rebuilt photo capture around a ready camera frame with a reliable square crop",
+    "Added camera fallback instead of a dead shutter",
+    "Kept staged evidence, required photo explanations and guided video timestamps",
+    "Removed the detached v127 capture layer and old recorder assets",
+    "Moved Evia's offline cache to v129"
   ]
 }
