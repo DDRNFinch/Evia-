@@ -1,18 +1,18 @@
 {
-  "version": "130",
-  "title": "Camera flow fixed",
+  "version": "131",
+  "title": "Evidence capture handoff fixed",
   "details": [
-    "Photo capture now uses the live camera frame immediately instead of waiting on the slow ImageCapture path seen on some Android phones",
-    "After Use photo, Evia goes straight to the required written explanation instead of showing another preview and Continue step",
-    "After guided video recording, Evia goes straight to the optional extra-text screen instead of briefly showing a black or broken media preview",
-    "The existing Evia evidence-page layout, 1:1 camera area, guided video prompts and timestamp recording are unchanged"
+    "Photo capture now takes the live 1:1 camera frame directly, removing the long Capturing delay shown on Android",
+    "After Use photo, Evia now immediately opens the required written explanation for that photo",
+    "After Finish recording, Evia now immediately opens the optional extra-text screen without showing the black media preview or another Continue step",
+    "The existing Evia learner UI, guided video prompts, audio recording and prompt timestamps are unchanged"
   ],
-  "summary": "Evia v130 removes the long photo-capture delay and the extra broken preview step after captured evidence.",
+  "summary": "Evia v131 fixes the exact photo and video handoff faults shown in the latest test recording.",
   "changes": [
-    "Bypassed the slow Android ImageCapture frame path",
-    "Added automatic handoff from accepted photo to its explanation",
-    "Added automatic handoff from finished video to optional text",
-    "Preserved the Evia UI and staged evidence workflow",
-    "Moved the offline shell to v130"
+    "Replaced the slow photo frame path with direct live-frame capture",
+    "Tied accepted photos directly to their explanation step",
+    "Tied finished guided videos directly to optional text",
+    "Removed the failed v130 auto-advance approach from the active app",
+    "Moved the offline shell to v131"
   ]
 }
