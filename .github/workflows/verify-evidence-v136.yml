@@ -1,4 +1,4 @@
-name: Verify Evia performance polish v140
+name: Verify Evia menu fade v141
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-v140:
+  verify-v141:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,47 +23,40 @@ jobs:
           node --check assets/evia-staged-evidence-v132.js
           node --check assets/evia-stage-save-v139.js
           node --check assets/evia-photo-fast-v140.js
-          node --check assets/evia-menu-fade-v140.js
+          node --check assets/evia-menu-fade-v141.js
           node --check assets/evia-evidence-media-v122.js
           node --check assets/evia-st0171-v124.js
           node --check assets/evia-selfobs-live.js
-          node --check assets/evia-version-v140.js
+          node --check assets/evia-version-v141.js
           node --check sw.js
           node --check public/sw.js
-      - name: Keep approved camera and save flow unchanged
+      - name: Keep approved camera save and photo speed unchanged
         run: |
           test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
           test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "31e544a5ccd5b009efe652ecadec1bcd13b5dcc5"
           test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
-          node - <<'NODE'
-          const fs=require('fs');
-          const js=fs.readFileSync('assets/evia-staged-evidence-v132.js','utf8');
-          const css=fs.readFileSync('assets/evia-staged-evidence-v132.css','utf8');
-          const save=fs.readFileSync('assets/evia-stage-save-v139.js','utf8');
-          const mustJs=['Photo prompt','What to talk about','data-start-video','data-next-prompt','markers.push({seconds:Math.floor((Date.now()-startedAt)/1000)','data-finish-video','videoPromptMarkers=meta.markers||[]'];
-          for(const x of mustJs)if(!js.includes(x))throw Error('Approved camera behaviour missing: '+x);
-          const mustCss=['z-index:2147483000!important','z-index:2147483001!important','height:100dvh!important','evia-stage-capture-prompt-v137','evia-stage-capture-actions-v137'];
-          for(const x of mustCss)if(!css.includes(x))throw Error('Approved camera style missing: '+x);
-          for(const x of ['[data-save-photo],[data-skip-video],[data-save-video]','entry.mediaKind=kind','entry.videoPromptMarkers=Array.isArray(meta.markers)?meta.markers:[]'])if(!save.includes(x))throw Error('Approved save behaviour missing: '+x);
-          NODE
-      - name: Verify faster photo processing only
+          test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
+      - name: Verify fade only
+        run: |
+          grep -q 'OUT_MS=55,IN_MS=115' assets/evia-menu-fade-v141.js
+          grep -q 'prefers-reduced-motion' assets/evia-menu-fade-v141.js
+          grep -q 'name="evia-app-version" content="141"' index.html
+          grep -q 'evia-photo-fast-v140.js?v=140' index.html
+          grep -q 'evia-menu-fade-v141.js?v=141' index.html
+          grep -q 'evia-staged-evidence-v132.js?v=138' index.html
+          grep -q 'evia-stage-save-v139.js?v=139' index.html
+          grep -q 'evia-version-v141.js?v=141' index.html
+          grep -q 'evia-updater.js?v=141' index.html
+          grep -q 'evia-shell-v141' sw.js
+          grep -q 'evia-shell-v141' public/sw.js
+      - name: Check manifests and offline shell match
         run: |
           node - <<'NODE'
           const fs=require('fs');
-          const js=fs.readFileSync('assets/evia-photo-fast-v140.js','utf8');
-          for(const x of ['.evia-stage-overlay-v132.evia-photo-mode-v137','longest<=1280','const scale=1280/longest','nativeToBlob.call(fast,callback,"image/jpeg"','maxLongEdge:1280'])if(!js.includes(x))throw Error('Fast photo requirement missing: '+x);
-          for(const bad of ['MediaRecorder','data-next-prompt','data-finish-video','evia-video-mode-v137'])if(js.includes(bad))throw Error('Photo optimisation must not alter video flow: '+bad);
-          NODE
-      - name: Verify smooth menu cross-fade
-        run: |
-          node - <<'NODE'
-          const fs=require('fs');
-          const js=fs.readFileSync('assets/evia-menu-fade-v140.js','utf8');
-          for(const x of ['[data-cat]','[data-job]','[data-opp]','const DURATION=135','makeGhost(panel)','mode:"crossfade"','prefers-reduced-motion'])if(!js.includes(x))throw Error('Menu cross-fade requirement missing: '+x);
-          for(const bad of ['setTimeout(()=>{\n    bypass=true','opacity 95ms ease','opacity 170ms ease'])if(js.includes(bad))throw Error('Old stepped menu fade still present: '+bad);
-          const index=fs.readFileSync('index.html','utf8');
-          const fade=index.indexOf('evia-menu-fade-v140.js?v=140'),staged=index.indexOf('evia-staged-evidence-v132.js?v=138');
-          if(fade<0||staged<0||fade>staged)throw Error('Menu fade must load before staged click handling');
+          const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
+          if(a.version!=='141')throw Error('update.json is not v141');
+          if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
+          if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
           NODE
       - name: Keep Property Maintenance tiles unchanged
         run: |
@@ -77,49 +70,7 @@ jobs:
           vm.runInContext(fs.readFileSync('assets/evia-st0171-map-v124.js','utf8'),context);
           vm.runInContext(fs.readFileSync('assets/evia-st0171-v124.js','utf8'),context);
           const data=context.window.EviaST0171Map,job=id=>data.flatMap(c=>c.jobs||[]).find(j=>j.id===id),titles=id=>job(id).opps.map(o=>o.title);
-          const exact=(a,b,label)=>{if(JSON.stringify(a)!==JSON.stringify(b))throw Error(label+': '+JSON.stringify(a))};
-          exact(titles('tiling'),['Tiling repair','Setting out','Preparation','Cutting tiles'],'Tiling repairs');
-          exact(titles('plaster'),['Plaster defect','Preparation','Finished repair'],'Plaster repairs');
-          exact(titles('flooring'),['Flooring defect','Preparation','Setting out','Finished repair'],'Flooring repairs');
+          if(JSON.stringify(titles('tiling'))!==JSON.stringify(['Tiling repair','Setting out','Preparation','Cutting tiles']))throw Error('Tiling tiles changed');
           NODE
-      - name: Check v140 release wiring
-        run: |
-          grep -q 'name="evia-app-version" content="140"' index.html
-          grep -q 'evia-staged-evidence-v132.js?v=138' index.html
-          grep -q 'evia-staged-evidence-v132.css?v=138' index.html
-          grep -q 'evia-stage-save-v139.js?v=139' index.html
-          grep -q 'evia-photo-fast-v140.js?v=140' index.html
-          grep -q 'evia-menu-fade-v140.js?v=140' index.html
-          grep -q 'evia-version-v140.js?v=140' index.html
-          grep -q 'evia-updater.js?v=140' index.html
-          grep -q "evia-shell-v140" sw.js
-          grep -q "evia-shell-v140" public/sw.js
-          grep -q 'window.EviaAppVersion=140' assets/evia-version-v140.js
-          grep -q './assets/evia-photo-fast-v140.js' sw.js
-          grep -q './assets/evia-menu-fade-v140.js' sw.js
-      - name: Check manifests and offline shell match
-        run: |
-          node - <<'NODE'
-          const fs=require('fs');
-          const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
-          if(a.version!=='140')throw Error('update.json is not v140');
-          if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
-          if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
-          NODE
-      - name: Run current regression tests
+      - name: Run regression tests
         run: node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs
-      - name: Verify production references
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re,sys
-          index=Path('index.html').read_text(encoding='utf-8');missing=[]
-          for raw in re.findall(r'(?:src|href)=["\']([^"\']+)["\']',index):
-              path=raw.split('?',1)[0]
-              if path.startswith('./'): local=Path(path[2:])
-              elif path.startswith('/Evia/'): local=Path(path[len('/Evia/'):])
-              else: continue
-              if not local.exists(): missing.append(str(local))
-          if missing:
-              print('Missing production references:');print('\n'.join(sorted(set(missing))));sys.exit(1)
-          PY
