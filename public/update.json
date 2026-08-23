@@ -1,20 +1,20 @@
 {
-  "version": "133",
-  "title": "Evidence flow rebuilt to stay stable",
+  "version": "134",
+  "title": "Property Maintenance evidence stages corrected",
   "details": [
-    "Property Maintenance practical repairs now open their real evidence stages one at a time",
-    "The staged screen is shown before Evia's underlying evidence page changes, removing the visible page jump between stages",
-    "Photo capture stays 1:1, captures directly from the live camera frame, then goes straight to the required explanation",
-    "Guided video remains one continuous recording with audio, Next prompt timestamps and optional extra text afterwards",
-    "Unfinished accepted media and the current stage stay on the device so the learner can return later",
-    "Evidence download preparation no longer inserts an expanding status card that moves the signature screen"
+    "Multi-part Property Maintenance evidence sentences are now split into one evidence stage per item instead of generic invented stages",
+    "Repair tiles now uses four stages: Tiling repair, Setting out, Preparation and Cutting",
+    "Plaster repairs now follows the three items in its instruction: Plaster defect, Preparation and Finished repair",
+    "Flooring, drainage, doors and windows, masonry, roofing, fencing and groundwork now follow the same sentence-to-stage rule",
+    "Every stage offers one photo or video, with the existing photo explanation and guided-video flow retained",
+    "Legacy capture controls are fully hidden while a staged task is open so duplicate camera buttons cannot appear"
   ],
-  "summary": "Evia v133 rebuilds the staged evidence handoff so Property Maintenance and the capture flow stay stable inside Evia.",
+  "summary": "Evia v134 makes Property Maintenance evidence stages match the task wording exactly.",
   "changes": [
-    "Moved staged interception ahead of the legacy evidence render",
-    "Kept the original Evia learner screen hidden underneath while staged evidence is active",
-    "Optimised square photo capture for faster Android shutter response",
-    "Preserved the original evidence store and course progress updates",
-    "Moved the offline shell to v133"
+    "Removed invented generic repair stages from ST0171",
+    "Split each relevant evidence sentence into its actual evidence items",
+    "Kept single-item Property Maintenance tasks as single evidence captures",
+    "Stopped legacy capture controls leaking through the staged evidence screen",
+    "Moved the offline shell to v134"
   ]
 }
