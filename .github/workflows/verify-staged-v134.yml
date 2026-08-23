@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-staged:
@@ -105,3 +105,15 @@ jobs:
               print('\n'.join(orphaned))
               sys.exit(1)
           PY
+      - name: Record successful verification
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          mkdir -p .github/verification
+          printf 'Evia v134 Property Maintenance verification passed.\n' > .github/verification/v134-full-passed.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/verification/v134-full-passed.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Verify Evia v134 Property Maintenance'
+          git push
