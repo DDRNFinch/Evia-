@@ -1,5 +1,5 @@
-// Evia v139 keeps the v138 camera UI and fixes staged media saving.
-const CACHE_NAME = 'evia-shell-v139';
+// Evia v140 keeps the approved v138 camera/save flow and only speeds photo processing plus menu fades.
+const CACHE_NAME = 'evia-shell-v140';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,9 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v139.js',
+  './assets/evia-version-v140.js',
+  './assets/evia-photo-fast-v140.js',
+  './assets/evia-menu-fade-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
