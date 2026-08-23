@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   verify-staged:
@@ -63,14 +63,3 @@ jobs:
           for(const id of required)if(!s.includes(id+':['))throw Error('Missing ST0171 stages for '+id);
           for(const word of ['Plaster defect','Preparation','Materials & repair','Finished repair'])if(!s.includes(word))throw Error('Missing plaster stage '+word);
           NODE
-      - name: Record successful verification
-        shell: bash
-        run: |
-          mkdir -p .github/verification
-          printf 'Evia v133 staged evidence verification passed.\n' > .github/verification/v133-passed.txt
-          if git diff --quiet -- .github/verification/v133-passed.txt && git ls-files --error-unmatch .github/verification/v133-passed.txt >/dev/null 2>&1; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/verification/v133-passed.txt
-          git commit -m 'Verify Evia v133 staged evidence'
-          git push
