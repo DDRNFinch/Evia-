@@ -65,7 +65,29 @@ function bindShell(){
   document.querySelectorAll("[data-arch]").forEach(b=>b.onclick=()=>{if(b.dataset.arch==="KSB"){open=true;view="coverage";syncShell()}else toast(`${b.dataset.arch} is still available from the arch bar.`)});
   $("#selfPhoto").onchange=e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;photo=f;if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(f);render()}
 }
-function render(){const p=$(".self-panel");if(!p||!open)return;if(view==="home")home(p);else if(view==="jobs")jobs(p);else if(view==="opps")opps(p);else if(view==="capture")capture(p);else if(view==="question")question(p);else if(view==="answer")answer(p);else if(view==="evidence")evidence(p);else if(view==="coverage")coverage(p);else if(view==="day")day(p);bindPanel()}
+const MENU_FADE_VIEWS=new Set(["home","jobs","opps","evidence","coverage","day"]);
+let menuFadeToken=0,menuFadeOut=null,menuFadeIn=null;
+function stopMenuFade(p){try{menuFadeOut?.cancel?.()}catch{}try{menuFadeIn?.cancel?.()}catch{}menuFadeOut=menuFadeIn=null;if(p)p.style.removeProperty("opacity")}
+function paint(p){if(view==="home")home(p);else if(view==="jobs")jobs(p);else if(view==="opps")opps(p);else if(view==="capture")capture(p);else if(view==="question")question(p);else if(view==="answer")answer(p);else if(view==="evidence")evidence(p);else if(view==="coverage")coverage(p);else if(view==="day")day(p);p.dataset.eviaView=view;bindPanel()}
+function render(transition=false){
+  const p=$(".self-panel");if(!p||!open)return;
+  const previous=p.dataset.eviaView||"",next=view;
+  const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  const safe=transition&&MENU_FADE_VIEWS.has(previous)&&MENU_FADE_VIEWS.has(next)&&previous!==next&&!document.querySelector(".evia-stage-overlay-v132")&&!reduced&&typeof p.animate==="function";
+  if(!safe){menuFadeToken++;stopMenuFade(p);paint(p);return}
+  const token=++menuFadeToken;stopMenuFade(p);
+  menuFadeOut=p.animate([{opacity:1},{opacity:.04}],{duration:85,easing:"cubic-bezier(.4,0,1,1)",fill:"forwards"});
+  menuFadeOut.onfinish=()=>{
+    if(token!==menuFadeToken)return;
+    p.style.opacity=".04";try{menuFadeOut?.cancel?.()}catch{}menuFadeOut=null;
+    paint(p);
+    requestAnimationFrame(()=>{
+      if(token!==menuFadeToken)return;
+      menuFadeIn=p.animate([{opacity:.04},{opacity:1}],{duration:145,easing:"cubic-bezier(.16,1,.3,1)",fill:"forwards"});
+      menuFadeIn.onfinish=()=>{if(token!==menuFadeToken)return;p.style.opacity="1";try{menuFadeIn?.cancel?.()}catch{}menuFadeIn=null;p.style.removeProperty("opacity")};
+    });
+  }
+}
 function home(p){
   const heading=COURSE.pathway==="architectural-joiner"?"What are you doing in the workshop today?":"What are you doing on site today?";
   let h=title(heading,recapText())+'<div class="self-list">';
@@ -92,17 +114,17 @@ function evidence(p){
 function coverage(p){const x=counts();p.innerHTML=back()+title("Course coverage","Nothing is marked complete. A yellow tick shows that you have evidence against that KSB. Tap any code to get a suitable photo or question.")+`<div class="self-ksbs">${CODES.map(c=>`<button data-code="${c}"><b>${c}</b><span>${dots(x[c]||0)}</span></button>`).join("")}</div>`}
 function day(p){p.innerHTML=title("That’s enough for today",recap?.count?`You collected ${recap.count} evidence moment${recap.count===1?"":"s"}. I’ll remind you next time.`:"Nothing was forced or marked missing.")+`<button class="self-button primary" data-action="home">Back home</button>`}
 function bindPanel(){
-  document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=findCat(b.dataset.cat);view="jobs";render()});
-  document.querySelectorAll("[data-job]").forEach(b=>b.onclick=()=>{job=findJob(cat,b.dataset.job);view="opps";render()});
+  document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=findCat(b.dataset.cat);view="jobs";render(true)});
+  document.querySelectorAll("[data-job]").forEach(b=>b.onclick=()=>{job=findJob(cat,b.dataset.job);view="opps";render(true)});
   document.querySelectorAll("[data-opp]").forEach(b=>b.onclick=()=>{opp=findOpp(job,b.dataset.opp);clearCapture();view=opp.media==="talk"?"question":"capture";render()});
   document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;view="answer";render()});
-  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
+  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render(true)});
   document.querySelectorAll("[data-code]").forEach(b=>b.onclick=()=>routeCode(b.dataset.code));
   document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>action(b.dataset.action));
   const pick=$("[data-pick]");if(pick)pick.onclick=()=>$("#selfPhoto").click();
   const ta=$("#selfText");if(ta)ta.oninput=e=>typed=e.target.value
 }
-function goBack(){if(view==="jobs")view="home";else if(view==="opps")view="jobs";else if(view==="capture"||view==="question")view="opps";else if(view==="answer")view="question";else view="home";render()}
+function goBack(){if(view==="jobs")view="home";else if(view==="opps")view="jobs";else if(view==="capture"||view==="question")view="opps";else if(view==="answer")view="question";else view="home";render(true)}
 async function action(a){
   if(a==="back")goBack();
   else if(a==="next"){view="question";render()}
@@ -111,9 +133,9 @@ async function action(a){
   else if(a==="stop")stopRec();
   else if(a==="submit"){cat=job=opp=null;view="home";open=false;syncShell();toast("Job submitted. Start another job whenever you’re ready.")}
   else if(a==="finish")finish();
-  else if(a==="home"){view="home";render()}
-  else if(a==="evidence"){view="evidence";render()}
-  else if(a==="coverage"){view="coverage";render()}
+  else if(a==="home"){view="home";render(true)}
+  else if(a==="evidence"){view="evidence";render(true)}
+  else if(a==="coverage"){view="coverage";render(true)}
   else if(a==="download")download()
 }
 function openDb(){return new Promise((res,rej)=>{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(DBS))q.result.createObjectStore(DBS,{keyPath:"id"})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
@@ -129,7 +151,7 @@ async function save(){
     entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);clearCapture();view="opps";open=true;syncShell();toast("Evidence saved. About one minute, done.")
   }catch(e){console.error(e);toast("That evidence could not be saved.")}
 }
-function finish(){const n=today().length;recap={at:Date.now(),count:n,touched:touched()};write(RECAP,recap);dayIds=[];write(DAY,dayIds);cat=job=opp=null;view="day";render()}
+function finish(){const n=today().length;recap={at:Date.now(),count:n,touched:touched()};write(RECAP,recap);dayIds=[];write(DAY,dayIds);cat=job=opp=null;view="day";render(true)}
 function routeCode(code){for(const c of DATA)for(const j of c.jobs)for(const o of j.opps)if(o.codes.includes(code)){cat=c;job=j;opp=o;clearCapture();view=o.media==="talk"?"question":"capture";render();toast(`Here’s a way to gather more ${code} evidence.`);return}}
 async function startRec(){
   if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){toast("Microphone isn’t available here. Use Type instead.");return}
