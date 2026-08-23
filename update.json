@@ -1,19 +1,19 @@
 {
-  "version": "139",
-  "title": "Evidence saving fixed",
+  "version": "140",
+  "title": "Faster photos and smoother menus",
   "details": [
-    "Keeps the full-screen photo and video camera exactly as it is in v138",
-    "Photos now save after the required written explanation",
-    "Videos now save after Skip text or Save with text",
-    "Guided video prompts, Next prompt and timestamp markers are unchanged",
-    "No course tiles, camera styling, navigation or evidence layout was changed"
+    "Keeps the current camera, video prompts, timestamps, evidence saving and course structure unchanged",
+    "Photo capture now uses a faster evidence-sized image encode so the captured image appears much sooner",
+    "Course menu pages now fade smoothly out and back in when moving between them",
+    "The full-screen photo and video camera layout is unchanged",
+    "No Property Maintenance tiles, evidence records, navigation structure or other Evia behaviour was changed"
   ],
-  "summary": "Evia v139 fixes photo and video saving without changing the approved capture screen.",
+  "summary": "Evia v140 speeds photo capture and adds smooth menu fades without changing the approved workflow.",
   "changes": [
-    "Fixed staged photo save handoff",
-    "Fixed staged video save handoff",
-    "Preserved media in the existing evidence store",
-    "Kept v138 camera UI unchanged",
-    "Moved the offline shell to v139"
+    "Faster photo processing",
+    "Smooth menu fade transitions",
+    "Kept guided video unchanged",
+    "Kept evidence saving unchanged",
+    "Moved the offline shell to v140"
   ]
 }
