@@ -1,0 +1,119 @@
+name: Diagnose Evia v133
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax
+        id: syntax
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          { node --check assets/evia-staged-evidence-v132.js && node --check assets/evia-st0171-v124.js && node --check assets/evia-export-status.js && node --check assets/evia-version-v133.js && node --check assets/evia-selfobs-live.js && node --check sw.js && node --check public/sw.js; } > /tmp/syntax.log 2>&1
+      - name: Wiring
+        id: wiring
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          { grep -q 'name="evia-app-version" content="133"' index.html && grep -q 'evia-version-v133.js?v=133' index.html && grep -q 'evia-staged-evidence-v132.js?v=133' index.html && grep -q 'evia-staged-evidence-v132.css?v=133' index.html && grep -q "evia-shell-v133" sw.js && grep -q "evia-shell-v133" public/sw.js && grep -q 'const VERSION=133' assets/evia-st0171-v124.js && grep -q 'const VERSION=133' assets/evia-staged-evidence-v132.js && grep -q 'document.addEventListener("click",onClick,true)' assets/evia-staged-evidence-v132.js && ! grep -q 'evia-evidence-flow-v131' index.html && ! grep -q 'evia-staged-evidence-v129' index.html && test ! -e assets/evia-evidence-flow-v131.js && test ! -e assets/evia-staged-evidence-v129.js && test ! -e assets/evia-staged-evidence-v129.css && test ! -e assets/evia-version-v132.js; } > /tmp/wiring.log 2>&1
+      - name: Manifests
+        id: manifests
+        continue-on-error: true
+        shell: bash
+        run: |
+          node - <<'NODE' > /tmp/manifests.log 2>&1
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('update.json','utf8'));
+          const b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
+          if(a.version!=='133')throw Error('update.json is not v133');
+          if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
+          const sw=fs.readFileSync('sw.js','utf8').trimEnd();
+          const psw=fs.readFileSync('public/sw.js','utf8').trimEnd();
+          if(sw!==psw)throw Error('service workers differ');
+          NODE
+      - name: ST0171 stages
+        id: stages
+        continue-on-error: true
+        shell: bash
+        run: |
+          node - <<'NODE' > /tmp/stages.log 2>&1
+          const fs=require('fs');
+          const s=fs.readFileSync('assets/evia-st0171-v124.js','utf8');
+          const required=['plumbing_fault','drainage_fault','energy_fault','door_window','plaster_repair','paint_repair','tile_repair','floor_repair','masonry_repair','roof_repair','fence_repair','ground_repair'];
+          for(const id of required)if(!s.includes(id+':['))throw Error('Missing ST0171 stages for '+id);
+          for(const word of ['Plaster defect','Preparation','Materials & repair','Finished repair'])if(!s.includes(word))throw Error('Missing plaster stage '+word);
+          NODE
+      - name: Regression tests
+        id: tests
+        continue-on-error: true
+        shell: bash
+        run: node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs > /tmp/tests.log 2>&1
+      - name: Asset scan
+        id: assets
+        continue-on-error: true
+        shell: bash
+        run: |
+          python - <<'PY' > /tmp/assets.log 2>&1
+          from pathlib import Path
+          import re, sys
+          index = Path('index.html').read_text(encoding='utf-8')
+          missing=[]
+          for raw in re.findall(r'(?:src|href)=["\']([^"\']+)["\']', index):
+              path=raw.split('?',1)[0]
+              if path.startswith('/Evia/'): local=Path(path[len('/Evia/'):])
+              elif path.startswith('./'): local=Path(path[2:])
+              else: continue
+              if not local.exists(): missing.append(str(local))
+          if missing:
+              print('Missing production references:'); print('\n'.join(sorted(set(missing)))); sys.exit(1)
+          surfaces=[Path('index.html'),Path('sw.js')]
+          for root in (Path('assets'),Path('app'),Path('course-delivery')):
+              if root.exists(): surfaces.extend(p for p in root.rglob('*') if p.is_file() and p.suffix.lower() in {'.js','.css','.ts','.tsx','.html'})
+          text={}
+          for p in surfaces:
+              try:text[p]=p.read_text(encoding='utf-8',errors='ignore')
+              except Exception:text[p]=''
+          orphaned=[]
+          for asset in sorted(Path('assets').iterdir()):
+              if not asset.is_file() or asset.suffix.lower() not in {'.js','.css'}: continue
+              if not any(p!=asset and asset.name in body for p,body in text.items()): orphaned.append(str(asset))
+          if orphaned:
+              print('Unreferenced production assets:'); print('\n'.join(orphaned)); sys.exit(1)
+          PY
+      - name: Write diagnostics
+        shell: bash
+        run: |
+          mkdir -p .github/verification
+          {
+            echo 'syntax=${{ steps.syntax.outcome }}'
+            echo 'wiring=${{ steps.wiring.outcome }}'
+            echo 'manifests=${{ steps.manifests.outcome }}'
+            echo 'stages=${{ steps.stages.outcome }}'
+            echo 'tests=${{ steps.tests.outcome }}'
+            echo 'assets=${{ steps.assets.outcome }}'
+            echo '--- syntax ---'; cat /tmp/syntax.log 2>/dev/null || true
+            echo '--- wiring ---'; cat /tmp/wiring.log 2>/dev/null || true
+            echo '--- manifests ---'; cat /tmp/manifests.log 2>/dev/null || true
+            echo '--- stages ---'; cat /tmp/stages.log 2>/dev/null || true
+            echo '--- tests ---'; tail -80 /tmp/tests.log 2>/dev/null || true
+            echo '--- assets ---'; cat /tmp/assets.log 2>/dev/null || true
+          } > .github/verification/v133-diagnostics.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/verification/v133-diagnostics.txt
+          git commit -m 'Record Evia v133 diagnostics'
+          git push
