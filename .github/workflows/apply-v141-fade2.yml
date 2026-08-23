@@ -1,0 +1,66 @@
+name: Apply Evia v141 fade release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wire v141 fade only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('index.html'); s=p.read_text()
+          s=s.replace('name="evia-app-version" content="140"','name="evia-app-version" content="141"')
+          s=s.replace('./assets/evia-version-v140.js?v=140','./assets/evia-version-v141.js?v=141')
+          s=s.replace('./assets/evia-menu-fade-v140.js?v=140','./assets/evia-menu-fade-v141.js?v=141')
+          s=s.replace('./assets/evia-updater.js?v=140','./assets/evia-updater.js?v=141')
+          p.write_text(s)
+          for name in ['sw.js','public/sw.js']:
+              p=Path(name); s=p.read_text()
+              s=s.replace('// Evia v140 keeps the approved v138 camera/save flow and only speeds photo processing plus menu fades.','// Evia v141 keeps all approved behaviour and only smooths menu fades.')
+              s=s.replace('evia-shell-v140','evia-shell-v141')
+              s=s.replace('./assets/evia-version-v140.js','./assets/evia-version-v141.js')
+              s=s.replace('./assets/evia-menu-fade-v140.js','./assets/evia-menu-fade-v141.js')
+              p.write_text(s)
+          manifest={'version':'141','title':'Smoother menu fades','details':['Only the menu fade timing has changed','Menus now fade out and back in more quickly and smoothly','The photo speed improvement remains unchanged','Camera, video prompts, timestamps, saving, course tiles and all layouts are unchanged'],'summary':'Evia v141 only smooths the menu fade transition.','changes':['Smoother menu fade out','Smoother menu fade in','Everything else unchanged','Moved the offline shell to v141']}
+          text=json.dumps(manifest,indent=2)+'\n';Path('update.json').write_text(text);Path('public/update.json').write_text(text)
+          PY
+      - name: Verify untouched approved files
+        run: |
+          node --check assets/evia-menu-fade-v141.js
+          node --check assets/evia-version-v141.js
+          node --check assets/evia-photo-fast-v140.js
+          node --check assets/evia-staged-evidence-v132.js
+          node --check assets/evia-stage-save-v139.js
+          test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
+          test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "31e544a5ccd5b009efe652ecadec1bcd13b5dcc5"
+          test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
+          test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
+          grep -q 'OUT_MS=55,IN_MS=115' assets/evia-menu-fade-v141.js
+          grep -q 'name="evia-app-version" content="141"' index.html
+          grep -q 'evia-photo-fast-v140.js?v=140' index.html
+          grep -q 'evia-menu-fade-v141.js?v=141' index.html
+          grep -q 'evia-stage-save-v139.js?v=139' index.html
+          grep -q 'evia-staged-evidence-v132.js?v=138' index.html
+          grep -q 'evia-shell-v141' sw.js
+          node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs
+      - name: Commit release wiring
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js public/sw.js update.json public/update.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Release Evia v141 smoother fades'
+          git push
