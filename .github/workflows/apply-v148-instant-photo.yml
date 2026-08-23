@@ -1,0 +1,109 @@
+name: Apply Evia v148 instant photo preview
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Protect everything except photo encode speed
+        run: |
+          test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "43cf69cff21b42ae2c3e1439546d3045e7b3e085"
+          test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
+          test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
+          test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
+          test "$(git hash-object assets/evia-selfobs-live.js)" = "6254b425d4ce0771ea79f8d3ca16b62824d66542"
+
+      - name: Reduce photo encode work only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          p=Path('assets/evia-staged-evidence-v132.js')
+          s=p.read_text()
+          if 'const VERSION=147;' not in s: raise SystemExit('unexpected staged version')
+          if 'max=1600' not in s: raise SystemExit('photo encode anchor missing')
+          s=s.replace('const VERSION=147;','const VERSION=148;',1)
+          s=s.replace('max=1600','max=1024',1)
+          p.write_text(s)
+
+          Path('assets/evia-version-v148.js').write_text('(()=>{"use strict";const meta=document.querySelector(\'meta[name="evia-app-version"]\');if(meta)meta.setAttribute("content","148");window.EviaAppVersion=148})();\n')
+
+          p=Path('index.html'); s=p.read_text()
+          s=s.replace('name="evia-app-version" content="147"','name="evia-app-version" content="148"')
+          s=s.replace('./assets/evia-version-v147.js?v=147','./assets/evia-version-v148.js?v=148')
+          s=s.replace('./assets/evia-staged-evidence-v132.js?v=147','./assets/evia-staged-evidence-v132.js?v=148')
+          s=s.replace('./assets/evia-updater.js?v=147','./assets/evia-updater.js?v=148')
+          p.write_text(s)
+
+          for name in ['sw.js','public/sw.js']:
+              p=Path(name); s=p.read_text()
+              s=s.replace('// Evia v147 makes photo/video draft persistence non-blocking; UI and capture behaviour are unchanged.','// Evia v148 reduces only the photo capture encode workload for instant preview.')
+              s=s.replace('evia-shell-v147','evia-shell-v148')
+              s=s.replace('./assets/evia-version-v147.js','./assets/evia-version-v148.js')
+              p.write_text(s)
+
+          manifest={
+            'version':'148',
+            'title':'Instant photo capture',
+            'details':[
+              'Photo capture now encodes a 1024px evidence image directly instead of creating the larger intermediate frame first',
+              'This removes the remaining shutter-to-preview pause',
+              'Camera UI, prompts, video, saving, menus, evidence flow, tiles and course data are unchanged'
+            ],
+            'summary':'Evia v148 removes the remaining photo capture delay.',
+            'changes':['Instant shutter-to-preview','Nothing else changed']
+          }
+          text=json.dumps(manifest,indent=2)+'\n'
+          Path('update.json').write_text(text);Path('public/update.json').write_text(text)
+          PY
+
+      - name: Verify photo-speed-only release
+        run: |
+          node --check assets/evia-staged-evidence-v132.js
+          node --check assets/evia-version-v148.js
+          node --check sw.js
+          node --check public/sw.js
+          test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
+          test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
+          test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
+          test "$(git hash-object assets/evia-selfobs-live.js)" = "6254b425d4ce0771ea79f8d3ca16b62824d66542"
+          grep -q 'const VERSION=148' assets/evia-staged-evidence-v132.js
+          grep -q 'max=1024' assets/evia-staged-evidence-v132.js
+          ! grep -q 'max=1600' assets/evia-staged-evidence-v132.js
+          grep -q 'name="evia-app-version" content="148"' index.html
+          grep -q 'evia-staged-evidence-v132.js?v=148' index.html
+          grep -q 'evia-stage-save-v139.js?v=139' index.html
+          grep -q 'evia-photo-fast-v140.js?v=140' index.html
+          grep -q 'evia-selfobs-live.js?v=145' index.html
+          grep -q 'evia-shell-v148' sw.js
+          grep -q 'evia-shell-v148' public/sw.js
+          cmp -s sw.js public/sw.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
+          if(a.version!=='148'||JSON.stringify(a)!==JSON.stringify(b))throw Error('manifest mismatch');
+          NODE
+          node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs
+
+      - name: Commit v148 and remove installer
+        run: |
+          rm .github/workflows/apply-v148-instant-photo.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release Evia v148 instant photo preview'
+          git push
