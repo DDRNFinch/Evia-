@@ -1,17 +1,17 @@
 {
-  "version": "143",
-  "title": "Menu transition repaired",
+  "version": "145",
+  "title": "Camera restored and menu fade rebuilt",
   "details": [
-    "Removed the cloned menu layer that caused duplicate and misplaced Evia UI",
-    "Menu clicks now run normally with no delay or interception",
-    "Only the newly rendered menu receives a brief subtle opacity fade",
-    "Camera, photo speed, video prompts, timestamps, saving, course tiles and layouts are unchanged"
+    "The photo and video camera routes are restored and no longer touched by menu animation code",
+    "Photo and video prompts, Next prompt, timestamps and saving remain unchanged",
+    "Menu fade out and fade in now run inside Evia's core renderer only for ordinary menu-to-menu changes",
+    "No cloned screens, click interception or evidence-overlay observers are used"
   ],
-  "summary": "Evia v143 repairs the menu transition without changing the working app.",
+  "summary": "Evia v145 restores the working cameras and moves menu fading into the correct core render path.",
   "changes": [
-    "Removed cloned menu transition",
-    "Restored normal immediate navigation",
-    "Added subtle single-panel fade",
-    "Everything else unchanged"
+    "Restore camera routes",
+    "Core fade out and fade in",
+    "Keep evidence capture isolated",
+    "Remove unsafe transition interception"
   ]
 }
