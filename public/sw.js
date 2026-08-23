@@ -1,5 +1,5 @@
-// Evia v138 keeps fullscreen capture controls above all Evia chrome.
-const CACHE_NAME = 'evia-shell-v138';
+// Evia v139 keeps the v138 camera UI and fixes staged media saving.
+const CACHE_NAME = 'evia-shell-v139';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,9 +21,10 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v138.js',
+  './assets/evia-version-v139.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
+  './assets/evia-stage-save-v139.js',
   './assets/evia-export-status.js',
   './assets/evia-folder-completion-v116.js',
   './assets/evia-mini-milos-v86.js',
