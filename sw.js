@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v126.js',
+  './assets/evia-version-v127.js',
   './assets/evia-video-recorder.js',
   './assets/evia-staged-evidence-v127.js',
   './assets/evia-staged-evidence-v127.css',
