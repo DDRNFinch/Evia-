@@ -1,0 +1,91 @@
+name: Verify Evia evidence screen v136
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check production JavaScript
+        run: |
+          node --check assets/evia-evidence-media-v122.js
+          node --check assets/evia-st0171-v124.js
+          node --check assets/evia-staged-evidence-v132.js
+          node --check assets/evia-selfobs-live.js
+          node --check assets/evia-version-v136.js
+          node --check sw.js
+          node --check public/sw.js
+      - name: Verify clean evidence-card renderer
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('assets/evia-evidence-media-v122.js','utf8');
+          const must=['const VERSION=136','Guided video','Photo + written explanation','row.dataset.eviaEvidenceId','row.dataset.thumbReady="1"','Object.keys(groups).sort().flatMap'];
+          for(const x of must)if(!s.includes(x))throw Error('Missing evidence renderer behaviour: '+x);
+          for(const old of ['function scoreRow(','function matchEntries(','new MutationObserver(schedule)'])if(s.includes(old))throw Error('Old unstable evidence renderer still active: '+old);
+          NODE
+      - name: Boot ST0171 and keep job-page tiles correct
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm'),store=new Map();
+          const localStorage={getItem:k=>store.has(k)?store.get(k):null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
+          const document={readyState:'loading',addEventListener(){},querySelector(){return null},body:{}};
+          const context={window:{},document,localStorage,navigator:{},MutationObserver:function(){this.observe=()=>{}},Response:global.Response,console,setTimeout,clearTimeout};
+          context.window.window=context.window;context.window.document=document;context.window.localStorage=localStorage;context.window.fetch=async()=>new Response('{}',{status:200});context.fetch=context.window.fetch;
+          vm.createContext(context);
+          vm.runInContext(fs.readFileSync('assets/evia-st0171-map-v124.js','utf8'),context);
+          vm.runInContext(fs.readFileSync('assets/evia-st0171-v124.js','utf8'),context);
+          const data=context.window.EviaST0171Map,job=id=>data.flatMap(c=>c.jobs||[]).find(j=>j.id===id),titles=id=>job(id).opps.map(o=>o.title);
+          const exact=(a,b,label)=>{if(JSON.stringify(a)!==JSON.stringify(b))throw Error(label+': '+JSON.stringify(a))};
+          exact(titles('tiling'),['Tiling repair','Setting out','Preparation','Cutting tiles'],'Tiling repairs');
+          exact(titles('plaster'),['Plaster defect','Preparation','Finished repair'],'Plaster repairs');
+          exact(titles('flooring'),['Flooring defect','Preparation','Setting out','Finished repair'],'Flooring repairs');
+          NODE
+      - name: Check v136 release wiring
+        run: |
+          grep -q 'name="evia-app-version" content="136"' index.html
+          grep -q 'evia-version-v136.js?v=136' index.html
+          grep -q 'evia-evidence-media-v122.js?v=136' index.html
+          grep -q 'evia-updater.js?v=136' index.html
+          grep -q "evia-shell-v136" sw.js
+          grep -q "evia-shell-v136" public/sw.js
+          grep -q 'evia-version-v136.js' sw.js
+          test ! -e assets/evia-version-v135.js
+      - name: Check manifests and offline shell match
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));
+          if(a.version!=='136')throw Error('update.json is not v136');
+          if(JSON.stringify(a)!==JSON.stringify(b))throw Error('public update manifest differs');
+          if(fs.readFileSync('sw.js','utf8').trimEnd()!==fs.readFileSync('public/sw.js','utf8').trimEnd())throw Error('service workers differ');
+          NODE
+      - name: Run current regression tests
+        run: node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs
+      - name: Verify production references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,sys
+          index=Path('index.html').read_text(encoding='utf-8');missing=[]
+          for raw in re.findall(r'(?:src|href)=["\']([^"\']+)["\']',index):
+              path=raw.split('?',1)[0]
+              if path.startswith('./'): local=Path(path[2:])
+              elif path.startswith('/Evia/'): local=Path(path[len('/Evia/'):])
+              else: continue
+              if not local.exists(): missing.append(str(local))
+          if missing:
+              print('Missing production references:');print('\n'.join(sorted(set(missing))));sys.exit(1)
+          PY
