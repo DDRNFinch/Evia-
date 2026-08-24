@@ -1,5 +1,5 @@
-// Evia v182 removes legacy course titles and keeps the assessment arch labelled Test.
-const CACHE_NAME = 'evia-shell-v182';
+// Evia v183 removes the remaining legacy course-header flash.
+const CACHE_NAME = 'evia-shell-v183';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
