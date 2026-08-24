@@ -6,6 +6,8 @@ const index=fs.readFileSync("index.html","utf8");
 const live=fs.readFileSync("assets/evia-selfobs-live.js","utf8");
 const motionCss=fs.readFileSync("assets/evia-selfobs-live.css","utf8");
 const updater=fs.readFileSync("assets/evia-updater.js","utf8");
+const archLabels=fs.readFileSync("assets/evia-arch-labels-v154.js","utf8");
+const assistantNetwork=fs.readFileSync("assets/evia-assistant-network.js","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 const publicSw=fs.readFileSync("sw.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
@@ -19,17 +21,25 @@ test("Evia keeps one mounted interaction shell",()=>{
   assert.doesNotMatch(live,/panel\.innerHTML=""/);
 });
 
-test("Evia motion is compositor-only and follows the Milos path",()=>{
-  assert.match(motionCss,/transition:translate \.92s var\(--ease-out\),scale \.92s var\(--ease-out\)/);
+test("Evia core motion is fast and compositor-only",()=>{
+  assert.match(motionCss,/transition:translate \.38s var\(--ease-out\),scale \.38s var\(--ease-out\)/);
   assert.match(motionCss,/translate:-50% calc\(40\.5svh - 50%\)/);
   assert.match(motionCss,/scale:\.605/);
   assert.match(motionCss,/transform:translate3d\(0,14px,0\)/);
-  assert.match(motionCss,/opacity \.36s ease \.14s/);
-  assert.match(motionCss,/transform \.58s var\(--ease-out\) \.14s/);
+  assert.match(motionCss,/opacity \.18s ease \.03s/);
+  assert.match(motionCss,/transform \.28s var\(--ease-out\) \.03s/);
   assert.match(motionCss,/will-change:translate,scale/);
-  assert.doesNotMatch(motionCss,/transition:top \.92s/);
+  assert.doesNotMatch(motionCss,/transition:top/);
   assert.doesNotMatch(motionCss,/will-change:top,width,height/);
+  assert.doesNotMatch(motionCss,/translate \.92s|transform \.58s|opacity \.36s/);
   assert.match(motionCss,/\.selfobs \.self-panel>\*\{animation:none!important\}/);
+});
+
+test("patch layers stop watching once the shell is ready",()=>{
+  assert.match(archLabels,/observer\?\.disconnect/);
+  assert.match(assistantNetwork,/observer\?\.disconnect/);
+  assert.doesNotMatch(archLabels,/attributes:true|characterData:true/);
+  assert.doesNotMatch(assistantNetwork,/ensureExchange\(\)\.catch/);
 });
 
 test("Evia has one service-worker owner and one current cache",()=>{
