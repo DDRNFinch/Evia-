@@ -1,5 +1,5 @@
-// Evia v155 fixes NVQ signature stroke accuracy only.
-const CACHE_NAME = 'evia-shell-v155';
+// Evia v156 adds new OTJ/GLH learning records to evidence-pack downloads only.
+const CACHE_NAME = 'evia-shell-v156';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -28,6 +28,7 @@ const CRITICAL = [
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
   './assets/evia-post-evidence-otj-v149.js',
+  './assets/evia-otj-export.js',
   './assets/evia-nvq-audio-v150.js',
   './assets/evia-nvq-pack-export-v150.js',
   './assets/evia-signature-smooth-v155.js',
