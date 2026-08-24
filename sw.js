@@ -1,5 +1,5 @@
-// Evia v157 refreshes the offline shell so recent performance and audio-save fixes reach installed clients.
-const CACHE_NAME = 'evia-shell-v157';
+// Evia v158 adds smooth evidence transitions and video prompt timestamps to evidence PDFs.
+const CACHE_NAME = 'evia-shell-v158';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,8 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v157.js',
+  './assets/evia-version-v158.js',
+  './assets/evia-smooth-flow-v158.js',
   './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',

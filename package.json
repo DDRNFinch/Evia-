@@ -6,7 +6,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs",
+    "test": "node --test tests/next-visit-v95.test.mjs tests/update-notice-v96.test.mjs tests/milos-review-sync-v97.test.mjs tests/performance-current.test.mjs tests/evidence-flow-v158.test.mjs",
     "test:course-assets": "node --test tests/course-assets.test.mjs"
   },
   "devDependencies": {

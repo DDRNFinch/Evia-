@@ -1,16 +1,16 @@
 {
-  "version": "157",
-  "title": "Performance and audio save fixes",
+  "version": "158",
+  "title": "Smooth evidence flow",
   "details": [
-    "Faster Evia movement and menu response",
-    "Reduced background DOM watching that was making the app feel clunky",
-    "Fixed NVQ guided audio evidence saving directly into the existing evidence media store",
-    "Refreshes the offline cache so these fixes actually reach installed and returning devices"
+    "Video prompt timestamps are listed clearly in evidence PDFs",
+    "After evidence saves, Evia shows Evidence saved for two seconds and then asks What did you learn?",
+    "The learner's reflection is saved with the evidence before Evia returns to the home screen",
+    "Page, option and back navigation use smooth fade-out and fade-in transitions"
   ],
-  "summary": "Evia v157 delivers the performance and audio-save fixes and refreshes the offline shell.",
+  "summary": "Evia v158 adds the smooth post-evidence flow, cleaner navigation fades and video timestamp lists in evidence PDFs.",
   "changes": [
-    "Performance improvements",
-    "NVQ audio evidence save fix",
-    "Offline cache refresh"
+    "Video timestamp lists",
+    "Post-evidence reflection flow",
+    "Smooth navigation fades"
   ]
 }
