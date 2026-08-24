@@ -1,5 +1,5 @@
-// Evia v168 refreshes the cached shell with evidence thumbnail and video audio stability fixes.
-const CACHE_NAME = 'evia-shell-v168';
+// Evia v170 refreshes the cached shell with combined evidence PDF and smoother guided video.
+const CACHE_NAME = 'evia-shell-v170';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
