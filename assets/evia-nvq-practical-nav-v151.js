@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=153;
+const VERSION=174;
 const STORE="evia-selfobs-live-v3";
 let overlay=null,current=null,raf=0,returnFromEvidence=false,restoring=false;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -10,7 +10,9 @@ function isTrowel(){const c=course();return c.courseType==="nvq"&&c.courseId==="
 function appOpen(){return !!document.querySelector(".evia-app.selfobs.is-open")}
 function siteData(){const a=window.EviaCoursePacks?.active?.(),d=a?.pathway?.siteData||a?.pack?.siteData;return Array.isArray(d)?d:[]}
 function findOpp(id){for(const cat of siteData())for(const job of cat.jobs||[])for(const opp of job.opps||[])if(String(opp.id)===String(id))return{cat,job,opp};return null}
+function findJob(id){for(const cat of siteData())for(const job of cat.jobs||[])if(String(job.id)===String(id))return{cat,job};return null}
 function children(parent,job){return (job?.opps||[]).filter(o=>o?.nvqPracticalChild&&String(o.parentActivityId)===String(parent.id))}
+function practicalParents(job){return (job?.opps||[]).filter(o=>o?.nvqPracticalParent)}
 function savedCount(id){const xs=read(STORE,[]);return Array.isArray(xs)?xs.filter(e=>String(e?.opportunityId)===String(id)).length:0}
 function style(){if(document.getElementById("evia-nvq-practical-nav-v151-style"))return;const s=document.createElement("style");s.id="evia-nvq-practical-nav-v151-style";s.textContent=`
 .selfobs .evia-nvq-practical-list-v151{position:absolute;inset:0;z-index:10;background:linear-gradient(180deg,#fff 0%,#fff 62%,#fff9dd 100%);overflow:auto;padding:0 0 7rem}
@@ -74,6 +76,14 @@ function patchPanel(){
 function schedule(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;patchPanel();maybeRestore()})}
 function intercept(event){
   if(!isTrowel())return;
+  const jobButton=event.target?.closest?.("[data-job]");
+  if(jobButton){
+    const found=findJob(jobButton.dataset.job),parents=practicalParents(found?.job);
+    if(found&&String(found.cat?.id)==="E"&&parents.length===1){
+      event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();
+      openParent({cat:found.cat,job:found.job,opp:parents[0]});return
+    }
+  }
   const button=event.target?.closest?.("[data-opp]");if(!button)return;
   const ctx=findOpp(button.dataset.opp);if(!ctx?.opp?.nvqPracticalParent)return;
   event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();openParent(ctx)
