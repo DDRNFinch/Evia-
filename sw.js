@@ -1,5 +1,5 @@
-// Evia v180 removes the remaining duplicate completion tick.
-const CACHE_NAME = 'evia-shell-v180';
+// Evia v181 refreshes the cached shell with simple evidence media tiles and permanent home labels.
+const CACHE_NAME = 'evia-shell-v181';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
