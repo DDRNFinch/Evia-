@@ -1,1 +1,1 @@
-(()=>{"use strict";const meta=document.querySelector('meta[name="evia-app-version"]');if(meta)meta.setAttribute("content","176");window.EviaAppVersion=176})();
+(()=>{"use strict";const meta=document.querySelector('meta[name="evia-app-version"]');if(meta)meta.setAttribute("content","177");window.EviaAppVersion=177})();
