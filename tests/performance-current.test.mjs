@@ -6,7 +6,6 @@ const index=fs.readFileSync("index.html","utf8");
 const live=fs.readFileSync("assets/evia-selfobs-live.js","utf8");
 const motionCss=fs.readFileSync("assets/evia-selfobs-live.css","utf8");
 const updater=fs.readFileSync("assets/evia-updater.js","utf8");
-const archLabels=fs.readFileSync("assets/evia-arch-labels-v154.js","utf8");
 const assistantNetwork=fs.readFileSync("assets/evia-assistant-network.js","utf8");
 const nvqAudio=fs.readFileSync("assets/evia-nvq-audio-v150.js","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
@@ -36,10 +35,14 @@ test("Evia core motion is fast and compositor-only",()=>{
   assert.match(motionCss,/\.selfobs \.self-panel>\*\{animation:none!important\}/);
 });
 
-test("patch layers stop watching once the shell is ready",()=>{
-  assert.match(archLabels,/observer\?\.disconnect/);
+test("home identity and arch labels are core-owned instead of watcher patches",()=>{
+  assert.match(live,/function courseIdentity\(\)/);
+  assert.match(live,/ARCH_LABELS=\{TOC:"Time",KSB:"Course",AC:"Course",OTJ:"Learn",GLH:"Learn",EPA:"Test",ARP:"Test",Units:"Test"\}/);
+  assert.equal(fs.existsSync("assets/evia-arch-labels-v154.js"),false);
+  assert.equal(fs.existsSync("assets/evia-course-title-v161.js"),false);
+  assert.doesNotMatch(index,/evia-arch-labels-v\d+\.js/);
+  assert.doesNotMatch(index,/evia-course-title-v\d+\.js/);
   assert.match(assistantNetwork,/observer\?\.disconnect/);
-  assert.doesNotMatch(archLabels,/attributes:true|characterData:true/);
   assert.doesNotMatch(assistantNetwork,/ensureExchange\(\)\.catch/);
 });
 

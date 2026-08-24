@@ -1,16 +1,17 @@
 {
-  "version": "161",
-  "title": "Evidence flow fixes",
+  "version": "162",
+  "title": "Core homepage source correction",
   "details": [
-    "Prevents the full course title from flashing before the concise two-line title is ready",
-    "Fixes the post-evidence learning screen so only the intended UI is rendered",
-    "Completed evidence opportunities can be opened again to add more evidence instead of leaving a blank screen",
-    "Keeps the v160 thumbnail and measured download progress improvements"
+    "Removes the self-triggering v161 course-title watcher that could prevent Evia from loading",
+    "Renders the concise course identity directly from the core homepage",
+    "Renders Time, Course, Learn and Test directly from the core arch renderer",
+    "Removes the separate course-title and arch-label patch layers"
   ],
-  "summary": "Evia v161 fixes the three issues visible in the latest phone recording without changing qualification data or saved evidence.",
+  "summary": "Evia v162 restores loading and moves the final homepage identity and arch labels into the core renderer instead of repainting older UI after launch.",
   "changes": [
-    "No course-title flash",
-    "Clean learning screen",
-    "Evidence list remains usable"
+    "Load-loop removed",
+    "Course identity owned by core",
+    "Arch labels owned by core",
+    "Obsolete homepage patch layers removed"
   ]
 }
