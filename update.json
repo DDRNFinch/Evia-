@@ -1,17 +1,17 @@
 {
-  "version": "171",
-  "title": "Evidence export and video quality",
+  "version": "172",
+  "title": "Evidence capture and export stability",
   "details": [
-    "Loads the single Evidence Pack.pdf exporter instead of old category-named PDFs",
-    "Prevents corrupted em-dash characters in downloaded PDF names",
-    "Records guided video at 1080p up to 30fps using the hardware MP4 path when supported",
-    "Raises guided video bitrate for smoother, clearer evidence while retaining continuous recording for clean audio"
+    "Speeds up evidence photo capture and encoding",
+    "Prevents overlapping Evidence tab thumbnail loads that could freeze the screen",
+    "Loads video previews only when they are on screen",
+    "Removes the yellow tint from evidence PDFs"
   ],
-  "summary": "Evia v171 fixes the cached evidence exporter and improves guided video smoothness and quality.",
+  "summary": "Evia v172 improves photo capture responsiveness, stabilizes the Evidence tab, and uses a neutral PDF layout.",
   "changes": [
-    "Single Evidence Pack.pdf",
-    "Correct PDF filenames",
-    "1080p guided video",
-    "Higher video bitrate"
+    "Faster photo capture",
+    "Stable Evidence tab",
+    "Lazy video previews",
+    "Neutral PDF styling"
   ]
 }
