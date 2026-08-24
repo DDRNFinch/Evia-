@@ -1,5 +1,5 @@
-// Evia v179 removes the legacy duplicate completion-tick layers.
-const CACHE_NAME = 'evia-shell-v179';
+// Evia v180 removes the remaining duplicate completion tick.
+const CACHE_NAME = 'evia-shell-v180';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -51,6 +51,7 @@ const CRITICAL = [
   './assets/evia-targets.js',
   './assets/evia-targets-milos-only-v123.js',
   './assets/evia-count-display-v94.js',
+  './assets/evia-single-completion-tick-v173.js',
   './assets/evia-milos-observed-arch-v94.js',
   './assets/evia-rpl-evidence.js',
   './assets/evia-rpl-evidence.css',
