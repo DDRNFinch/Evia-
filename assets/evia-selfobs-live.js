@@ -5,6 +5,7 @@ const COURSE=window.EviaCourseContext?.current?.()||{
 };
 const CODES=[...COURSE.codes];
 const STORE="evia-selfobs-live-v3",DAY="evia-selfobs-day-v3",RECAP="evia-selfobs-recap-v3",DB="evia-self-observation-media",DBS="files";
+const ARCH_LABELS={TOC:"Time",KSB:"Course",AC:"Course",OTJ:"Learn",GLH:"Learn",EPA:"Test",ARP:"Test",Units:"Test"};
 let DATA=[],entries=read(STORE,[]),dayIds=read(DAY,[]),recap=read(RECAP,null),open=false,view="home",cat=null,job=null,opp=null,photo=null,photoUrl="",mode="type",typed="",audio=null,recorder=null,stream=null,chunks=[],tab="new",toastTimer=null;
 const $=q=>document.querySelector(q),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function read(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}}
@@ -30,10 +31,22 @@ function otj(){
   }catch{return 0}
 }
 function epa(){if(COURSE.epaConfigured===false)return 0;try{const x=JSON.parse(localStorage.getItem("evia-epa-checks")||"{}");const n=Array.isArray(x)?x.length:Object.values(x||{}).filter(Boolean).length;return Math.round(Math.min(1,n/6)*100)}catch{return 0}}
-function arch(label,pct){return `<button class="progress-arch" data-arch="${label}"><svg viewBox="0 0 100 68"><path class="arch-track" d="M14 54 A36 36 0 0 1 86 54"/><path class="arch-value" d="M14 54 A36 36 0 0 1 86 54" pathLength="100" stroke-dasharray="${pct} 100"/></svg><span class="arch-label">${label}</span><span class="arch-number">${pct}%</span></button>`}
+function courseIdentity(){
+  const id=String(COURSE.courseId||""),path=String(COURSE.pathway||"");
+  if(id==="6570-05")return{name:"Trowel",code:"6570-05"};
+  if(id==="st0095-v1-2")return{name:"Bricklayer",code:"ST0095"};
+  if(id==="st0264-v1-4")return{name:path==="architectural-joiner"?"Joinery":"Carpentry",code:"ST0264"};
+  try{
+    const t=JSON.parse(localStorage.getItem("evia-course-timeline")||"null")||{},raw=String(t.courseTitle||COURSE.courseTitle||COURSE.title||id||"Course");
+    const code=(raw.match(/\b(ST\d+|\d{4}-\d{2})\b/i)?.[1]||id.match(/\b(ST\d+|\d{4}-\d{2})\b/i)?.[1]||"").toUpperCase();
+    const name=raw.replace(/\s*[—-]\s*(ST\d+|\d{4}-\d{2}).*$/i,"").replace(/\s+Level\s*\d+.*$/i,"").trim()||"Course";
+    return{name,code}
+  }catch{return{name:"Course",code:""}}
+}
+function arch(label,pct){const shown=ARCH_LABELS[label]||label;return `<button class="progress-arch" data-arch="${label}" aria-label="${shown} ${pct}%"><svg viewBox="0 0 100 68"><path class="arch-track" d="M14 54 A36 36 0 0 1 86 54"/><path class="arch-value" d="M14 54 A36 36 0 0 1 86 54" pathLength="100" stroke-dasharray="${pct} 100"/></svg><span class="arch-label">${shown}</span><span class="arch-number">${pct}%</span></button>`}
 function shell(){
-  const name=(localStorage.getItem("evia-full-name")||"").trim();
-  return `<main class="evia-app selfobs is-ready${open?" is-open":""}"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div><div class="self-top"><b>Evia</b><small>${esc(name||"Apprentice assistant")}</small></div><button class="self-evidence" data-quick>Evidence · ${fresh().length} new</button><button class="evia-anchor" data-evia aria-expanded="${open}"><span class="evia-float"><span class="evia-halo"></span><span class="evia-face expression-idle"><span class="evia-eyes"><span class="evia-eye eye-left"></span><span class="evia-eye eye-right"></span></span></span></span></button><div class="self-invite">Tap me to get started</div><section class="menu-stage" aria-hidden="${!open}"><div class="self-panel"></div></section><section class="progress-dock"><div class="progress-row">${arch("TOC",timeline())}${arch("KSB",Math.round(touched()/CODES.length*100))}${arch("OTJ",otj())}${arch("EPA",epa())}</div></section><div class="app-toast"></div><input id="selfPhoto" type="file" accept="image/*" capture="environment" hidden></main>`
+  const learner=(localStorage.getItem("evia-full-name")||"").trim()||"Learner profile",identity=courseIdentity();
+  return `<main class="evia-app selfobs is-ready${open?" is-open":""}"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div><div class="self-top"><b>Evia</b><small class="evia-course-identity-v113"><span class="evia-course-name-v113">${esc(identity.name)}</span><span class="evia-course-code-v113">${esc(identity.code)}</span><button type="button" class="evia-learner-name-v113">${esc(learner)}</button></small></div><button class="self-evidence" data-quick>Evidence · ${fresh().length} new</button><button class="evia-anchor" data-evia aria-expanded="${open}"><span class="evia-float"><span class="evia-halo"></span><span class="evia-face expression-idle"><span class="evia-eyes"><span class="evia-eye eye-left"></span><span class="evia-eye eye-right"></span></span></span></span></button><div class="self-invite">Tap me to get started</div><section class="menu-stage" aria-hidden="${!open}"><div class="self-panel"></div></section><section class="progress-dock"><div class="progress-row">${arch("TOC",timeline())}${arch("KSB",Math.round(touched()/CODES.length*100))}${arch("OTJ",otj())}${arch("EPA",epa())}</div></section><div class="app-toast"></div><input id="selfPhoto" type="file" accept="image/*" capture="environment" hidden></main>`
 }
 function title(a,b=""){return `<h2 class="self-title">${esc(a)}</h2>${b?`<p class="self-copy">${esc(b)}</p>`:""}`}
 function pill(a,b="",n=0,attrs=""){return `<button class="option-row" ${attrs}><span class="option-row-copy"><span>${esc(a)}</span>${b?`<small>${esc(b)}</small>`:""}</span><span class="self-side">${n?`<b>${dots(n)}</b>`:""}<i>›</i></span></button>`}
@@ -48,7 +61,7 @@ function mount(){document.getElementById("root").innerHTML=shell();bindShell();r
 function refreshShellMeta(){
   const quick=$("[data-quick]");if(quick)quick.textContent=`Evidence · ${fresh().length} new`;
   const values={TOC:timeline(),KSB:Math.round(touched()/CODES.length*100),OTJ:otj(),EPA:epa()};
-  document.querySelectorAll("[data-arch]").forEach(button=>{const pct=values[button.dataset.arch];if(pct==null)return;const path=button.querySelector(".arch-value"),number=button.querySelector(".arch-number");if(path)path.setAttribute("stroke-dasharray",`${pct} 100`);if(number)number.textContent=`${pct}%`})
+  document.querySelectorAll("[data-arch]").forEach(button=>{const pct=values[button.dataset.arch];if(pct==null)return;const path=button.querySelector(".arch-value"),number=button.querySelector(".arch-number"),shown=ARCH_LABELS[button.dataset.arch]||button.dataset.arch;if(path)path.setAttribute("stroke-dasharray",`${pct} 100`);if(number)number.textContent=`${pct}%`;button.setAttribute("aria-label",`${shown} ${pct}%`)})
 }
 function syncShell(){
   const app=$(".evia-app"),stage=$(".menu-stage"),avatar=$("[data-evia]");
@@ -62,7 +75,7 @@ function syncShell(){
 function bindShell(){
   $("[data-evia]").onclick=()=>{open=!open;if(!open){view="home";cat=job=opp=null}syncShell()};
   $("[data-quick]").onclick=()=>{open=true;view="evidence";syncShell()};
-  document.querySelectorAll("[data-arch]").forEach(b=>b.onclick=()=>{if(b.dataset.arch==="KSB"){open=true;view="coverage";syncShell()}else toast(`${b.dataset.arch} is still available from the arch bar.`)});
+  document.querySelectorAll("[data-arch]").forEach(b=>b.onclick=()=>{if(b.dataset.arch==="KSB"){open=true;view="coverage";syncShell()}else toast(`${ARCH_LABELS[b.dataset.arch]||b.dataset.arch} is still available from the arch bar.`)});
   $("#selfPhoto").onchange=e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;photo=f;if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(f);render()}
 }
 const MENU_FADE_VIEWS=new Set(["home","jobs","opps","evidence","coverage","day"]);
