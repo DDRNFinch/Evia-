@@ -1,5 +1,5 @@
-// Evia v163 refreshes the cached shell with the post-evidence interaction-lock fix.
-const CACHE_NAME = 'evia-shell-v163';
+// Evia v164 refreshes the cached shell with the evidence export update.
+const CACHE_NAME = 'evia-shell-v164';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
