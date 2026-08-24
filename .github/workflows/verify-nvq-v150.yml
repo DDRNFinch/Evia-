@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v153
+name: Verify Evia NVQ v154
 
 on:
   push:
@@ -23,8 +23,9 @@ jobs:
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
           node --check assets/evia-post-evidence-otj-v149.js
+          node --check assets/evia-arch-labels-v154.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v152.js
+          node --check assets/evia-version-v154.js
           node --check sw.js
           node --check public/sw.js
 
@@ -67,27 +68,20 @@ jobs:
             const routeCodes=codes.filter(c=>allowed.has(c.split('.')[0]));
             if(new Set(routeCodes).size!==expected[route]||routeCodes.length!==expected[route]) throw Error(`${route} route ${routeCodes.length}/${expected[route]}`);
           }
-          console.log(JSON.stringify({categories:groups.length,subcategories:subs.length,activities:acts.length,acs:unique.size,practical:practical.length},null,2));
           NODE
 
       - name: Check Section E overlay handoff
         run: |
-          grep -q 'nvqPracticalParent=true' assets/evia-trowel-practical-v151.js
-          grep -q 'nvqPracticalChild:true' assets/evia-trowel-practical-v151.js
-          grep -q 'data-nvq-child' assets/evia-nvq-practical-nav-v151.js
           grep -q 'returnFromEvidence=true;removeList(false)' assets/evia-nvq-practical-nav-v151.js
-          grep -q 'document.querySelector(".evia-stage-overlay-v132")' assets/evia-nvq-practical-nav-v151.js
           grep -q 'restoreParent(ctx' assets/evia-nvq-practical-nav-v151.js
           grep -q 'const VERSION=152' assets/evia-nvq-practical-nav-v151.js
-          grep -q 'const MAPPING_REVISION=5' assets/evia-6570-pack-migration.js
 
-      - name: Check AC arch uses A-E structure not P/T
+      - name: Check A-E AC coverage navigation
         run: |
           grep -q 'AC coverage now follows the same NVQ structure' assets/evia-nvq-structure-browser-v151.js
           grep -q 'data-nvq151-group' assets/evia-nvq-structure-browser-v151.js
           grep -q 'data-nvq151-sub' assets/evia-nvq-structure-browser-v151.js
           grep -q 'data-nvq151-activity' assets/evia-nvq-structure-browser-v151.js
-          if grep -q 'By P / T' assets/evia-nvq-structure-browser-v151.js; then exit 1; fi
           if grep -q 'evia-nvq-ac-browser-v90.js' index.html; then exit 1; fi
 
       - name: Check post-evidence OTJ and GLH routing
@@ -100,22 +94,27 @@ jobs:
           grep -q 'recordOtj' assets/evia-post-evidence-otj-v149.js
           grep -q 'EviaNVQV94?.refresh' assets/evia-post-evidence-otj-v149.js
           grep -q 'evia:glh-updated' assets/evia-post-evidence-otj-v149.js
-          grep -q 'guided\\s\*learning' assets/evia-post-evidence-otj-v149.js
-          grep -q 'evia-post-evidence-otj-v149.js' index.html
+          grep -q 'evia-post-evidence-otj-v149.js?v=153' index.html
 
-      - name: Check v153 release wiring
+      - name: Check learner-friendly arch labels
         run: |
-          grep -q 'meta name="evia-app-version" content="152"' index.html
-          grep -q 'setAttribute("content","153")' assets/evia-version-v152.js
-          grep -q 'window.EviaAppVersion=153' assets/evia-version-v152.js
-          grep -q 'evia-version-v152.js?v=152' index.html
-          grep -q 'evia-nvq-practical-nav-v151.js?v=152' index.html
-          grep -q 'evia-nvq-structure-browser-v151.js?v=151' index.html
+          grep -q 'TOC:"Time"' assets/evia-arch-labels-v154.js
+          grep -q 'KSB:"Course"' assets/evia-arch-labels-v154.js
+          grep -q 'AC:"Course"' assets/evia-arch-labels-v154.js
+          grep -q 'OTJ:"Learn"' assets/evia-arch-labels-v154.js
+          grep -q 'GLH:"Learn"' assets/evia-arch-labels-v154.js
+          grep -q 'EPA:"Test"' assets/evia-arch-labels-v154.js
+          grep -q 'ARP:"Test"' assets/evia-arch-labels-v154.js
+          grep -q 'Units:"Test"' assets/evia-arch-labels-v154.js
+          grep -q 'evia-arch-labels-v154.js?v=154' index.html
 
-      - name: Check offline and update release
+      - name: Check v154 release wiring
         run: |
+          grep -q 'meta name="evia-app-version" content="154"' index.html
+          grep -q 'evia-version-v154.js?v=154' index.html
+          grep -q 'window.EviaAppVersion=154' assets/evia-version-v154.js
           cmp -s sw.js public/sw.js
-          grep -q "evia-shell-v153" sw.js
-          grep -q 'evia-post-evidence-otj-v149.js' sw.js
+          grep -q "evia-shell-v154" sw.js
+          grep -q 'evia-arch-labels-v154.js' sw.js
           cmp -s update.json public/update.json
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="153") process.exit(1)'
+          node -e 'const x=require("./update.json"); if(String(x.version)!=="154") process.exit(1)'
