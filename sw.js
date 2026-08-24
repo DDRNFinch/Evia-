@@ -1,5 +1,5 @@
-// Evia v177 refreshes the cached shell with standardised course progress and completion ticks.
-const CACHE_NAME = 'evia-shell-v177';
+// Evia v178 refreshes the cached shell with duplicate-tick and navigation-response fixes.
+const CACHE_NAME = 'evia-shell-v178';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -12,6 +12,7 @@ const CRITICAL = [
   './assets/evia-selfobs-live.css',
   './assets/evia-selfobs-fixes.css',
   './assets/evia-selfobs-live.js',
+  './assets/evia-menu-response-v173.js',
   './assets/evia-avatar-life-v108.js',
   './assets/evia-qr-neutral-v122.js',
   './assets/evia-welcome-v120.js',
