@@ -56,5 +56,6 @@ async function run(button){
   }catch(error){console.error("Evia staged evidence save",error);setStatus("That evidence could not be saved. Try again.",true);buttons.forEach(b=>b.disabled=false)}finally{busy=false}
 }
 document.addEventListener("click",event=>{const button=event.target?.closest?.("[data-save-photo],[data-skip-video],[data-save-video]");if(!button||!button.closest(".evia-stage-overlay-v132"))return;event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();run(button)},true);
+window.addEventListener("evia:evidence-reflection-saved",()=>{if(!document.querySelector(".evia-stage-overlay-v132"))return;try{window.EviaStagedEvidence?.close?.()}catch(error){console.debug("Evia staged evidence cleanup",error)}});
 window.EviaStageSaveV139=Object.freeze({version:139});
 })();
