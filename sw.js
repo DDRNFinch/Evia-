@@ -1,5 +1,5 @@
-// Evia v183 removes the remaining legacy course-header flash.
-const CACHE_NAME = 'evia-shell-v183';
+// Evia v184 restores the learner profile button after header cleanup.
+const CACHE_NAME = 'evia-shell-v184';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
