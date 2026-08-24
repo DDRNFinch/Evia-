@@ -1,5 +1,5 @@
-// Evia v176 refreshes the cached shell with refined practical progress indicators.
-const CACHE_NAME = 'evia-shell-v176';
+// Evia v177 refreshes the cached shell with standardised course progress and completion ticks.
+const CACHE_NAME = 'evia-shell-v177';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
