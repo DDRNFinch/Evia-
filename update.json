@@ -1,17 +1,17 @@
 {
-  "version": "176",
-  "title": "Practical progress refinement",
+  "version": "177",
+  "title": "Standardised course progress",
   "details": [
-    "Makes practical progress rings smaller and more subtle",
-    "Uses a lighter yellow progress colour",
-    "Removes completed/total numbers from inside the rings",
-    "Adds the same practical progress ring to main category tiles"
+    "Shows the same progress ring on all main course category tiles",
+    "Shows progress consistently on task tiles across courses",
+    "Uses the same pale-yellow circular tick on final completed evidence tiles",
+    "Keeps completion styling consistent throughout Evia"
   ],
-  "summary": "Evia v176 refines practical section progress so it is quieter, clearer and visible at the main category level too.",
+  "summary": "Evia v177 standardises course progress and completion markers across every course hierarchy.",
   "changes": [
-    "Smaller progress rings",
-    "Lighter yellow",
-    "No numbers inside rings",
-    "Main category progress"
+    "A-E category progress",
+    "Consistent task progress",
+    "Standard pale-yellow completion tick",
+    "Cross-course styling"
   ]
 }
