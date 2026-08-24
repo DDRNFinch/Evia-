@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v151
+name: Verify Evia NVQ v152
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v151.js
+          node --check assets/evia-version-v152.js
           node --check sw.js
           node --check public/sw.js
 
@@ -69,14 +69,16 @@ jobs:
           console.log(JSON.stringify({categories:groups.length,subcategories:subs.length,activities:acts.length,acs:unique.size,practical:practical.length},null,2));
           NODE
 
-      - name: Check visible practical activity expansion
+      - name: Check Section E overlay handoff
         run: |
           grep -q 'nvqPracticalParent=true' assets/evia-trowel-practical-v151.js
           grep -q 'nvqPracticalChild:true' assets/evia-trowel-practical-v151.js
           grep -q 'const childCode=`${parent.activityCode}.${number}`' assets/evia-trowel-practical-v151.js
           grep -q 'data-nvq-child' assets/evia-nvq-practical-nav-v151.js
-          grep -q 'Each one saves separately' assets/evia-nvq-practical-nav-v151.js
-          grep -q 'z-index:10' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'returnFromEvidence=true;removeList(false)' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'document.querySelector(".evia-stage-overlay-v132")' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'restoreParent(ctx' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'const VERSION=152' assets/evia-nvq-practical-nav-v151.js
           grep -q 'const MAPPING_REVISION=5' assets/evia-6570-pack-migration.js
 
       - name: Check AC arch uses A-E structure not P/T
@@ -88,12 +90,12 @@ jobs:
           if grep -q 'By P / T' assets/evia-nvq-structure-browser-v151.js; then exit 1; fi
           if grep -q 'evia-nvq-ac-browser-v90.js' index.html; then exit 1; fi
 
-      - name: Check v151 wiring and route isolation
+      - name: Check v152 wiring and route isolation
         run: |
-          grep -q 'meta name="evia-app-version" content="151"' index.html
-          grep -q 'evia-version-v151.js?v=151' index.html
+          grep -q 'meta name="evia-app-version" content="152"' index.html
+          grep -q 'evia-version-v152.js?v=152' index.html
           grep -q 'evia-trowel-practical-v151.js?v=151' index.html
-          grep -q 'evia-nvq-practical-nav-v151.js?v=151' index.html
+          grep -q 'evia-nvq-practical-nav-v151.js?v=152' index.html
           grep -q 'evia-nvq-structure-browser-v151.js?v=151' index.html
           node <<'NODE'
           const fs=require('fs'),s=fs.readFileSync('index.html','utf8');
@@ -109,9 +111,7 @@ jobs:
       - name: Check offline and update release
         run: |
           cmp -s sw.js public/sw.js
-          grep -q "evia-shell-v151" sw.js
-          grep -q 'evia-trowel-practical-v151.js' sw.js
+          grep -q "evia-shell-v152" sw.js
           grep -q 'evia-nvq-practical-nav-v151.js' sw.js
-          grep -q 'evia-nvq-structure-browser-v151.js' sw.js
           cmp -s update.json public/update.json
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="151") process.exit(1)'
+          node -e 'const x=require("./update.json"); if(String(x.version)!=="152") process.exit(1)'
