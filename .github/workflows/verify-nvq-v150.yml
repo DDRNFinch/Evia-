@@ -73,9 +73,10 @@ jobs:
         run: |
           grep -q 'nvqPracticalParent=true' assets/evia-trowel-practical-v151.js
           grep -q 'nvqPracticalChild:true' assets/evia-trowel-practical-v151.js
+          grep -q 'const childCode=`${parent.activityCode}.${number}`' assets/evia-trowel-practical-v151.js
           grep -q 'data-nvq-child' assets/evia-nvq-practical-nav-v151.js
-          grep -q 'E2.1.1' assets/evia-trowel-framework-v150.js
           grep -q 'Each one saves separately' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'z-index:10' assets/evia-nvq-practical-nav-v151.js
           grep -q 'const MAPPING_REVISION=5' assets/evia-6570-pack-migration.js
 
       - name: Check AC arch uses A-E structure not P/T
@@ -85,6 +86,7 @@ jobs:
           grep -q 'data-nvq151-sub' assets/evia-nvq-structure-browser-v151.js
           grep -q 'data-nvq151-activity' assets/evia-nvq-structure-browser-v151.js
           if grep -q 'By P / T' assets/evia-nvq-structure-browser-v151.js; then exit 1; fi
+          if grep -q 'evia-nvq-ac-browser-v90.js' index.html; then exit 1; fi
 
       - name: Check v151 wiring and route isolation
         run: |
@@ -99,7 +101,7 @@ jobs:
           before('evia-trowel-framework-v150.js','evia-trowel-practical-v151.js');
           before('evia-trowel-practical-v151.js','evia-6570-pack-migration.js');
           before('evia-nvq-practical-nav-v151.js','evia-staged-evidence-v132.js');
-          before('evia-nvq-structure-browser-v151.js','evia-nvq-ac-browser-v90.js');
+          before('evia-nvq-structure-browser-v151.js','evia-nvq-v94.js');
           NODE
           grep -q 'courseId==="6570-05"' assets/evia-nvq-audio-v150.js
           grep -q 'courseId==="6570-05"' assets/evia-nvq-pack-export-v150.js
