@@ -141,6 +141,12 @@ async function action(a){
 function openDb(){return new Promise((res,rej)=>{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(DBS))q.result.createObjectStore(DBS,{keyPath:"id"})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
 async function storeBlob(blob,name,type){const db=await openDb(),id=`m-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;await new Promise((res,rej)=>{const t=db.transaction(DBS,"readwrite");t.objectStore(DBS).put({id,blob,name,type});t.oncomplete=res;t.onerror=()=>rej(t.error)});db.close();return id}
 async function getBlob(id){if(!id)return null;const db=await openDb();const v=await new Promise((res,rej)=>{const q=db.transaction(DBS,"readonly").objectStore(DBS).get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)});db.close();return v}
+async function saveExternalAudioEvidence({context,file,answerText="",startedAt=null,promptMarkers=[],durationSeconds=null}={}){
+  const c=context?.cat,j=context?.job,o=context?.opp;if(!c||!j||!o||!(file instanceof Blob))throw Error("audio evidence context unavailable");
+  const audioId=await storeBlob(file,file.name||`${o.id}.webm`,file.type||"audio/webm"),now=Date.now();
+  const e={id:`e-${now}-${Math.random().toString(36).slice(2,7)}`,createdAt:now,courseId:COURSE.courseId,pathway:COURSE.pathway||null,categoryId:c.id,categoryTitle:c.title,jobId:j.id,jobTitle:j.title,opportunityId:o.id,title:o.title,bundle:o.bundle,question:o.question,codes:[...(o.codes||[])],answerMode:"talk",answerText:String(answerText||"").trim()||null,photoId:null,audioId,downloadedAt:null,mediaKind:"audio",audioStartedAt:startedAt||null,audioPromptMarkers:Array.isArray(promptMarkers)?promptMarkers:[],audioDurationSeconds:durationSeconds??null,activityCode:o.activityCode||null,groupId:o.groupId||c.id,groupTitle:o.groupTitle||c.title,subCategoryId:o.subCategoryId||j.id,subCategoryTitle:o.subCategoryTitle||j.title};
+  entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);cat=c;job=j;opp=o;clearCapture();view="opps";open=true;syncShell();return e
+}
 async function save(){
   if(opp.media!=="talk"&&!photo){toast("Add one photo first.");return}
   if(mode==="type"&&(typed.trim().match(/\S+/g)||[]).length<3){toast("Just add a little more so I know what you mean.");return}
@@ -188,5 +194,6 @@ async function loadData(){
     mount()
   }catch(e){console.error(e);document.getElementById("root").innerHTML='<main class="evia-app selfobs is-ready"><div class="self-load-error">Evia could not load the course map. Refresh once and try again.</div></main>'}
 }
+window.EviaEvidenceCore=Object.freeze({saveExternalAudioEvidence});
 loadData();
 })();

@@ -102,22 +102,12 @@ function renderComplete(file,meta,text){
 }
 async function saveViaCore(file,meta,extra){
  if(!active||!file)return;const o=root(),buttons=o.querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
- let status=document.createElement("div");status.className="evia-stage-saving-v132";status.textContent="Saving evidence…";o.appendChild(status);
- const before=new Set((read(STORE,[])||[]).map(e=>e?.id));
+ const status=document.createElement("div");status.className="evia-stage-saving-v132";status.textContent="Saving evidence…";o.appendChild(status);
  try{
-   const input=$("#selfPhoto");if(!input||typeof input.onchange!=="function")throw Error("evidence input unavailable");
-   input.onchange({target:{files:[file],value:""}});await wait(0);
-   const next=$(".self-panel [data-action='next']");if(!next||next.disabled)throw Error("next unavailable");next.click();await wait(0);
-   const type=$(".self-panel [data-mode='type']");if(!type)throw Error("type unavailable");type.click();await wait(0);
-   const ta=$("#selfText"),save=$(".self-panel [data-action='save']");if(!ta||!save)throw Error("save unavailable");
-   const text=answer(meta,extra);ta.value=text;ta.dispatchEvent(new Event("input",{bubbles:true}));save.click();
-   let entry=null,xs=null;for(let i=0;i<60;i++){await wait(80);xs=read(STORE,[]);entry=Array.isArray(xs)?xs.find(e=>!before.has(e?.id)&&e?.opportunityId===active.opp.id):null;if(entry)break}
-   if(!entry)throw Error("evidence was not saved");
-   entry.audioId=entry.photoId||entry.audioId||null;entry.photoId=null;entry.answerMode="talk";entry.answerText=text;entry.mediaKind="audio";
-   entry.audioStartedAt=meta.startedAt||null;entry.audioPromptMarkers=meta.markers||[];entry.audioDurationSeconds=meta.durationSeconds??null;
-   entry.activityCode=active.opp.activityCode||null;entry.groupId=active.opp.groupId||active.cat.id;entry.groupTitle=active.opp.groupTitle||active.cat.title;
-   entry.subCategoryId=active.opp.subCategoryId||active.job.id;entry.subCategoryTitle=active.opp.subCategoryTitle||active.job.title;
-   write(STORE,xs);saved=true;toast("Audio evidence saved.");window.EviaEvidenceMedia?.refresh?.();close()
+   const core=window.EviaEvidenceCore;if(!core?.saveExternalAudioEvidence)throw Error("audio evidence core unavailable");
+   const text=answer(meta,extra);
+   await core.saveExternalAudioEvidence({context:active,file,answerText:text,startedAt:meta.startedAt||null,promptMarkers:meta.markers||[],durationSeconds:meta.durationSeconds??null});
+   saved=true;toast("Audio evidence saved.");window.EviaEvidenceMedia?.refresh?.();close()
  }catch(error){console.error("Evia NVQ audio save",error);status.textContent="That evidence could not be saved. Try again.";buttons.forEach(b=>b.disabled=false)}
 }
 function open(ctx){active=ctx;saved=false;methodChoice()}

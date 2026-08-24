@@ -8,6 +8,7 @@ const motionCss=fs.readFileSync("assets/evia-selfobs-live.css","utf8");
 const updater=fs.readFileSync("assets/evia-updater.js","utf8");
 const archLabels=fs.readFileSync("assets/evia-arch-labels-v154.js","utf8");
 const assistantNetwork=fs.readFileSync("assets/evia-assistant-network.js","utf8");
+const nvqAudio=fs.readFileSync("assets/evia-nvq-audio-v150.js","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 const publicSw=fs.readFileSync("sw.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
@@ -40,6 +41,15 @@ test("patch layers stop watching once the shell is ready",()=>{
   assert.match(assistantNetwork,/observer\?\.disconnect/);
   assert.doesNotMatch(archLabels,/attributes:true|characterData:true/);
   assert.doesNotMatch(assistantNetwork,/ensureExchange\(\)\.catch/);
+});
+
+test("NVQ audio saves directly instead of masquerading as photo evidence",()=>{
+  assert.match(live,/saveExternalAudioEvidence/);
+  assert.match(live,/window\.EviaEvidenceCore=Object\.freeze\(\{saveExternalAudioEvidence\}\)/);
+  assert.match(nvqAudio,/EviaEvidenceCore/);
+  assert.match(nvqAudio,/saveExternalAudioEvidence/);
+  assert.doesNotMatch(nvqAudio,/input\.onchange\(\{target:\{files:\[file\]/);
+  assert.doesNotMatch(nvqAudio,/entry\.audioId=entry\.photoId/);
 });
 
 test("Evia has one service-worker owner and one current cache",()=>{
