@@ -1,17 +1,15 @@
 {
-  "version": "151",
-  "title": "Clearer NVQ activity navigation",
+  "version": "152",
+  "title": "Section E overlay fixed",
   "details": [
-    "The Level 3 Trowel AC arch no longer uses the old P/T theme view and now follows the same A-E Main Category > Sub-category > Activity structure used for evidence",
-    "Section E practical activities now open visible evidence activity tiles such as E2.1.1, E2.1.2, E2.1.3 and E2.1.4 instead of forcing a hidden stage-by-stage workflow",
-    "Each practical evidence tile keeps its own Photo or Video prompts and saves underneath the overarching practical activity",
-    "The official AC mapping remains attached to the overarching activity and all learner routes retain their complete qualification AC coverage",
+    "Section E evidence activity lists now close completely before the existing Photo or Video evidence screen opens",
+    "Backing out of an E evidence activity returns to the correct E2.1.x style option list without leaving two interfaces stacked together",
+    "The Level 3 Trowel A-E structure, AC mapping and practical activity numbering are unchanged",
     "The approved camera, photo/video saving, guided audio, OTJ, Standards courses and the rest of Evia are unchanged"
   ],
-  "summary": "Evia v151 removes P/T navigation and makes practical NVQ evidence activities directly selectable.",
+  "summary": "Evia v152 fixes the Section E practical evidence overlay handoff.",
   "changes": [
-    "A-E AC coverage navigation",
-    "Visible E practical evidence tiles",
-    "No P/T theme browser"
+    "Section E overlay fix",
+    "Correct return to practical options"
   ]
 }
