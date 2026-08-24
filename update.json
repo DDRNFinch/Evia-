@@ -1,17 +1,17 @@
 {
-  "version": "162",
-  "title": "Core homepage source correction",
+  "version": "171",
+  "title": "Evidence export and video quality",
   "details": [
-    "Removes the self-triggering v161 course-title watcher that could prevent Evia from loading",
-    "Renders the concise course identity directly from the core homepage",
-    "Renders Time, Course, Learn and Test directly from the core arch renderer",
-    "Removes the separate course-title and arch-label patch layers"
+    "Loads the single Evidence Pack.pdf exporter instead of old category-named PDFs",
+    "Prevents corrupted em-dash characters in downloaded PDF names",
+    "Records guided video at 1080p up to 30fps using the hardware MP4 path when supported",
+    "Raises guided video bitrate for smoother, clearer evidence while retaining continuous recording for clean audio"
   ],
-  "summary": "Evia v162 restores loading and moves the final homepage identity and arch labels into the core renderer instead of repainting older UI after launch.",
+  "summary": "Evia v171 fixes the cached evidence exporter and improves guided video smoothness and quality.",
   "changes": [
-    "Load-loop removed",
-    "Course identity owned by core",
-    "Arch labels owned by core",
-    "Obsolete homepage patch layers removed"
+    "Single Evidence Pack.pdf",
+    "Correct PDF filenames",
+    "1080p guided video",
+    "Higher video bitrate"
   ]
 }
