@@ -1,14 +1,16 @@
 {
-  "version": "156",
-  "title": "Learning log added to packs",
+  "version": "157",
+  "title": "Performance and audio save fixes",
   "details": [
-    "Each evidence-pack download now includes one PDF containing only the OTJ or GLH learning added since the previous pack download",
-    "The PDF shows the overall OTJ or GLH time since the last download at the top and lists each new learning record underneath",
-    "Standards use OTJ and NVQ courses use GLH automatically, and included learning records are marked only after the pack is downloaded",
-    "No other Evia behaviour, evidence PDFs, signatures, navigation or qualification mapping was changed"
+    "Faster Evia movement and menu response",
+    "Reduced background DOM watching that was making the app feel clunky",
+    "Fixed NVQ guided audio evidence saving directly into the existing evidence media store",
+    "Refreshes the offline cache so these fixes actually reach installed and returning devices"
   ],
-  "summary": "Evia v156 adds the new OTJ/GLH learning log to evidence-pack downloads.",
+  "summary": "Evia v157 delivers the performance and audio-save fixes and refreshes the offline shell.",
   "changes": [
-    "OTJ/GLH learning PDF in packs"
+    "Performance improvements",
+    "NVQ audio evidence save fix",
+    "Offline cache refresh"
   ]
 }
