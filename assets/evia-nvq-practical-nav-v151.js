@@ -2,7 +2,7 @@
 "use strict";
 const VERSION=151;
 const STORE="evia-selfobs-live-v3";
-let overlay=null,raf=0;
+let overlay=null,current=null,raf=0;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const read=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
 function course(){return window.EviaCourseContext?.current?.()||{}}
@@ -12,19 +12,19 @@ function findOpp(id){for(const cat of siteData())for(const job of cat.jobs||[])f
 function children(parent,job){return (job?.opps||[]).filter(o=>o?.nvqPracticalChild&&String(o.parentActivityId)===String(parent.id))}
 function savedCount(id){const xs=read(STORE,[]);return Array.isArray(xs)?xs.filter(e=>String(e?.opportunityId)===String(id)).length:0}
 function style(){if(document.getElementById("evia-nvq-practical-nav-v151-style"))return;const s=document.createElement("style");s.id="evia-nvq-practical-nav-v151-style";s.textContent=`
-.selfobs .evia-nvq-practical-list-v151{position:absolute;inset:0;z-index:64;background:linear-gradient(180deg,#fff 0%,#fff 62%,#fff9dd 100%);overflow:auto;padding:0 0 7rem}
+.selfobs .evia-nvq-practical-list-v151{position:absolute;inset:0;z-index:10;background:linear-gradient(180deg,#fff 0%,#fff 62%,#fff9dd 100%);overflow:auto;padding:0 0 7rem}
 .selfobs .evia-nvq-practical-list-v151 .self-list{margin-top:.65rem}
 .selfobs .option-row[data-nvq-child] .self-side b{color:#b88f00}
 `;document.head.appendChild(s)}
-function close(){overlay?.remove();overlay=null}
+function close(restoreParent=true){const ctx=current;overlay?.remove();overlay=null;current=null;if(restoreParent&&ctx){const jobButton=document.querySelector(`[data-job="${CSS.escape(String(ctx.job.id))}"]`);if(jobButton)jobButton.click()}}
 function openParent(ctx){
-  close();style();const host=document.querySelector(".menu-stage");if(!host)return;
-  const xs=children(ctx.opp,ctx.job);if(!xs.length)return;
+  close(false);style();const host=document.querySelector(".menu-stage");if(!host)return;
+  const xs=children(ctx.opp,ctx.job);if(!xs.length)return;current=ctx;
   overlay=document.createElement("section");overlay.className="evia-nvq-practical-list-v151";
   overlay.innerHTML=`<button class="self-back" type="button" data-practical-back>‹ Back</button><h2 class="self-title">${esc(ctx.opp.title)}</h2><p class="self-copy">Choose the part of the activity you can evidence now. Each one saves separately under ${esc(ctx.opp.activityCode||ctx.opp.title)}.</p><div class="self-list">${xs.map(child=>{const n=savedCount(child.id);return `<button class="option-row" type="button" data-nvq-child="${esc(child.id)}"><span class="option-row-copy"><span>${esc(child.title)}</span><small>${esc(child.instruction||"")}</small></span><span class="self-side">${n?`<b>✓</b>`:""}<i>›</i></span></button>`}).join("")}</div>`;
   host.appendChild(overlay);
-  overlay.querySelector("[data-practical-back]").onclick=close;
-  overlay.querySelectorAll("[data-nvq-child]").forEach(button=>button.onclick=()=>{const id=button.dataset.nvqChild;close();window.EviaStagedEvidence?.openForOpp?.(id)})
+  overlay.querySelector("[data-practical-back]").onclick=()=>close(true);
+  overlay.querySelectorAll("[data-nvq-child]").forEach(button=>button.onclick=()=>window.EviaStagedEvidence?.openForOpp?.(button.dataset.nvqChild))
 }
 function patchPanel(){
   if(!isTrowel())return;
