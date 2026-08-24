@@ -1,5 +1,5 @@
-// Evia v151 replaces Trowel P/T navigation with the A-E NVQ structure and exposes practical evidence activities as visible tiles.
-const CACHE_NAME = 'evia-shell-v151';
+// Evia v152 fixes the Section E practical evidence overlay handoff without changing camera, saving or qualification mapping.
+const CACHE_NAME = 'evia-shell-v152';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v151.js',
+  './assets/evia-version-v152.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
