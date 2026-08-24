@@ -1,5 +1,5 @@
-// Evia v165 refreshes the cached shell with the staged repair stability fix.
-const CACHE_NAME = 'evia-shell-v165';
+// Evia v166 refreshes the cached shell with the practical stage return fix.
+const CACHE_NAME = 'evia-shell-v166';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
