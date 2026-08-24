@@ -1,5 +1,5 @@
-// Evia v171 refreshes the cached shell with corrected evidence filenames and higher-quality guided video.
-const CACHE_NAME = 'evia-shell-v171';
+// Evia v172 refreshes the cached shell with faster photo capture, stable evidence loading, and neutral PDFs.
+const CACHE_NAME = 'evia-shell-v172';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -27,6 +27,7 @@ const CRITICAL = [
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
   './assets/evia-photo-fast-v140.js',
+  './assets/evia-pdf-neutral-v172.js',
   './assets/evia-staged-resume-guard-v167.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
