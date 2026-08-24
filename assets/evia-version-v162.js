@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=186;
+const VERSION=187;
 const meta=document.querySelector('meta[name="evia-app-version"]');if(meta)meta.setAttribute("content",String(VERSION));window.EviaAppVersion=VERSION;
 let queued=false,observer=null;
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
