@@ -7,7 +7,7 @@ const live=fs.readFileSync("assets/evia-selfobs-live.js","utf8");
 const motionCss=fs.readFileSync("assets/evia-selfobs-live.css","utf8");
 const updater=fs.readFileSync("assets/evia-updater.js","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
-const publicSw=fs.readFileSync("public/sw.js","utf8");
+const publicSw=fs.readFileSync("sw.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 

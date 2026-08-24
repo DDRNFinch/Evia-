@@ -1,66 +1,60 @@
 # Evia
 
-**Evia — Apprentice Vocational Assistant** is a clean, animated apprenticeship companion designed to help learners understand their course, organise evidence and monitor progress.
+Evia is the learner-facing Apprentice Vocational Assistant. This repository's
+root is the production progressive web app: GitHub Pages publishes it directly,
+with [`index.html`](index.html) as the entry point and [`sw.js`](sw.js) providing
+the offline shell.
 
-[Open the current Evia app](https://ava-apprentice-assistant.dfinch1984.chatgpt.site)
+## Data and privacy
 
-## What Evia currently does
+Evia is local/offline-first. Learner profiles, enrolments, progress, learning
+logs, evidence metadata and media remain in browser storage (localStorage and
+IndexedDB). The app does not require an account or a remote learner database.
+Existing storage keys and migration scripts are retained so installed learners
+can continue upgrading safely.
 
-- Introduces herself through a short first-use onboarding journey
-- Opens the main options when the learner taps Evia
-- Displays four progress arches for TOC, KSB, OTJ and EPA
-- Provides areas for My Course, Self Study, My Portfolio and Settings
-- Lets tutors and learners add a course in three ways:
-  - Import a structured Evia course file
-  - Paste an existing course layout
-  - Paste an unstructured KSB list and let Evia organise it
-- Preserves tutor-written unit titles and KSB mappings
-- Creates evidence-focused units from Knowledge, Skills and Behaviours
-- Shows full KSB wording and suitable evidence options inside each unit
-- Includes animated facial expressions and smooth in-app transitions
+## Production layout
 
-## Project status
+- `index.html` — authoritative learner app entry point.
+- `assets/` — production CSS, JavaScript, QR libraries and compatibility logic.
+- `course-delivery/` — course registry, question/practical banks and labelled QR assets.
+- `course-packs/` — installable `.nisi` course packs and their schema.
+- `manifest.webmanifest`, `sw.js`, `update.json` and root icons — install, offline and update resources.
+- `scripts/` — deterministic course/QR generation utilities.
+- `tests/` — Node regression checks for courses and learner behaviour.
+- `.github/workflows/` — root deployment and production verification.
 
-Evia is an evolving prototype. Learner onboarding and course information are currently stored in the browser on the learner's device. A production version will need persistent accounts, secure data storage and tutor administration services.
+The historical React/Next/Vite/Cloudflare prototype has been removed. It was a
+separate application and was not used by the root GitHub Pages deployment,
+production service worker, course generation, or learner regression suite.
+There is intentionally no duplicated `public/` application tree; root files are
+the single production source of truth.
 
-## Run locally
+## Local use
 
-### Requirements
+Serve the repository root with any static HTTP server, for example:
 
-- Node.js 22.13 or newer
-- npm
+```bash
+python -m http.server 8000
+```
 
-### Start the app
+Then open `http://localhost:8000/`. A static server is required to exercise the
+service worker; opening `index.html` via `file://` is not equivalent.
+
+## Maintenance
+
+Node.js 22 or newer is used for verification. The only npm dependency is
+`sharp`, which decodes the generated labelled QR PNGs in the course integrity
+tests.
 
 ```bash
 npm ci
-npm run dev
+npm test
+find assets course-delivery -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+node --check sw.js
 ```
 
-Then open the local address shown in the terminal.
-
-### Build
-
-```bash
-npm run build
-```
-
-## Main source files
-
-- `app/page.tsx` — Evia interface, navigation, onboarding and course-building logic
-- `app/globals.css` — visual design, responsive layout, animations and transitions
-- `app/layout.tsx` — application metadata
-- `public/` — static assets
-- `tests/` — rendered application checks
-
-## Technology
-
-- React
-- Next.js
-- Vinext
-- TypeScript
-- Cloudflare-compatible deployment output
-
-## Repository purpose
-
-This repository contains the current Evia source code. The live prototype is deployed separately; GitHub is being used to store and manage the project as it develops.
+Course artefacts can be regenerated with the scripts in `scripts/`. Generated
+changes should always be reviewed and the full regression suite rerun; course
+codes, mappings, QR payloads and learner storage formats are compatibility
+contracts.

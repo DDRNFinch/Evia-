@@ -1,1 +1,0 @@
-export type KsbType="Knowledge"|"Skill"|"Behaviour";export type EvidenceOpportunity={id:string;title:string;instruction:string;question:string;codes:string[];bundle:string;media?:"talk"};export type SiteJob={id:string;title:string;opps:EvidenceOpportunity[]};export type SiteCategory={id:string;title:string;jobs:SiteJob[]};

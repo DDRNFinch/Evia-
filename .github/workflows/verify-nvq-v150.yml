@@ -27,9 +27,8 @@ jobs:
           node --check assets/evia-otj-export.js
           node --check assets/evia-arch-labels-v154.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v155.js
+          node --check assets/evia-version-v156.js
           node --check sw.js
-          node --check public/sw.js
 
       - name: Protect approved existing behaviour
         run: |
@@ -133,11 +132,9 @@ jobs:
 
       - name: Check v156 release wiring
         run: |
-          grep -q 'meta name="evia-app-version" content="155"' index.html
-          grep -q 'evia-version-v155.js?v=155' index.html
-          grep -q 'window.EviaAppVersion=156' assets/evia-version-v155.js
-          cmp -s sw.js public/sw.js
+          grep -q 'meta name="evia-app-version" content="156"' index.html
+          grep -q 'evia-version-v156.js?v=156' index.html
+          grep -q 'window.EviaAppVersion=156' assets/evia-version-v156.js
           grep -q "evia-shell-v156" sw.js
           grep -q 'evia-otj-export.js' sw.js
-          cmp -s update.json public/update.json
           node -e 'const x=require("./update.json"); if(String(x.version)!=="156") process.exit(1)'

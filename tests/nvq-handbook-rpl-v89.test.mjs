@@ -11,7 +11,7 @@ const nvq=read('assets/evia-nvq.js');
 const rplUnit=read('assets/evia-rpl-unit-order-v88.js');
 const index=read('index.html');
 const sw=read('sw.js');
-const publicSw=read('public/sw.js');
+const publicSw=read('sw.js');
 
 function jsonBetween(source,start,end){
   const a=source.indexOf(start),b=source.indexOf(end,a+start.length);
