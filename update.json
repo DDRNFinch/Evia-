@@ -1,15 +1,14 @@
 {
-  "version": "179",
-  "title": "Single completion indicator",
+  "version": "180",
+  "title": "Single completion tick correction",
   "details": [
-    "Deletes the legacy dark-yellow completion tick layer",
-    "Removes the duplicate folder-completion badge generator",
-    "Keeps only the newer built-in completion circle/tick on category and task rows"
+    "Removes the remaining duplicate yellow tick on completed evidence rows",
+    "Keeps one completion indicator only",
+    "Does not change course progress, evidence data or navigation"
   ],
-  "summary": "Evia v179 removes the old duplicate yellow completion badge so only the newer completion indicator remains.",
+  "summary": "Evia v180 removes the remaining duplicate completion marker so completed rows show one yellow tick.",
   "changes": [
-    "Legacy tick deleted",
-    "Duplicate folder badge deleted",
-    "Single completion indicator"
+    "One yellow completion tick",
+    "Duplicate marker removed"
   ]
 }
