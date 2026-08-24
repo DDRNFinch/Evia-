@@ -1,15 +1,15 @@
 (()=>{
 "use strict";
-const VERSION=171;
+const VERSION=172;
 
 function inEvidence(){return document.querySelector(".self-title")?.textContent?.trim()==="Evidence"}
 let hydrateToken=0,mutationTimer=0;
 function refreshEvidenceMedia(){try{window.EviaEvidenceMedia?.refresh?.()}catch(error){console.debug("Evia evidence media refresh",error)}}
 function hydrateEvidence(){
   const token=++hydrateToken;
-  [0,120,280,520,900,1450,2200].forEach(delay=>setTimeout(()=>{
+  [0,140,420,900].forEach(delay=>setTimeout(()=>{
     if(token!==hydrateToken||!inEvidence())return;
-    refreshEvidenceMedia();
+    refreshEvidenceMedia()
   },delay))
 }
 function observeEvidence(){
@@ -18,7 +18,7 @@ function observeEvidence(){
   const observer=new MutationObserver(()=>{
     if(!inEvidence())return;
     clearTimeout(mutationTimer);
-    mutationTimer=setTimeout(refreshEvidenceMedia,140)
+    mutationTimer=setTimeout(refreshEvidenceMedia,180)
   });
   observer.observe(panel,{childList:true,subtree:true})
 }
@@ -33,23 +33,17 @@ const mediaDevices=navigator.mediaDevices;
 if(mediaDevices?.getUserMedia){
   const nativeGetUserMedia=mediaDevices.getUserMedia.bind(mediaDevices);
   mediaDevices.getUserMedia=async constraints=>{
-    if(constraints?.video&&constraints?.audio){
+    const stagedPhoto=!!document.querySelector(".evia-stage-overlay-v132.evia-photo-mode-v137");
+    if(stagedPhoto&&constraints?.video&&!constraints?.audio){
+      const video=typeof constraints.video==="object"?{...constraints.video}:{};
+      constraints={...constraints,video:{...video,width:{ideal:1280,max:1280},height:{ideal:720,max:720},frameRate:{ideal:30,max:30}}}
+    }else if(constraints?.video&&constraints?.audio){
       const video=typeof constraints.video==="object"?{...constraints.video}:{};
       const audio=typeof constraints.audio==="object"?{...constraints.audio}:{};
       constraints={
         ...constraints,
-        video:{
-          ...video,
-          width:{ideal:1920,max:1920},
-          height:{ideal:1080,max:1080},
-          frameRate:{ideal:30,min:24,max:30}
-        },
-        audio:{
-          ...audio,
-          channelCount:{ideal:1,max:1},
-          echoCancellation:true,
-          noiseSuppression:true
-        }
+        video:{...video,width:{ideal:1920,max:1920},height:{ideal:1080,max:1080},frameRate:{ideal:30,min:24,max:30}},
+        audio:{...audio,channelCount:{ideal:1,max:1},echoCancellation:true,noiseSuppression:true}
       }
     }
     return nativeGetUserMedia(constraints)
