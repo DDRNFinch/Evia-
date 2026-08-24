@@ -1,15 +1,15 @@
 {
-  "version": "186",
-  "title": "Evidence media row fix",
+  "version": "187",
+  "title": "Avatar look animation removed",
   "details": [
-    "Detects the Evidence view from its tabs and rows instead of one title position",
-    "Shows the real saved photo, video or audio in the left media area",
-    "Removes the duplicated criterion text from the left side before media loads"
+    "Removes Evia's directional eye-look animation completely",
+    "Prevents the lower-left glance when opening QR and scan menus",
+    "Keeps blinking and the existing non-directional avatar reactions"
   ],
-  "summary": "Evia v186 fixes the Evidence rows so media loads reliably in both New evidence and Downloaded.",
+  "summary": "Evia v187 removes the directional looking animation so Evia's eyes stay centred.",
   "changes": [
-    "Evidence media detection fixed",
-    "Media-left layout restored",
-    "Duplicate left criterion removed"
+    "Directional eye movement removed",
+    "QR menu glance removed",
+    "Other avatar behaviour unchanged"
   ]
 }
