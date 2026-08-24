@@ -1,17 +1,17 @@
 {
-  "version": "172",
-  "title": "Evidence capture and export stability",
+  "version": "173",
+  "title": "Evidence thumbnails and PDF cleanup",
   "details": [
-    "Speeds up evidence photo capture and encoding",
-    "Prevents overlapping Evidence tab thumbnail loads that could freeze the screen",
-    "Loads video previews only when they are on screen",
-    "Removes the yellow tint from evidence PDFs"
+    "Restores photo and video thumbnails in both New evidence and Downloaded evidence",
+    "Keeps thumbnail loading serialized so the Evidence tab stays responsive",
+    "Removes the duplicated first recording prompt from evidence PDFs",
+    "Keeps the neutral PDF styling from v172"
   ],
-  "summary": "Evia v172 improves photo capture responsiveness, stabilizes the Evidence tab, and uses a neutral PDF layout.",
+  "summary": "Evia v173 restores evidence thumbnails and removes repeated prompt text from the PDF export.",
   "changes": [
-    "Faster photo capture",
-    "Stable Evidence tab",
-    "Lazy video previews",
-    "Neutral PDF styling"
+    "Thumbnails restored",
+    "Responsive Evidence tab",
+    "No repeated PDF prompts",
+    "Neutral PDF styling retained"
   ]
 }
