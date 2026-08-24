@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=116;
+const VERSION=173;
 const STORE="evia-selfobs-live-v3",RPL_KEY="evia-rpl-ksbs-v1",OBS_KEY="evia-mini-milos-observed-v1",WITNESS_KEY="evia-tinos-witnessed-v1";
 let DATA=[],dataKey="",dataPromise=null,queued=false;
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}}
@@ -35,9 +35,12 @@ function findJob(id){for(const c of DATA){const j=(c.jobs||[]).find(x=>String(x.
 function side(btn){return btn?.querySelector?.(".self-side")||null}
 function folderMark(btn,on,label){
   const s=side(btn);if(!s)return;
-  let mark=s.querySelector(":scope > b.evia-folder-complete-v107");
-  if(!on){mark?.remove();return}
-  if(!mark){mark=document.createElement("b");mark.className="evia-evidence-check evia-folder-complete-v107";const arrow=s.querySelector(":scope > i");if(arrow)s.insertBefore(mark,arrow);else s.appendChild(mark)}
+  if(!on){s.querySelector(":scope > b.evia-folder-complete-v107")?.remove();return}
+  const direct=[...s.children].filter(el=>el.tagName==="B");
+  let mark=direct.find(el=>el.classList.contains("evia-folder-complete-v107"))||direct[0]||null;
+  direct.forEach(el=>{if(el!==mark)el.remove()});
+  if(!mark){mark=document.createElement("b");const arrow=s.querySelector(":scope > i");if(arrow)s.insertBefore(mark,arrow);else s.appendChild(mark)}
+  mark.className="evia-evidence-check evia-folder-complete-v107";
   mark.textContent="✓";mark.title=label;mark.setAttribute("aria-label",label);mark.setAttribute("role","img")
 }
 async function patch(){
@@ -50,6 +53,6 @@ function queue(){if(queued)return;queued=true;requestAnimationFrame(patch)}
 const WATCH="button[data-cat],button[data-job],button[data-opp],.evia-folder-complete-v107,.evia-opportunity-source-v107";
 function relevant(records){return records.some(r=>{const target=r.target instanceof Element?r.target:r.target?.parentElement;if(target&&(target.matches?.(WATCH)||target.closest?.(WATCH)))return true;return[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches?.(WATCH)||n.querySelector?.(WATCH)))})}
 function start(){queue();const root=document.getElementById("root")||document.body;if(root&&!root.__eviaFolderCompletionV116){root.__eviaFolderCompletionV116=true;new MutationObserver(records=>{if(relevant(records))queue()}).observe(root,{subtree:true,childList:true,characterData:true})}}
-window.addEventListener("load",start);window.addEventListener("pageshow",queue);window.addEventListener("storage",e=>{if([STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(e.key))queue()});window.addEventListener("evia:milos-observed-changed",queue);window.addEventListener("evia:witness-changed",queue);document.addEventListener("click",()=>{setTimeout(queue,0);setTimeout(queue,180)},true);if(document.readyState!=="loading")start();else document.addEventListener("DOMContentLoaded",start,{once:true});
+window.addEventListener("load",start);window.addEventListener("pageshow",queue);window.addEventListener("storage",e=>{if([STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(e.key))queue()});window.addEventListener("evia:milos-observed-changed",queue);window.addEventListener("evia:witness-changed",queue);if(document.readyState!=="loading")start();else document.addEventListener("DOMContentLoaded",start,{once:true});
 window.EviaFolderCompletion=Object.freeze({version:VERSION,refresh:queue});
 })();
