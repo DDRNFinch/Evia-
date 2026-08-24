@@ -1,5 +1,5 @@
-// Evia v184 restores the learner profile button after header cleanup.
-const CACHE_NAME = 'evia-shell-v184';
+// Evia v185 restores real evidence media previews.
+const CACHE_NAME = 'evia-shell-v185';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
