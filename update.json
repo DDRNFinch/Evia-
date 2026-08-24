@@ -1,17 +1,15 @@
 {
-  "version": "178",
-  "title": "Faster course navigation",
+  "version": "179",
+  "title": "Single completion indicator",
   "details": [
-    "Removes the duplicate dark-yellow completion tick from course task rows",
-    "Uses one completion indicator per category or task",
-    "Removes the redundant delayed navigation interception on menu presses",
-    "Makes category and task screens respond immediately while keeping a short finish animation"
+    "Deletes the legacy dark-yellow completion tick layer",
+    "Removes the duplicate folder-completion badge generator",
+    "Keeps only the newer built-in completion circle/tick on category and task rows"
   ],
-  "summary": "Evia v178 removes the duplicate completion marker and makes course navigation respond much faster.",
+  "summary": "Evia v179 removes the old duplicate yellow completion badge so only the newer completion indicator remains.",
   "changes": [
-    "Single completion marker",
-    "Faster category presses",
-    "Faster task presses",
-    "Reduced navigation work"
+    "Legacy tick deleted",
+    "Duplicate folder badge deleted",
+    "Single completion indicator"
   ]
 }
