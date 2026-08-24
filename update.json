@@ -1,17 +1,17 @@
 {
-  "version": "177",
-  "title": "Standardised course progress",
+  "version": "178",
+  "title": "Faster course navigation",
   "details": [
-    "Shows the same progress ring on all main course category tiles",
-    "Shows progress consistently on task tiles across courses",
-    "Uses the same pale-yellow circular tick on final completed evidence tiles",
-    "Keeps completion styling consistent throughout Evia"
+    "Removes the duplicate dark-yellow completion tick from course task rows",
+    "Uses one completion indicator per category or task",
+    "Removes the redundant delayed navigation interception on menu presses",
+    "Makes category and task screens respond immediately while keeping a short finish animation"
   ],
-  "summary": "Evia v177 standardises course progress and completion markers across every course hierarchy.",
+  "summary": "Evia v178 removes the duplicate completion marker and makes course navigation respond much faster.",
   "changes": [
-    "A-E category progress",
-    "Consistent task progress",
-    "Standard pale-yellow completion tick",
-    "Cross-course styling"
+    "Single completion marker",
+    "Faster category presses",
+    "Faster task presses",
+    "Reduced navigation work"
   ]
 }
