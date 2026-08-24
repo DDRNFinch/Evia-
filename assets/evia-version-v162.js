@@ -1,9 +1,10 @@
 (()=>{
 "use strict";
-const VERSION=183;
+const VERSION=184;
 const meta=document.querySelector('meta[name="evia-app-version"]');if(meta)meta.setAttribute("content",String(VERSION));window.EviaAppVersion=VERSION;
 let queued=false,observer=null;
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
+function openLearnerProfile(event){event?.preventDefault?.();event?.stopPropagation?.();const open=window.EviaLearnerProfile?.open;if(typeof open==="function"){open();return}setTimeout(()=>window.EviaLearnerProfile?.open?.(),60)}
 function ensureHeaderGuardStyle(){if(document.getElementById("evia-header-guard-v183-style"))return;const s=document.createElement("style");s.id="evia-header-guard-v183-style";s.textContent=`.evia-app.selfobs .self-top>small{font-size:0!important}.evia-app.selfobs .self-top>small>.evia-course-name-v113{display:block!important;font-size:.55rem!important;line-height:1.08!important}.evia-app.selfobs .self-top>small>.evia-course-code-v113{display:block!important;font-size:.49rem!important;line-height:1.08!important}.evia-app.selfobs .self-top>small>.evia-learner-name-v113,.evia-app.selfobs .self-top>small>.evia-learner-name-v114{font-size:.51rem!important}`;document.head.appendChild(s)}
 function identity(){
   const c=window.EviaCourseContext?.current?.()||{},t=read("evia-course-timeline",{}),id=String(c.courseId||t.courseId||"").toLowerCase(),path=String(c.pathway||t.pathway||"").toLowerCase();
@@ -25,13 +26,14 @@ function cleanCourseHeader(){
   let name=preferred.querySelector(":scope > .evia-course-name-v113"),code=preferred.querySelector(":scope > .evia-course-code-v113"),learner=preferred.querySelector(":scope > .evia-learner-name-v113,:scope > .evia-learner-name-v114");
   const unexpected=[...preferred.childNodes].some(node=>node.nodeType===3&&String(node.textContent||"").trim())||[...preferred.children].some(el=>!el.matches(".evia-course-name-v113,.evia-course-code-v113,.evia-learner-name-v113,.evia-learner-name-v114"));
   if(!name||!code||!learner||unexpected){
-    const oldClick=learner?.onclick||null;preferred.replaceChildren();
+    preferred.replaceChildren();
     name=document.createElement("span");name.className="evia-course-name-v113";
     code=document.createElement("span");code.className="evia-course-code-v113";
-    learner=document.createElement("button");learner.type="button";learner.className="evia-learner-name-v113";if(oldClick)learner.onclick=oldClick;
+    learner=document.createElement("button");learner.type="button";learner.className="evia-learner-name-v113";
     preferred.append(name,code,learner)
   }
   if(name.textContent!==x.name)name.textContent=x.name;if(code.textContent!==x.code)code.textContent=x.code;if(learner.textContent!==person)learner.textContent=person;
+  learner.onclick=openLearnerProfile;learner.setAttribute("aria-label",`Open learner profile for ${person}`);
   [...preferred.childNodes].forEach(node=>{if(node.nodeType===3&&String(node.textContent||"").trim())node.remove()});
 }
 const LABELS=Object.freeze({TOC:"Time",KSB:"Course",AC:"Course",OTJ:"Learn",GLH:"Learn",EPA:"Test",ARP:"Test",Units:"Test","Q&A":"Test"});
