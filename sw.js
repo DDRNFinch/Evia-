@@ -1,5 +1,5 @@
-// Evia v172 refreshes the cached shell with faster photo capture, stable evidence loading, and neutral PDFs.
-const CACHE_NAME = 'evia-shell-v172';
+// Evia v173 refreshes the cached shell with restored evidence thumbnails and PDF prompt cleanup.
+const CACHE_NAME = 'evia-shell-v173';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
