@@ -170,10 +170,10 @@ async function makeInstallerHarness({ registryOnline = true } = {}) {
   };
 }
 
-test("all seven permanent manual and QR values resolve to publishable course packages", async () => {
+test("all eight permanent manual and QR values resolve to publishable course packages", async () => {
   const harness = await makeInstallerHarness();
 
-  assert.equal(harness.registry.courses.length, 7);
+  assert.equal(harness.registry.courses.length, 8);
   for (const course of harness.registry.courses) {
     for (const value of [course.enrolmentId, course.qrPayload.toLowerCase()]) {
       const resolved = await harness.window.EviaCourseRegistry.resolve(value);
@@ -181,9 +181,18 @@ test("all seven permanent manual and QR values resolve to publishable course pac
       assert.equal(resolved.enrolmentId, course.enrolmentId);
       assert.equal(resolved.course.packageId, course.packageId);
       assert.equal(resolved.course.packagePath, course.packagePath);
-      assert.match(resolved.course.questionBankPath, /question-banks\/.+-v1\.json$/);
-      assert.match(resolved.course.practicalBankPath, /practical-banks\/.+-v1\.json$/);
-      assert.equal(resolved.course.content.practical, "available-12-task-coach");
+      if (course.enrolmentId === "ST0171") {
+        assert.equal(resolved.course.packagePath, "inline:ST0171");
+        assert.equal(resolved.course.questionBankPath, undefined);
+        assert.equal(resolved.course.practicalBankPath, undefined);
+        assert.equal(resolved.course.content.multipleChoice, "not-configured");
+        assert.equal(resolved.course.content.discussion, "not-configured");
+        assert.equal(resolved.course.content.practical, "not-configured");
+      } else {
+        assert.match(resolved.course.questionBankPath, /question-banks\/.+-v1\.json$/);
+        assert.match(resolved.course.practicalBankPath, /practical-banks\/.+-v1\.json$/);
+        assert.equal(resolved.course.content.practical, "available-12-task-coach");
+      }
     }
   }
 });
