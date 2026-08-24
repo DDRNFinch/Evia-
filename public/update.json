@@ -1,13 +1,14 @@
 {
-  "version": "155",
-  "title": "Signature accuracy fixed",
+  "version": "156",
+  "title": "Learning log added to packs",
   "details": [
-    "The NVQ evidence-pack signature pad now follows the learner's finger smoothly instead of joining sparse touch points with sharp straight lines",
-    "Signature strokes now use coalesced pointer movement and smoothing for more accurate handwriting on Android touchscreens",
-    "No other Evia behaviour or qualification structure was changed"
+    "Each evidence-pack download now includes one PDF containing only the OTJ or GLH learning added since the previous pack download",
+    "The PDF shows the overall OTJ or GLH time since the last download at the top and lists each new learning record underneath",
+    "Standards use OTJ and NVQ courses use GLH automatically, and included learning records are marked only after the pack is downloaded",
+    "No other Evia behaviour, evidence PDFs, signatures, navigation or qualification mapping was changed"
   ],
-  "summary": "Evia v155 fixes the NVQ signature pad accuracy.",
+  "summary": "Evia v156 adds the new OTJ/GLH learning log to evidence-pack downloads.",
   "changes": [
-    "Accurate signature strokes"
+    "OTJ/GLH learning PDF in packs"
   ]
 }
