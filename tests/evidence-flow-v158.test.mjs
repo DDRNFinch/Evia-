@@ -31,10 +31,11 @@ test("post-evidence sequence is saved screen, two seconds, learning reflection, 
   assert.match(flow,/fadeIn\(/);
 });
 
-test("navigation fades do not delay recording controls",()=>{
+test("navigation fades all page buttons while recording controls stay instant",()=>{
   assert.match(flow,/event\.target\?\.closest\?\.\("button"\)/);
   assert.match(flow,/transitionHost\(button\)/);
-  assert.match(flow,/data-action='back'/);
+  assert.match(flow,/evia-tools-body/);
+  assert.match(flow,/self-panel/);
   assert.match(flow,/data-start-video/);
   assert.match(flow,/data-next-prompt/);
   assert.match(flow,/data-start-audio/);
