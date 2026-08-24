@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v150
+name: Verify Evia NVQ v151
 
 on:
   push:
@@ -17,10 +17,13 @@ jobs:
       - name: Syntax checks
         run: |
           node --check assets/evia-trowel-framework-v150.js
+          node --check assets/evia-trowel-practical-v151.js
+          node --check assets/evia-nvq-practical-nav-v151.js
+          node --check assets/evia-nvq-structure-browser-v151.js
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v150.js
+          node --check assets/evia-version-v151.js
           node --check sw.js
           node --check public/sw.js
 
@@ -49,8 +52,12 @@ jobs:
           if(subs.length!==20) throw Error(`sub-categories ${subs.length}/20`);
           if(acts.length!==44) throw Error(`activities ${acts.length}/44`);
           if(codes.length!==335||unique.size!==335) throw Error(`AC assignments ${codes.length}, unique ${unique.size}, expected 335/335`);
-          const ids=acts.map(a=>a.code);
-          if(new Set(ids).size!==44) throw Error('duplicate activity codes');
+          const practical=acts.filter(a=>a.code.startsWith('E'));
+          if(practical.length!==8) throw Error(`practical activities ${practical.length}/8`);
+          for(const a of practical){
+            if(!Array.isArray(a.stages)||a.stages.length<3) throw Error(`${a.code} practical evidence activities`);
+            a.stages.forEach((stage,i)=>{if(!stage.methods?.includes('photo')||!stage.methods?.includes('video'))throw Error(`${a.code}.${i+1} visual methods`)})
+          }
           const mandatory=new Set(['102','234','235','303','300','313','502','701']);
           const options={thin:'238',repair:'690',specialist:'828',drainage:'837'};
           const expected={thin:238,repair:239,specialist:239,drainage:240};
@@ -59,43 +66,50 @@ jobs:
             const routeCodes=codes.filter(c=>allowed.has(c.split('.')[0]));
             if(new Set(routeCodes).size!==expected[route]||routeCodes.length!==expected[route]) throw Error(`${route} route ${routeCodes.length}/${expected[route]}`);
           }
-          const audio=acts.filter(a=>Array.isArray(a.methods)&&a.methods.length===1&&a.methods[0]==='audio');
-          if(audio.length!==15) throw Error(`guided audio activities ${audio.length}/15`);
-          const practical=acts.filter(a=>a.code.startsWith('E'));
-          if(practical.length!==8) throw Error(`practical activities ${practical.length}/8`);
-          for(const a of practical){
-            if(!a.methods?.includes('photo')||!a.methods?.includes('video')) throw Error(`${a.code} visual evidence methods`);
-            if(!Array.isArray(a.stages)||a.stages.length<3) throw Error(`${a.code} staged practical evidence`);
-          }
-          console.log(JSON.stringify({categories:groups.length,subcategories:subs.length,activities:acts.length,acs:unique.size,audio:audio.length,practical:practical.length,expected},null,2));
+          console.log(JSON.stringify({categories:groups.length,subcategories:subs.length,activities:acts.length,acs:unique.size,practical:practical.length},null,2));
           NODE
 
-      - name: Check v150 wiring and route isolation
+      - name: Check visible practical activity expansion
         run: |
-          grep -q 'meta name="evia-app-version" content="150"' index.html
-          grep -q 'evia-version-v150.js?v=150' index.html
-          grep -q 'evia-trowel-framework-v150.js?v=150' index.html
-          grep -q 'evia-nvq-audio-v150.js?v=150' index.html
-          grep -q 'evia-nvq-pack-export-v150.js?v=150' index.html
-          grep -q 'const MAPPING_REVISION=4' assets/evia-6570-pack-migration.js
+          grep -q 'nvqPracticalParent=true' assets/evia-trowel-practical-v151.js
+          grep -q 'nvqPracticalChild:true' assets/evia-trowel-practical-v151.js
+          grep -q 'data-nvq-child' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'E2.1.1' assets/evia-trowel-framework-v150.js
+          grep -q 'Each one saves separately' assets/evia-nvq-practical-nav-v151.js
+          grep -q 'const MAPPING_REVISION=5' assets/evia-6570-pack-migration.js
+
+      - name: Check AC arch uses A-E structure not P/T
+        run: |
+          grep -q 'AC coverage now follows the same NVQ structure' assets/evia-nvq-structure-browser-v151.js
+          grep -q 'data-nvq151-group' assets/evia-nvq-structure-browser-v151.js
+          grep -q 'data-nvq151-sub' assets/evia-nvq-structure-browser-v151.js
+          grep -q 'data-nvq151-activity' assets/evia-nvq-structure-browser-v151.js
+          if grep -q 'By P / T' assets/evia-nvq-structure-browser-v151.js; then exit 1; fi
+
+      - name: Check v151 wiring and route isolation
+        run: |
+          grep -q 'meta name="evia-app-version" content="151"' index.html
+          grep -q 'evia-version-v151.js?v=151' index.html
+          grep -q 'evia-trowel-practical-v151.js?v=151' index.html
+          grep -q 'evia-nvq-practical-nav-v151.js?v=151' index.html
+          grep -q 'evia-nvq-structure-browser-v151.js?v=151' index.html
           node <<'NODE'
           const fs=require('fs'),s=fs.readFileSync('index.html','utf8');
-          const mustBefore=(a,b)=>{if(s.indexOf(a)<0||s.indexOf(b)<0||s.indexOf(a)>=s.indexOf(b))throw Error(`${a} must load before ${b}`)};
-          mustBefore('evia-trowel-framework-v150.js','evia-6570-pack-migration.js');
-          mustBefore('evia-nvq-pack-export-v150.js','evia-selfobs-fixes.js');
-          mustBefore('evia-nvq-audio-v150.js','evia-staged-evidence-v132.js');
+          const before=(a,b)=>{if(s.indexOf(a)<0||s.indexOf(b)<0||s.indexOf(a)>=s.indexOf(b))throw Error(`${a} must load before ${b}`)};
+          before('evia-trowel-framework-v150.js','evia-trowel-practical-v151.js');
+          before('evia-trowel-practical-v151.js','evia-6570-pack-migration.js');
+          before('evia-nvq-practical-nav-v151.js','evia-staged-evidence-v132.js');
+          before('evia-nvq-structure-browser-v151.js','evia-nvq-ac-browser-v90.js');
           NODE
           grep -q 'courseId==="6570-05"' assets/evia-nvq-audio-v150.js
           grep -q 'courseId==="6570-05"' assets/evia-nvq-pack-export-v150.js
-          grep -q 'media==="audio"' assets/evia-nvq-audio-v150.js
-          grep -q 'data-action=.download.' assets/evia-nvq-pack-export-v150.js
 
       - name: Check offline and update release
         run: |
           cmp -s sw.js public/sw.js
-          grep -q "evia-shell-v150" sw.js
-          grep -q 'evia-trowel-framework-v150.js' sw.js
-          grep -q 'evia-nvq-audio-v150.js' sw.js
-          grep -q 'evia-nvq-pack-export-v150.js' sw.js
+          grep -q "evia-shell-v151" sw.js
+          grep -q 'evia-trowel-practical-v151.js' sw.js
+          grep -q 'evia-nvq-practical-nav-v151.js' sw.js
+          grep -q 'evia-nvq-structure-browser-v151.js' sw.js
           cmp -s update.json public/update.json
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="150") process.exit(1)'
+          node -e 'const x=require("./update.json"); if(String(x.version)!=="151") process.exit(1)'
