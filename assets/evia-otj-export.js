@@ -1,10 +1,10 @@
 (()=>{
 "use strict";
-const KEY="evia-otj-entries",NAME_KEY="evia-full-name";
+const VERSION=156,OTJ_KEY="evia-otj-entries",GLH_KEY="evia-glh-entries",NAME_KEY="evia-full-name";
 const OriginalBlob=window.Blob,enc=new TextEncoder();
 let pending=null;
-function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[]}catch{return[]}}
-function write(x){try{localStorage.setItem(KEY,JSON.stringify(x))}catch{}}
+function read(key){try{const x=JSON.parse(localStorage.getItem(key)||"[]");return Array.isArray(x)?x:[]}catch{return[]}}
+function write(key,x){try{localStorage.setItem(key,JSON.stringify(x))}catch{}}
 function clean(s){return String(s??"").replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,"-").replace(/[^\x20-\x7E]/g," ").replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)")}
 function wrap(s,max=82){const words=clean(s).split(/\s+/).filter(Boolean),out=[];let line="";for(const w of words){if(!line)line=w;else if((line+" "+w).length<=max)line+=" "+w;else{out.push(line);line=w}}if(line)out.push(line);return out.length?out:[""]}
 function fmtDate(v){if(!v)return"";const d=new Date(`${v}T12:00:00`);return Number.isNaN(d.getTime())?String(v):d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
@@ -12,15 +12,17 @@ function mins(e){if(Number.isFinite(Number(e?.durationMinutes)))return Math.max(
 function fmtMins(n){n=Math.max(0,Math.round(n||0));const h=Math.floor(n/60),m=n%60;return m?`${h}h ${m}m`:`${h}h`}
 function concat(parts){const xs=parts.map(p=>p instanceof Uint8Array?p:new Uint8Array(p)),total=xs.reduce((n,p)=>n+p.length,0),out=new Uint8Array(total);let at=0;xs.forEach(p=>{out.set(p,at);at+=p.length});return out}
 function text(lines,x,y,size=9,leading=12,bold=false){let s=`BT /${bold?"F2":"F1"} ${size} Tf ${x} ${y} Td `;lines.forEach((line,i)=>{if(i)s+=`0 -${leading} Td `;s+=`(${clean(line)}) Tj `});return s+"ET\n"}
-function makePdf(entries){
+function profile(kind){return kind==="glh"?{kind:"glh",key:GLH_KEY,short:"GLH",title:"Evia guided learning hours",filename:"Evia-GLH.pdf",codeLabel:"ACs"}:{kind:"otj",key:OTJ_KEY,short:"OTJ",title:"Evia off-the-job learning",filename:"Evia-Off-the-Job.pdf",codeLabel:"KSBs"}}
+function makePdf(entries,p){
   const learner=(localStorage.getItem(NAME_KEY)||"Learner").trim()||"Learner",total=entries.reduce((n,e)=>n+mins(e),0),lines=[];
-  lines.push({t:"Evia off-the-job learning",b:true,s:16,g:20},{t:`Learner: ${learner}`,s:9,g:12},{t:`Included since previous evidence download: ${entries.length} record${entries.length===1?"":"s"} · ${fmtMins(total)}`,s:9,g:16},{t:"",g:8});
+  lines.push({t:p.title,b:true,s:16,g:20},{t:`Learner: ${learner}`,s:9,g:14},{t:`Overall ${p.short} since last download`,b:true,s:10,g:14},{t:fmtMins(total),b:true,s:20,g:25},{t:`${entries.length} new learning record${entries.length===1?"":"s"}`,s:9,g:18},{t:"",g:8});
   entries.slice().sort((a,b)=>String(a.date||"").localeCompare(String(b.date||""))).forEach((e,i)=>{
     lines.push({t:`${i+1}. ${fmtDate(e.date)} · ${fmtMins(mins(e))}`,b:true,s:10,g:13});
     lines.push({t:`Type: ${e.type||"Learning"}`,s:8.5,g:11});
-    lines.push({t:`Area: ${e.area||""}${e.topic?` - ${e.topic}`:""}`,s:8.5,g:11});
-    const ksbs=Array.isArray(e.codes)?e.codes.join(" · "):"";if(ksbs)lines.push({t:`KSB area: ${ksbs}`,s:8.5,g:11});
-    wrap(`What I learned: ${e.learned||e.description||e.whatLearned||""}`,86).forEach(t=>lines.push({t,s:8.5,g:11}));
+    const subject=String(e.subject||e.topic||e.area||"").trim();if(subject)lines.push({t:`Subject: ${subject}`,s:8.5,g:11});
+    const area=String(e.area||"").trim(),topic=String(e.topic||"").trim();if(area&&topic&&topic!==subject)lines.push({t:`Area: ${area} - ${topic}`,s:8.5,g:11});
+    const codes=Array.isArray(e.codes)?e.codes.join(" · "):"";if(codes)lines.push({t:`${p.codeLabel}: ${codes}`,s:8.5,g:11});
+    wrap(`What I learned: ${e.learning||e.learned||e.description||e.whatLearned||""}`,86).forEach(t=>lines.push({t,s:8.5,g:11}));
     lines.push({t:"",g:8});
   });
   const pages=[];let current=[],used=0;const max=690;
@@ -48,12 +50,14 @@ function appendStored(parts,name,data){
 }
 function EviaBlob(parts,options){
   let next=parts;const type=String(options?.type||"").toLowerCase();
-  if(type==="application/zip"&&pending?.pdf?.length&&!pending.injected){try{next=appendStored(parts,"Evia-Off-the-Job.pdf",pending.pdf);pending.injected=next!==parts}catch{}}
+  if(type==="application/zip"&&pending?.pdf?.length&&!pending.injected){try{next=appendStored(parts,pending.filename,pending.pdf);pending.injected=next!==parts}catch{}}
   return new OriginalBlob(next,options);
 }
 EviaBlob.prototype=OriginalBlob.prototype;try{Object.setPrototypeOf(EviaBlob,OriginalBlob)}catch{};window.Blob=EviaBlob;
-function prepare(){const entries=read().filter(e=>!e.downloadedAt);pending=entries.length?{ids:entries.map(e=>e.id),pdf:makePdf(entries),injected:false}:null}
-function mark(){if(!pending?.injected)return;const ids=new Set(pending.ids),stamp=Date.now();write(read().map(e=>ids.has(e.id)?{...e,downloadedAt:stamp}:e));pending=null}
-document.addEventListener("click",e=>{const b=e.target.closest?.("[data-sign-download]");if(b&&!b.disabled)prepare()},true);
-document.addEventListener("click",e=>{const a=e.target.closest?.('a[download^="Evia-New-Evidence-"]');if(a)mark()},true);
+function prepare(kind){const p=profile(kind),entries=read(p.key).filter(e=>!e.downloadedAt);pending=entries.length?{key:p.key,ids:entries.map(e=>e.id),filename:p.filename,pdf:makePdf(entries,p),injected:false}:null}
+function mark(){if(!pending?.injected)return;const ids=new Set(pending.ids),stamp=Date.now();write(pending.key,read(pending.key).map(e=>ids.has(e.id)?{...e,downloadedAt:stamp}:e));pending=null}
+function courseKind(){const c=window.EviaCourseContext?.current?.()||{};return c.courseType==="nvq"?"glh":"otj"}
+document.addEventListener("click",e=>{const b=e.target.closest?.("[data-sign-download],[data-nvq-pack-download]");if(!b||b.disabled)return;prepare(b.matches("[data-nvq-pack-download]")?"glh":courseKind())},true);
+document.addEventListener("click",e=>{const a=e.target.closest?.("a[download]");if(!a||!pending?.injected)return;const name=String(a.getAttribute("download")||"");if(name.startsWith("Evia-New-Evidence-")||name.startsWith("Evia-NVQ-Evidence-Packs-"))mark()},true);
+window.EviaLearningPackExport=Object.freeze({version:VERSION});
 })();
