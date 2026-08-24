@@ -1,16 +1,16 @@
 {
-  "version": "158",
-  "title": "Smooth evidence flow",
+  "version": "159",
+  "title": "Navigation flicker hotfix",
   "details": [
-    "Video prompt timestamps are listed clearly in evidence PDFs",
-    "After evidence saves, Evia shows Evidence saved for two seconds and then asks What did you learn?",
-    "The learner's reflection is saved with the evidence before Evia returns to the home screen",
-    "Page, option and back navigation use smooth fade-out and fade-in transitions"
+    "Removed the duplicate global button-fade interceptor introduced in v158",
+    "Normal navigation now uses Evia's existing core transition system only",
+    "Evidence completion has one owner: Evidence saved for two seconds, What did you learn?, then home",
+    "Video prompt timestamps remain listed clearly in evidence PDFs"
   ],
-  "summary": "Evia v158 adds the smooth post-evidence flow, cleaner navigation fades and video timestamp lists in evidence PDFs.",
+  "summary": "Evia v159 removes the v158 double-fade flicker and keeps one controlled evidence completion sequence.",
   "changes": [
-    "Video timestamp lists",
-    "Post-evidence reflection flow",
-    "Smooth navigation fades"
+    "Removed duplicate fade interceptor",
+    "Single-owner evidence completion flow",
+    "Fresh offline cache"
   ]
 }
