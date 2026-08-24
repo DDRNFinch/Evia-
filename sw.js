@@ -1,5 +1,5 @@
-// Evia v156 adds new OTJ/GLH learning records to evidence-pack downloads only.
-const CACHE_NAME = 'evia-shell-v156';
+// Evia v157 refreshes the offline shell so recent performance and audio-save fixes reach installed clients.
+const CACHE_NAME = 'evia-shell-v157';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v156.js',
+  './assets/evia-version-v157.js',
   './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
