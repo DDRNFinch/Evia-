@@ -1,15 +1,15 @@
 {
-  "version": "187",
-  "title": "Avatar look animation removed",
+  "version": "188",
+  "title": "Evia eye movement fully removed",
   "details": [
-    "Removes Evia's directional eye-look animation completely",
-    "Prevents the lower-left glance when opening QR and scan menus",
-    "Keeps blinking and the existing non-directional avatar reactions"
+    "Removes the remaining menu-state eye movement from the core Evia CSS",
+    "Locks Evia's eyes to the centred position in normal, menu and QR/scan states",
+    "Keeps blinking but removes all eye-position travel"
   ],
-  "summary": "Evia v187 removes the directional looking animation so Evia's eyes stay centred.",
+  "summary": "Evia v188 permanently locks the eye position to centre in every menu state.",
   "changes": [
-    "Directional eye movement removed",
-    "QR menu glance removed",
-    "Other avatar behaviour unchanged"
+    "Menu eye shift removed",
+    "QR/scan eye position locked",
+    "Blinking retained without gaze movement"
   ]
 }
