@@ -3,7 +3,7 @@
 const COURSE_ID="6570-05";
 const MARKER="nisi-6570-pack-migration-v1";
 const TIMELINE_KEY="evia-course-timeline";
-const MAPPING_REVISION=3;
+const MAPPING_REVISION=4;
 const ROUTES=["thin","repair","specialist","drainage"];
 const EXPECTED={
   thin:{acs:238,units:[102,234,235,303,300,313,502,701,238]},
