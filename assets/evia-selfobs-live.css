@@ -11,8 +11,7 @@ html,body,#root{width:100%;height:100%;margin:0}body{overflow:hidden}.selfobs{--
   will-change:translate,scale;backface-visibility:hidden;contain:layout paint style;
 }
 .selfobs.is-open .evia-anchor{translate:-50% calc(clamp(5rem,11svh,6.35rem) - 50%);scale:.64}
-.selfobs .evia-eyes{transition:transform .28s var(--ease-out)}
-.selfobs.is-open .evia-eyes{transform:translateY(14%)}
+.selfobs .evia-eyes,.selfobs.is-open .evia-eyes,.selfobs.evia-exchange-open .evia-eyes{transform:none!important;translate:0 0!important;transition:none!important}
 .selfobs .menu-stage{pointer-events:none}
 .selfobs.is-open .menu-stage{pointer-events:auto}
 .selfobs .self-panel{
