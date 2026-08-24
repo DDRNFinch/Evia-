@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=174;
+const VERSION=175;
 const STORE="evia-selfobs-live-v3";
 let overlay=null,current=null,raf=0,returnFromEvidence=false,restoring=false;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -14,10 +14,19 @@ function findJob(id){for(const cat of siteData())for(const job of cat.jobs||[])i
 function children(parent,job){return (job?.opps||[]).filter(o=>o?.nvqPracticalChild&&String(o.parentActivityId)===String(parent.id))}
 function practicalParents(job){return (job?.opps||[]).filter(o=>o?.nvqPracticalParent)}
 function savedCount(id){const xs=read(STORE,[]);return Array.isArray(xs)?xs.filter(e=>String(e?.opportunityId)===String(id)).length:0}
+function progressFor(parent,job){const xs=children(parent,job),total=xs.length,done=xs.reduce((n,child)=>n+(savedCount(child.id)>0?1:0),0);return{done,total,pct:total?done/total:0}}
+function progressMarkup(progress){if(!progress?.total)return"";const complete=progress.done>=progress.total,pct=Math.max(0,Math.min(1,progress.pct));return `<span class="evia-section-progress-v175${complete?" is-complete":""}" style="--evia-section-progress:${pct*360}deg" role="img" aria-label="${progress.done} of ${progress.total} complete"><span>${complete?"✓":`${progress.done}/${progress.total}`}</span></span>`}
+function applyProgress(button,parent,job){if(!button)return;const side=button.querySelector(".self-side");if(!side)return;side.querySelector(".evia-section-progress-v175")?.remove();const progress=progressFor(parent,job);if(!progress.total)return;const holder=document.createElement("span");holder.innerHTML=progressMarkup(progress);const ring=holder.firstElementChild;if(ring)side.prepend(ring)}
 function style(){if(document.getElementById("evia-nvq-practical-nav-v151-style"))return;const s=document.createElement("style");s.id="evia-nvq-practical-nav-v151-style";s.textContent=`
 .selfobs .evia-nvq-practical-list-v151{position:absolute;inset:0;z-index:10;background:linear-gradient(180deg,#fff 0%,#fff 62%,#fff9dd 100%);overflow:auto;padding:0 0 7rem}
 .selfobs .evia-nvq-practical-list-v151 .self-list{margin-top:.65rem}
 .selfobs .option-row[data-nvq-child] .self-side b{color:#b88f00}
+.selfobs .evia-section-progress-v175{--evia-section-progress:0deg;position:relative;display:grid;place-items:center;width:2rem;height:2rem;flex:0 0 2rem;border-radius:50%;background:conic-gradient(#efc33d 0 var(--evia-section-progress),#e8e5dc var(--evia-section-progress) 360deg);font:750 .52rem/1 system-ui,-apple-system,sans-serif;color:#625d52;box-sizing:border-box}
+.selfobs .evia-section-progress-v175:before{content:"";position:absolute;inset:3px;border-radius:50%;background:#fff}
+.selfobs .evia-section-progress-v175>span{position:relative;z-index:1;white-space:nowrap}
+.selfobs .evia-section-progress-v175.is-complete{background:#efc33d;color:#55420c;font-size:.78rem}
+.selfobs .evia-section-progress-v175.is-complete:before{display:none}
+.selfobs .option-row .self-side{gap:.42rem}
 `;document.head.appendChild(s)}
 function removeList(clearCurrent=true){overlay?.remove();overlay=null;if(clearCurrent)current=null}
 function close(){returnFromEvidence=false;restoring=false;removeList(true)}
@@ -69,7 +78,11 @@ function patchPanel(){
   panel.querySelectorAll("[data-opp]").forEach(button=>{
     const ctx=findOpp(button.dataset.opp);if(!ctx)return;
     if(ctx.opp.nvqPracticalChild){button.style.display="none";button.setAttribute("aria-hidden","true")}
-    if(ctx.opp.nvqPracticalParent)practical=true
+    if(ctx.opp.nvqPracticalParent){practical=true;applyProgress(button,ctx.opp,ctx.job)}
+  });
+  panel.querySelectorAll("[data-job]").forEach(button=>{
+    const found=findJob(button.dataset.job),parents=practicalParents(found?.job);
+    if(found&&String(found.cat?.id)==="E"&&parents.length===1)applyProgress(button,parents[0],found.job)
   });
   if(practical){const copy=panel.querySelector(".self-copy");if(copy)copy.textContent="Choose the activity you want to collect evidence for."}
 }
@@ -89,7 +102,8 @@ function intercept(event){
   event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();openParent(ctx)
 }
 document.addEventListener("click",intercept,true);
-window.addEventListener("evia:evidence-reflection-saved",close);
+window.addEventListener("evia:evidence-saved",schedule);
+window.addEventListener("evia:evidence-reflection-saved",()=>{close();schedule()});
 const observer=new MutationObserver(schedule);
 function start(){style();observer.observe(document.documentElement,{childList:true,subtree:true});schedule()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
