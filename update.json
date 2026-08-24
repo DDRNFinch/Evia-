@@ -1,15 +1,15 @@
 {
-  "version": "184",
-  "title": "Learner profile opening fix",
+  "version": "185",
+  "title": "Evidence media preview fix",
   "details": [
-    "Restores the learner-name button after the v183 header cleanup",
-    "Keeps the existing learner profile screen and fields unchanged",
-    "Preserves the clean Trowel / 6570-05 header"
+    "Restores the actual saved photo and video previews in Evidence",
+    "Makes saved audio playable directly from its media tile",
+    "Removes the duplicated criterion name from the left media column"
   ],
-  "summary": "Evia v184 restores the learner profile button without changing the profile or any other app flow.",
+  "summary": "Evia v185 restores the real evidence media previews without changing any other app flow.",
   "changes": [
-    "Learner profile button restored",
-    "Header cleanup retained",
-    "No profile data changes"
+    "Real evidence media restored",
+    "Audio tile playback restored",
+    "Duplicate left-side criterion text removed"
   ]
 }
