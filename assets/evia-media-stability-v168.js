@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=170;
+const VERSION=171;
 
 function inEvidence(){return document.querySelector(".self-title")?.textContent?.trim()==="Evidence"}
 let hydrateToken=0,mutationTimer=0;
@@ -40,9 +40,9 @@ if(mediaDevices?.getUserMedia){
         ...constraints,
         video:{
           ...video,
-          width:{ideal:1280,max:1280},
-          height:{ideal:720,max:720},
-          frameRate:{ideal:30,max:30}
+          width:{ideal:1920,max:1920},
+          height:{ideal:1080,max:1080},
+          frameRate:{ideal:30,min:24,max:30}
         },
         audio:{
           ...audio,
@@ -63,10 +63,15 @@ if(typeof NativeMediaRecorder==="function"){
     const hasVideo=!!stream?.getVideoTracks?.().length,hasAudio=!!stream?.getAudioTracks?.().length;
     let opts=options?{...options}:{};
     if(hasVideo&&hasAudio){
-      const stableType=["video/webm;codecs=vp8,opus","video/webm"].find(supports);
-      if(stableType)opts.mimeType=stableType;
-      opts.videoBitsPerSecond=Math.max(2800000,Number(opts.videoBitsPerSecond)||0);
-      opts.audioBitsPerSecond=Math.max(128000,Number(opts.audioBitsPerSecond)||0)
+      const hardwareType=[
+        'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
+        "video/mp4",
+        "video/webm;codecs=vp8,opus",
+        "video/webm"
+      ].find(supports);
+      if(hardwareType)opts.mimeType=hardwareType;
+      opts.videoBitsPerSecond=Math.max(6000000,Number(opts.videoBitsPerSecond)||0);
+      opts.audioBitsPerSecond=Math.max(160000,Number(opts.audioBitsPerSecond)||0)
     }
     let recorder;
     try{recorder=new NativeMediaRecorder(stream,opts)}catch{recorder=new NativeMediaRecorder(stream,options)}
