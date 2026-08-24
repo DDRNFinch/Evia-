@@ -1,16 +1,17 @@
 {
-  "version": "159",
-  "title": "Navigation flicker hotfix",
+  "version": "160",
+  "title": "Homepage and evidence polish",
   "details": [
-    "Removed the duplicate global button-fade interceptor introduced in v158",
-    "Normal navigation now uses Evia's existing core transition system only",
-    "Evidence completion has one owner: Evidence saved for two seconds, What did you learn?, then home",
-    "Video prompt timestamps remain listed clearly in evidence PDFs"
+    "Keeps the concise two-line course identity stable on the home screen",
+    "Uses one post-evidence learning screen with Hours and Minutes and records OTJ for Standards or GLH for NVQ",
+    "Restores evidence thumbnails and shows a square Audio tile for audio-only evidence",
+    "Shows measured pack-building progress with a yellow spinner and real percentage while NVQ evidence packs are prepared"
   ],
-  "summary": "Evia v159 removes the v158 double-fade flicker and keeps one controlled evidence completion sequence.",
+  "summary": "Evia v160 fixes the remaining homepage and evidence-flow issues without changing course mappings or evidence data.",
   "changes": [
-    "Removed duplicate fade interceptor",
-    "Single-owner evidence completion flow",
-    "Fresh offline cache"
+    "Stable concise course title",
+    "Single OTJ/GLH follow-up",
+    "Evidence thumbnails restored",
+    "Measured download progress"
   ]
 }

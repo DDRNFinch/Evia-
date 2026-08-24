@@ -1,5 +1,5 @@
-// Evia v159 removes the duplicate global fade interceptor and keeps one evidence completion owner.
-const CACHE_NAME = 'evia-shell-v159';
+// Evia v160 polishes the homepage, post-evidence learning flow, evidence thumbnails and measured pack progress.
+const CACHE_NAME = 'evia-shell-v160';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -19,10 +19,12 @@ const CRITICAL = [
   './assets/evia-evidence-hub-v109.js',
   './assets/evia-home-header-v110.js',
   './assets/evia-home-brand-v114.js',
+  './assets/evia-course-title-v160.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v159.js',
-  './assets/evia-smooth-flow-v159.js',
+  './assets/evia-version-v160.js',
+  './assets/evia-smooth-flow-v160.js',
+  './assets/evia-download-progress-v160.js',
   './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
