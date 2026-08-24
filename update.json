@@ -1,15 +1,15 @@
 {
-  "version": "183",
-  "title": "Header flicker cleanup",
+  "version": "184",
+  "title": "Learner profile opening fix",
   "details": [
-    "Removes the legacy pathway title before the header can paint",
-    "Prevents 690 · Repairing & maintaining masonry flashing under Evia",
-    "Keeps only Trowel / 6570-05 and the learner name in the top-left header"
+    "Restores the learner-name button after the v183 header cleanup",
+    "Keeps the existing learner profile screen and fields unchanged",
+    "Preserves the clean Trowel / 6570-05 header"
   ],
-  "summary": "Evia v183 removes the remaining legacy course-header flash.",
+  "summary": "Evia v184 restores the learner profile button without changing the profile or any other app flow.",
   "changes": [
-    "Legacy header removed before paint",
-    "No pathway-title flash",
-    "Short course identity only"
+    "Learner profile button restored",
+    "Header cleanup retained",
+    "No profile data changes"
   ]
 }
