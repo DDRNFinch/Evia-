@@ -1,5 +1,5 @@
-// Evia v153 routes post-evidence learning automatically to OTJ for Standards or GLH for NVQ.
-const CACHE_NAME = 'evia-shell-v153';
+// Evia v154 uses learner-friendly arch labels and keeps automatic post-evidence OTJ/GLH routing.
+const CACHE_NAME = 'evia-shell-v154';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,8 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v152.js',
+  './assets/evia-version-v154.js',
+  './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
