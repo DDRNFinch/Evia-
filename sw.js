@@ -1,5 +1,5 @@
-// Evia v162 moves the final home course identity and arch labels into the core renderer.
-const CACHE_NAME = 'evia-shell-v162';
+// Evia v163 refreshes the cached shell with the post-evidence interaction-lock fix.
+const CACHE_NAME = 'evia-shell-v163';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
