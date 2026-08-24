@@ -1,12 +1,12 @@
 (()=>{
 "use strict";
-const VERSION=115,STYLE_ID="evia-avatar-life-v115-style";
+const VERSION=116,STYLE_ID="evia-avatar-life-v116-style";
 let blinkTimer=null,gestureTimer=null,happyTimer=null,observer=null;
 const reduced=()=>!!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 const anchor=()=>document.querySelector(".evia-app.selfobs .evia-anchor[data-evia]");
 const app=()=>document.querySelector(".evia-app.selfobs");
 function ensureStyle(){
-  ["evia-avatar-life-v108-style","evia-avatar-life-v113-style","evia-avatar-life-v114-style"].forEach(id=>document.getElementById(id)?.remove());
+  ["evia-avatar-life-v108-style","evia-avatar-life-v113-style","evia-avatar-life-v114-style","evia-avatar-life-v115-style"].forEach(id=>document.getElementById(id)?.remove());
   const a=anchor();if(a)a.classList.remove("evia-life-sleeping","evia-life-wake","evia-life-look-left","evia-life-look-right","evia-life-look-up","evia-life-look-down");
   if(document.getElementById(STYLE_ID))return;
   const s=document.createElement("style");s.id=STYLE_ID;s.textContent=`
@@ -14,10 +14,10 @@ function ensureStyle(){
 .selfobs .evia-anchor .evia-face::before{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;opacity:.38;background:conic-gradient(from 0deg,transparent 0 68%,rgba(239,195,61,.08) 72%,rgba(255,221,92,.72) 81%,rgba(239,195,61,.12) 88%,transparent 94%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));animation:evia-life-rollglow-v114 9.5s linear infinite}
 .selfobs:not(.is-open):not(.evia-exchange-open) .evia-anchor .evia-float{animation:evia-life-float-v114 6.2s cubic-bezier(.45,0,.55,1) infinite}
 .selfobs .evia-anchor .evia-halo{animation:evia-life-breathe-v114 5.1s ease-in-out infinite;filter:drop-shadow(0 0 7px rgba(239,195,61,.16));transition:opacity .6s ease,filter .6s ease,scale .6s ease!important}
-.selfobs .evia-anchor .evia-eyes{transform:none!important;transition:none!important}
-.selfobs .evia-anchor .evia-eye{transform-origin:50% 50%;transition:scale .11s ease,translate .3s ease,border-color .25s ease,border-radius .25s ease,opacity .3s ease!important}
-.selfobs .evia-anchor.evia-life-blink .evia-eye{scale:1 .1!important}
-.selfobs .evia-anchor.evia-life-happy .evia-eye{scale:1 .55!important;translate:0 17%!important;border-bottom-color:transparent!important;border-radius:50% 50% 34% 34%!important}
+.selfobs .evia-anchor .evia-eyes,.selfobs.is-open .evia-anchor .evia-eyes,.selfobs.evia-exchange-open .evia-anchor .evia-eyes{transform:none!important;translate:0 0!important;transition:none!important}
+.selfobs .evia-anchor .evia-eye{transform-origin:50% 50%;translate:0 0!important;transition:scale .11s ease,border-color .25s ease,border-radius .25s ease,opacity .3s ease!important}
+.selfobs .evia-anchor.evia-life-blink .evia-eye{scale:1 .1!important;translate:0 0!important}
+.selfobs .evia-anchor.evia-life-happy .evia-eye{scale:1 .55!important;translate:0 0!important;border-bottom-color:transparent!important;border-radius:50% 50% 34% 34%!important}
 .selfobs .evia-anchor.evia-life-hop .evia-float{animation:evia-life-hop-v114 .8s cubic-bezier(.22,1,.36,1) both!important}
 .selfobs .evia-anchor.evia-life-pop .evia-float{animation:evia-life-pop-v114 .86s cubic-bezier(.22,1,.36,1) both!important}.selfobs .evia-anchor.evia-life-pop .evia-halo{filter:drop-shadow(0 0 13px rgba(239,195,61,.43))!important;opacity:1!important}
 .selfobs .evia-anchor.evia-life-dim .evia-face{filter:brightness(.9) saturate(.88)!important}.selfobs .evia-anchor.evia-life-dim .evia-halo{opacity:.42!important}
