@@ -1,5 +1,5 @@
-// Evia v178 refreshes the cached shell with duplicate-tick and navigation-response fixes.
-const CACHE_NAME = 'evia-shell-v178';
+// Evia v179 removes the legacy duplicate completion-tick layers.
+const CACHE_NAME = 'evia-shell-v179';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -43,7 +43,6 @@ const CRITICAL = [
   './assets/evia-nvq-practical-nav-v151.js',
   './assets/evia-nvq-structure-browser-v151.js',
   './assets/evia-export-status.js',
-  './assets/evia-folder-completion-v116.js',
   './assets/evia-qr-exchange-v107.js',
   './assets/evia-qr-st0171-v126.js',
   './assets/evia-assistant-network.js',
@@ -57,7 +56,6 @@ const CRITICAL = [
   './assets/evia-rpl-evidence.css',
   './assets/evia-rpl-course.js',
   './assets/evia-rpl-course.css',
-  './assets/evia-evidence-ticks-v103.js',
   './assets/evia-arp-v80.js',
   './assets/evia-arp-discussion-v82.js',
   './assets/evia-arp-practical-v83.js',
