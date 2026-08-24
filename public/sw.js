@@ -1,5 +1,5 @@
-// Evia v150 adds the structured Level 3 Trowel NVQ activity framework, guided audio evidence and category evidence packs.
-const CACHE_NAME = 'evia-shell-v150';
+// Evia v151 replaces Trowel P/T navigation with the A-E NVQ structure and exposes practical evidence activities as visible tiles.
+const CACHE_NAME = 'evia-shell-v151';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v150.js',
+  './assets/evia-version-v151.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
   './assets/evia-staged-evidence-v132.css',
@@ -30,6 +30,9 @@ const CRITICAL = [
   './assets/evia-nvq-audio-v150.js',
   './assets/evia-nvq-pack-export-v150.js',
   './assets/evia-trowel-framework-v150.js',
+  './assets/evia-trowel-practical-v151.js',
+  './assets/evia-nvq-practical-nav-v151.js',
+  './assets/evia-nvq-structure-browser-v151.js',
   './assets/evia-export-status.js',
   './assets/evia-folder-completion-v116.js',
   './assets/evia-mini-milos-v86.js',
