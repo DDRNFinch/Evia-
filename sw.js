@@ -1,5 +1,5 @@
-// Evia v187 removes Evia's directional eye-look animation.
-const CACHE_NAME = 'evia-shell-v187';
+// Evia v188 permanently centres Evia's eyes in every menu state.
+const CACHE_NAME = 'evia-shell-v188';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
