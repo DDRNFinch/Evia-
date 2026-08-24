@@ -1,16 +1,16 @@
 {
-  "version": "153",
-  "title": "Post-evidence GLH saving fixed",
+  "version": "154",
+  "title": "Simpler learner arch labels",
   "details": [
-    "The post-evidence 'Did you learn anything?' flow now saves automatically to GLH when the active course is an NVQ",
-    "The same flow continues to save to OTJ for Standards and apprenticeship courses",
-    "NVQ GLH entries keep the learner's reflection, duration, date and evidence context and refresh the GLH progress arch immediately",
-    "Save GLH, Save guided learning and equivalent save buttons are now recognised by the post-evidence learning flow",
-    "The camera, evidence saving, Section E navigation, AC mapping and the rest of Evia are unchanged"
+    "The four learner arches now use universal plain-language labels: Time, Course, Learn and Test",
+    "The underlying arch routes are unchanged, so Time still opens TOC, Course still opens KSB/AC coverage, Learn still opens OTJ/GLH and Test keeps the existing EPA/ARP/Units route",
+    "The post-evidence 'Did you learn anything?' flow now saves automatically to GLH for NVQ learners and continues to save to OTJ for Standards learners",
+    "NVQ GLH entries keep the reflection, duration, date and evidence context and refresh the learner's GLH progress",
+    "Camera, evidence saving, Section E navigation and qualification mapping are unchanged"
   ],
-  "summary": "Evia v153 fixes automatic post-evidence GLH saving for NVQ learners.",
+  "summary": "Evia v154 simplifies the arches to Time, Course, Learn and Test and includes the NVQ GLH save fix.",
   "changes": [
-    "Automatic NVQ GLH saving",
-    "Standards OTJ routing retained"
+    "Time / Course / Learn / Test arches",
+    "Automatic NVQ GLH saving"
   ]
 }
