@@ -1,17 +1,15 @@
 {
-  "version": "173",
-  "title": "Evidence thumbnails and PDF cleanup",
+  "version": "174",
+  "title": "Faster practical evidence navigation",
   "details": [
-    "Restores photo and video thumbnails in both New evidence and Downloaded evidence",
-    "Keeps thumbnail loading serialized so the Evidence tab stays responsive",
-    "Removes the duplicated first recording prompt from evidence PDFs",
-    "Keeps the neutral PDF styling from v172"
+    "Removes redundant one-choice practical activity screens",
+    "Opens the evidence stages immediately when a practical section contains only one activity",
+    "Keeps normal activity selection where a section genuinely has multiple choices"
   ],
-  "summary": "Evia v173 restores evidence thumbnails and removes repeated prompt text from the PDF export.",
+  "summary": "Evia v174 removes an unnecessary click from practical evidence collection without changing the evidence stages themselves.",
   "changes": [
-    "Thumbnails restored",
-    "Responsive Evidence tab",
-    "No repeated PDF prompts",
-    "Neutral PDF styling retained"
+    "One-choice screens skipped",
+    "Faster practical evidence route",
+    "Multiple-choice sections unchanged"
   ]
 }
