@@ -1,16 +1,13 @@
 {
-  "version": "154",
-  "title": "Simpler learner arch labels",
+  "version": "155",
+  "title": "Signature accuracy fixed",
   "details": [
-    "The four learner arches now use universal plain-language labels: Time, Course, Learn and Test",
-    "The underlying arch routes are unchanged, so Time still opens TOC, Course still opens KSB/AC coverage, Learn still opens OTJ/GLH and Test keeps the existing EPA/ARP/Units route",
-    "The post-evidence 'Did you learn anything?' flow now saves automatically to GLH for NVQ learners and continues to save to OTJ for Standards learners",
-    "NVQ GLH entries keep the reflection, duration, date and evidence context and refresh the learner's GLH progress",
-    "Camera, evidence saving, Section E navigation and qualification mapping are unchanged"
+    "The NVQ evidence-pack signature pad now follows the learner's finger smoothly instead of joining sparse touch points with sharp straight lines",
+    "Signature strokes now use coalesced pointer movement and smoothing for more accurate handwriting on Android touchscreens",
+    "No other Evia behaviour or qualification structure was changed"
   ],
-  "summary": "Evia v154 simplifies the arches to Time, Course, Learn and Test and includes the NVQ GLH save fix.",
+  "summary": "Evia v155 fixes the NVQ signature pad accuracy.",
   "changes": [
-    "Time / Course / Learn / Test arches",
-    "Automatic NVQ GLH saving"
+    "Accurate signature strokes"
   ]
 }
