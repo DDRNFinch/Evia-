@@ -50,8 +50,9 @@ async function run(button){
     let answer="";
     if(button.matches("[data-save-photo]")){const text=overlay.querySelector("[data-photo-text]")?.value?.trim()||draft.d.text?.trim()||"";if((text.match(/\S+/g)||[]).length<3)throw Error("photo explanation is too short");answer=`Stage: ${s.title}\n${text}`}
     else{const extra=button.matches("[data-save-video]")?(overlay.querySelector("[data-video-extra]")?.value||draft.d.text||""):"";answer=videoAnswer(s,meta,extra)}
-    await saveThroughCore(file,answer,kind,meta,route,ctx,s);await clearDraft(route,draft);setStatus("Evidence saved.");
-    await wait(0);if(window.EviaStagedEvidence?.openForOpp)await window.EviaStagedEvidence.openForOpp(route.oppId)
+    const entry=await saveThroughCore(file,answer,kind,meta,route,ctx,s);await clearDraft(route,draft);localStorage.removeItem(ROUTE);
+    if(window.EviaSmoothFlow?.start){window.dispatchEvent(new CustomEvent("evia:evidence-saved",{detail:{entry}}))}
+    else{setStatus("Evidence saved.");await wait(0);if(window.EviaStagedEvidence?.openForOpp)await window.EviaStagedEvidence.openForOpp(route.oppId)}
   }catch(error){console.error("Evia staged evidence save",error);setStatus("That evidence could not be saved. Try again.",true);buttons.forEach(b=>b.disabled=false)}finally{busy=false}
 }
 document.addEventListener("click",event=>{const button=event.target?.closest?.("[data-save-photo],[data-skip-video],[data-save-video]");if(!button||!button.closest(".evia-stage-overlay-v132"))return;event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();run(button)},true);
