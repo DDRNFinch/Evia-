@@ -1,5 +1,5 @@
-// Evia v173 refreshes the cached shell with restored evidence thumbnails and PDF prompt cleanup.
-const CACHE_NAME = 'evia-shell-v173';
+// Evia v174 refreshes the cached shell with streamlined practical evidence navigation.
+const CACHE_NAME = 'evia-shell-v174';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
