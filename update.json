@@ -1,16 +1,16 @@
 {
-  "version": "181",
-  "title": "Evidence preview and home labels",
+  "version": "182",
+  "title": "Course identity and Test label cleanup",
   "details": [
-    "Replaces unreliable evidence thumbnails with simple Photo, Video and Audio tiles in both New and Downloaded evidence",
-    "Keeps actual captured images in exported evidence PDFs",
-    "Locks the four home progress labels to Time, Course, Learn and Test",
-    "Prevents legacy AC, GLH, ARP, TOC, KSB and OTJ labels from returning on the home screen"
+    "Removes legacy duplicate course titles from underneath the Evia name",
+    "Keeps only the short course identity such as Trowel / 6570-05 and Bricklayer / ST0095",
+    "Applies the same short course identity rule across all courses",
+    "Removes the returning ARP home label and keeps the fourth progress arch labelled Test"
   ],
-  "summary": "Evia v181 simplifies evidence previews and makes Time, Course, Learn and Test the permanent home progress labels.",
+  "summary": "Evia v182 removes old duplicate course titles and permanently keeps the assessment arch labelled Test.",
   "changes": [
-    "Simple evidence media tiles",
-    "Real images retained in PDFs",
-    "Permanent Time Course Learn Test labels"
+    "Short course identity only",
+    "Legacy course title removed",
+    "Permanent Test label"
   ]
 }
