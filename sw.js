@@ -1,5 +1,5 @@
-// Evia v164 refreshes the cached shell with the evidence export update.
-const CACHE_NAME = 'evia-shell-v164';
+// Evia v165 refreshes the cached shell with the staged repair stability fix.
+const CACHE_NAME = 'evia-shell-v165';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
