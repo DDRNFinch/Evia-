@@ -1,15 +1,20 @@
 {
-  "version": "149",
-  "title": "Post-evidence OTJ saving fixed",
+  "version": "150",
+  "title": "Level 3 NVQ evidence framework",
   "details": [
-    "The existing post-evidence What did you learn flow now saves genuine learner-entered learning to the real OTJ record",
-    "The learner-entered learning duration is used and the task, job and KSB context are carried into the OTJ entry",
-    "The saved entry contributes to the OTJ total and OTJ arch",
-    "Evidence, camera, photo speed, video, menus, fade, tiles, layouts and course data are unchanged"
+    "The 6570-05 Level 3 Trowel NVQ now uses Main Category > Sub-category > Activity > Evidence Method > mapped ACs",
+    "The full qualification is organised into 5 main categories, 20 sub-categories and 44 learner-facing activities with every official AC retained in the holistic mapping",
+    "Activities now offer the evidence method that genuinely fits: Photo plus text, guided Video, or guided Audio",
+    "Practical bricklaying activities keep visual workplace evidence and use staged evidence opportunities where needed",
+    "NVQ downloads now create one signed PDF evidence pack per main category plus sub-category/activity folders containing the original media",
+    "The existing Standards course flow, approved photo/video camera, photo speed, post-evidence OTJ connection and other Evia behaviour are unchanged"
   ],
-  "summary": "Evia v149 connects the existing post-evidence learning reflection to the real OTJ record.",
+  "summary": "Evia v150 rebuilds Level 3 Trowel NVQ evidence around a complete holistic activity framework without changing the Standards evidence flow.",
   "changes": [
-    "Save post-evidence learning as OTJ",
-    "Nothing else changed"
+    "5 NVQ main evidence categories",
+    "20 NVQ sub-categories",
+    "44 mapped NVQ activities",
+    "Guided audio evidence",
+    "Category PDF evidence packs"
   ]
 }
