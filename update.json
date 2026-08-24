@@ -1,15 +1,17 @@
 {
-  "version": "175",
-  "title": "Practical section progress",
+  "version": "176",
+  "title": "Practical progress refinement",
   "details": [
-    "Adds a compact circular completed/total counter to practical section tiles",
-    "Fills the ring as each section item is completed",
-    "Changes the completed ring into a filled yellow circle with a tick"
+    "Makes practical progress rings smaller and more subtle",
+    "Uses a lighter yellow progress colour",
+    "Removes completed/total numbers from inside the rings",
+    "Adds the same practical progress ring to main category tiles"
   ],
-  "summary": "Evia v175 makes practical section progress visible at a glance without adding extra rows or changing the evidence flow.",
+  "summary": "Evia v176 refines practical section progress so it is quieter, clearer and visible at the main category level too.",
   "changes": [
-    "Section progress rings",
-    "Completed/total counters",
-    "Completion tick state"
+    "Smaller progress rings",
+    "Lighter yellow",
+    "No numbers inside rings",
+    "Main category progress"
   ]
 }
