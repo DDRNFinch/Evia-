@@ -1,15 +1,15 @@
 {
-  "version": "174",
-  "title": "Faster practical evidence navigation",
+  "version": "175",
+  "title": "Practical section progress",
   "details": [
-    "Removes redundant one-choice practical activity screens",
-    "Opens the evidence stages immediately when a practical section contains only one activity",
-    "Keeps normal activity selection where a section genuinely has multiple choices"
+    "Adds a compact circular completed/total counter to practical section tiles",
+    "Fills the ring as each section item is completed",
+    "Changes the completed ring into a filled yellow circle with a tick"
   ],
-  "summary": "Evia v174 removes an unnecessary click from practical evidence collection without changing the evidence stages themselves.",
+  "summary": "Evia v175 makes practical section progress visible at a glance without adding extra rows or changing the evidence flow.",
   "changes": [
-    "One-choice screens skipped",
-    "Faster practical evidence route",
-    "Multiple-choice sections unchanged"
+    "Section progress rings",
+    "Completed/total counters",
+    "Completion tick state"
   ]
 }
