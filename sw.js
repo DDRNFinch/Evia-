@@ -1,5 +1,5 @@
-// Evia v185 restores real evidence media previews.
-const CACHE_NAME = 'evia-shell-v185';
+// Evia v186 fixes evidence media hydration in both evidence tabs.
+const CACHE_NAME = 'evia-shell-v186';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
