@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=94,MC_KEY="evia-arp-mocks-v1",DISCUSSION_KEY="evia-arp-discussion-v1",PRACTICAL_KEY="evia-arp-practical-v1";
+const VERSION=182,MC_KEY="evia-arp-mocks-v1",DISCUSSION_KEY="evia-arp-discussion-v1",PRACTICAL_KEY="evia-arp-practical-v1";
 let queued=false;
 function read(key){try{const value=JSON.parse(localStorage.getItem(key)||"{}");return value&&typeof value==="object"?value:{}}catch{return{}}}
 function enrolmentId(){
@@ -23,11 +23,11 @@ function button(){return document.querySelector('.progress-arch[data-arch="ARP"]
 function patch(){
   queued=false;const target=button();if(!target)return;
   const state=progress(),value=Math.max(0,Math.min(100,state.percent));target.dataset.arch="ARP";target.dataset.arpAttempts=String(state.attempts);target.dataset.arpProgress=String(value);
-  const label=target.querySelector(".arch-label");if(label&&label.textContent!=="ARP")label.textContent="ARP";
+  const label=target.querySelector(".arch-label");if(label&&label.textContent!=="Test")label.textContent="Test";
   const number=target.querySelector(".arch-number");if(number&&number.textContent!==`${value}%`)number.textContent=`${value}%`;
   const path=target.querySelector(".arch-value");if(path){if(path.style.strokeDasharray!==`${value} 100`)path.style.strokeDasharray=`${value} 100`;if(path.getAttribute("stroke-dasharray")!==`${value} 100`)path.setAttribute("stroke-dasharray",`${value} 100`)}
-  const detail=state.attempts?`${state.attempts} completed practice ${state.attempts===1?"attempt":"attempts"}`:"no ARP practice attempted yet";
-  target.setAttribute("aria-label",`ARP — Assessment Readiness & Practice. ${value}% practice readiness; ${detail}. Open assessment practice`)
+  const detail=state.attempts?`${state.attempts} completed practice ${state.attempts===1?"attempt":"attempts"}`:"no assessment practice attempted yet";
+  target.setAttribute("aria-label",`Test — Assessment Readiness & Practice. ${value}% practice readiness; ${detail}. Open assessment practice`)
 }
 function queue(){if(queued)return;queued=true;requestAnimationFrame(patch)}
 function relevant(records){return records.some(record=>[...record.addedNodes].some(node=>node.nodeType===1&&(node.matches?.(".progress-arch")||node.querySelector?.(".progress-arch"))))}
