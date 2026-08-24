@@ -25,31 +25,8 @@ jobs:
           echo "EVIA_VERSION=$VERSION" >> "$GITHUB_ENV"
       - name: Check active JavaScript syntax
         run: |
-          node --check assets/evia-updater.js
-          node --check assets/evia-selfobs-live.js
-          node --check assets/evia-next-visit-v95.js
-          node --check assets/evia-milos-review-sync-v97.js
-          node --check assets/evia-targets.js
-          node --check assets/evia-targets-milos-only-v123.js
-          node --check assets/evia-home-brand-v114.js
-          node --check assets/evia-avatar-life-v108.js
-          node --check assets/evia-evidence-media-v115.js
-          node --check assets/evia-evidence-media-v122.js
-          node --check assets/evia-folder-completion-v116.js
-          node --check assets/evia-arp-integrity-v118.js
-          node --check assets/evia-arp-distractors-v123.js
-          node --check assets/evia-arp-integrity-watch-v119.js
-          node --check assets/evia-arp-marking-v121.js
-          node --check assets/evia-qr-neutral-v122.js
-          node --check assets/evia-welcome-v120.js
-          node --check assets/evia-st0171-meta-v124.js
-          node --check assets/evia-st0171-map-v124.js
-          node --check assets/evia-st0171-v124.js
-          node --check assets/evia-course-enrolment.js
-          node --check course-delivery/course-registry.js
-          node --check "assets/evia-version-v${EVIA_VERSION}.js"
+          find assets course-delivery -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check sw.js
-          node --check public/sw.js
       - name: Verify ST0171 course map
         run: |
           node - <<'NODE'
@@ -75,8 +52,6 @@ jobs:
       - name: Verify clean runtime and update source
         shell: bash
         run: |
-          node -e "const fs=require('fs');const a=fs.readFileSync('sw.js','utf8').trimEnd(),b=fs.readFileSync('public/sw.js','utf8').trimEnd();if(a!==b)process.exit(1)"
-          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('update.json','utf8')),b=JSON.parse(fs.readFileSync('public/update.json','utf8'));if(JSON.stringify(a)!==JSON.stringify(b))process.exit(1)"
           grep -q "evia-app-version\" content=\"${EVIA_VERSION}" index.html
           grep -q "evia-version-v${EVIA_VERSION}.js" index.html
           grep -q "evia-shell-v${EVIA_VERSION}" sw.js
@@ -164,7 +139,7 @@ jobs:
               sys.exit(1)
 
           surfaces=[Path('index.html'),Path('sw.js')]
-          for root in (Path('assets'),Path('app'),Path('course-delivery')):
+          for root in (Path('assets'),Path('course-delivery')):
               if root.exists():
                   surfaces.extend(p for p in root.rglob('*') if p.is_file() and p.suffix.lower() in {'.js','.css','.ts','.tsx','.html'})
           text={}
@@ -187,5 +162,8 @@ jobs:
       - name: Validate manifests
         run: |
           python -m json.tool update.json >/dev/null
-          python -m json.tool public/update.json >/dev/null
+          python -m json.tool manifest.webmanifest >/dev/null
           python -m json.tool course-delivery/registry-v1.json >/dev/null
+          npm ci
+          npm test
+          npm run test:course-assets

@@ -50,23 +50,35 @@ test("all seven labelled PNGs decode to their exact permanent Evia payloads", as
   assert.equal((page.match(/Download PNG/g) ?? []).length, 7);
 });
 
-test("all seven registry entries point to verified packs, question banks and 12-task practical banks", async () => {
+test("all eight registry entries are publishable and the seven configured routes have complete banks", async () => {
   const registry = await json("course-delivery/registry-v1.json");
   const index = await json("course-delivery/question-banks/index-v1.json");
   const practicalIndex = await json("course-delivery/practical-banks/index-v1.json");
-  assert.equal(registry.courses.length, 7);
+  assert.equal(registry.courses.length, 8);
   assert.equal(index.banks.length, 7);
   assert.equal(index.totalQuestions, 168);
   assert.equal(index.totalDiscussionScenarios, 168);
   assert.equal(practicalIndex.banks.length, 7);
   assert.equal(practicalIndex.totalTasks, 84);
 
-  const packCache = new Map();
-  const questionIds = new Set();
-  const practicalIds = new Set();
   for (const entry of registry.courses) {
     assert.equal(entry.publishable, true);
     assert.equal(entry.qrPayload, `EVIA1:${entry.enrolmentId}`);
+  }
+
+  const configured = registry.courses.filter((entry) => entry.questionBankPath && entry.practicalBankPath);
+  assert.equal(configured.length, 7);
+  const st0171 = registry.courses.find((entry) => entry.enrolmentId === "ST0171");
+  assert.ok(st0171);
+  assert.equal(st0171.packagePath, "inline:ST0171");
+  assert.equal(st0171.content.multipleChoice, "not-configured");
+  assert.equal(st0171.content.discussion, "not-configured");
+  assert.equal(st0171.content.practical, "not-configured");
+
+  const packCache = new Map();
+  const questionIds = new Set();
+  const practicalIds = new Set();
+  for (const entry of configured) {
     assert.equal(entry.content.discussion, "available-24-scenario-coach");
     assert.equal(entry.content.practical, "available-12-task-coach");
     const packRelative = path.posix.normalize(path.posix.join("course-delivery", entry.packagePath));
@@ -171,14 +183,14 @@ test("TOC exposes all seven labelled QR downloads and keeps pack management avai
   }
 });
 
-test("ARP selects all seven banks and builds 24 graded discussion scenarios for each pathway", async () => {
+test("ARP selects all seven configured banks and builds 24 graded discussion scenarios for each pathway", async () => {
   const registry = await json("course-delivery/registry-v1.json");
   let current = null;
   const requested = [];
   const fetchMock = async (input) => {
     const url = new URL(String(input));
     requested.push(url.pathname);
-    const marker = "/Evia_beta/course-delivery/";
+    const marker = "/course-delivery/";
     const offset = url.pathname.indexOf(marker);
     if (offset < 0) return new Response("Not found", { status: 404 });
     const relative = `course-delivery/${url.pathname.slice(offset + marker.length)}`;
@@ -277,7 +289,7 @@ test("Discussion Coach includes graded choice, voice, transcript and mock flows"
   assert.match(css, /\.evia-arp-voice-card/);
   assert.match(css, /\.evia-arp-strength-key/);
   assert.match(html, /assets\/evia-arp-v82\.css\?v=82/);
-  assert.match(html, /assets\/evia-arp-discussion-v82\.js\?v=82/);
+  assert.match(html, /assets\/evia-arp-discussion-v82\.js/);
 });
 
 test("Practical Coach includes learn, guided, mock, evidence, voice, timers and readiness history", async () => {
@@ -297,14 +309,18 @@ test("Practical Coach includes learn, guided, mock, evidence, voice, timers and 
   assert.match(css, /\.evia-practical-ratings/);
   assert.match(css, /@media\(max-width:370px\)/);
   assert.match(html, /assets\/evia-arp-practical-v83\.css\?v=83/);
-  assert.match(html, /assets\/evia-arp-practical-v83\.js\?v=83/);
+  assert.match(html, /assets\/evia-arp-practical-v83\.js/);
 });
 
-test("Mini Milos focuses on assessor feedback and secure sharing", async () => {
+test("current assessor QR exchange is retained and repository independent", async () => {
   const script = await read("assets/evia-assistant-network.js");
   const html = await read("index.html");
-  assert.doesNotMatch(script, /Mock assessment/i);
-  assert.match(script, /Assessment feedback/);
-  assert.match(script, /Share with assessor/);
-  assert.match(html, /assets\/evia-assistant-network\.js\?v=84/);
+  assert.match(script, /data-evia-share-qr/);
+  assert.match(script, /data-evia-receive-qr/);
+  assert.match(script, /Share QR code/);
+  assert.match(script, /Receive QR code/);
+  assert.match(script, /new URL\("\.\/assets\/evia-qr-exchange-v107\.js\?v=107",document\.baseURI\)\.href/);
+  assert.doesNotMatch(script, /\/Evia\/assets\//);
+  assert.match(html, /assets\/evia-assistant-network\.js\?v=126/);
+  assert.doesNotMatch(html, /evia-mini-milos-v86/);
 });

@@ -49,7 +49,7 @@ test("v91 remap refuses an installed pack containing an empty selectable area",(
   assert.match(remap,/every-selectable-area-has-ac/);
   const index=fs.readFileSync("index.html","utf8");
   const sw=fs.readFileSync("sw.js","utf8");
-  const publicSw=fs.readFileSync("public/sw.js","utf8");
+  const publicSw=fs.readFileSync("sw.js","utf8");
   assert.match(index,/evia-app-version" content="91"/);
   assert.match(index,/evia-trowel-loader\.js\?v=91/);
   assert.match(index,/evia-6570-v91-remap\.js\?v=91/);

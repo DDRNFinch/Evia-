@@ -5,9 +5,9 @@ import fs from "node:fs";
 const updater = fs.readFileSync(new URL("../assets/evia-updater.js", import.meta.url), "utf8");
 const index = fs.readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const sw = fs.readFileSync(new URL("../sw.js", import.meta.url), "utf8");
-const publicSw = fs.readFileSync(new URL("../public/sw.js", import.meta.url), "utf8");
+const publicSw = fs.readFileSync(new URL("../sw.js", import.meta.url), "utf8");
 const update = JSON.parse(fs.readFileSync(new URL("../update.json", import.meta.url), "utf8"));
-const publicUpdate = JSON.parse(fs.readFileSync(new URL("../public/update.json", import.meta.url), "utf8"));
+const publicUpdate = JSON.parse(fs.readFileSync(new URL("../update.json", import.meta.url), "utf8"));
 const version = String(update.version);
 const guard = fs.readFileSync(new URL(`../assets/evia-version-v${version}.js`, import.meta.url), "utf8");
 

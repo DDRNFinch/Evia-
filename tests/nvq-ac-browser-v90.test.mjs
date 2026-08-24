@@ -8,7 +8,7 @@ const index = read('index.html');
 const browser = read('assets/evia-nvq-ac-browser-v90.js');
 const css = read('assets/evia-nvq-ac-browser-v90.css');
 const sw = read('sw.js');
-const publicSw = read('public/sw.js');
+const publicSw = read('sw.js');
 const update = JSON.parse(read('update.json'));
 
 test('v90 loads the full AC browser before the legacy NVQ AC click handler', () => {

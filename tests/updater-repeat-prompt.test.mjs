@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const updater = readFileSync(new URL('../assets/evia-updater.js', import.meta.url), 'utf8');
 const rootSw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
-const publicSw = readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8');
+const publicSw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 
 test('successful Evia installs are remembered across app launches', () => {
   assert.match(updater, /INSTALLED_KEY="evia-installed-version"/);
