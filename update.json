@@ -1,15 +1,15 @@
 {
-  "version": "185",
-  "title": "Evidence media preview fix",
+  "version": "186",
+  "title": "Evidence media row fix",
   "details": [
-    "Restores the actual saved photo and video previews in Evidence",
-    "Makes saved audio playable directly from its media tile",
-    "Removes the duplicated criterion name from the left media column"
+    "Detects the Evidence view from its tabs and rows instead of one title position",
+    "Shows the real saved photo, video or audio in the left media area",
+    "Removes the duplicated criterion text from the left side before media loads"
   ],
-  "summary": "Evia v185 restores the real evidence media previews without changing any other app flow.",
+  "summary": "Evia v186 fixes the Evidence rows so media loads reliably in both New evidence and Downloaded.",
   "changes": [
-    "Real evidence media restored",
-    "Audio tile playback restored",
-    "Duplicate left-side criterion text removed"
+    "Evidence media detection fixed",
+    "Media-left layout restored",
+    "Duplicate left criterion removed"
   ]
 }
