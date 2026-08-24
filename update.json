@@ -1,17 +1,16 @@
 {
-  "version": "160",
-  "title": "Homepage and evidence polish",
+  "version": "161",
+  "title": "Evidence flow fixes",
   "details": [
-    "Keeps the concise two-line course identity stable on the home screen",
-    "Uses one post-evidence learning screen with Hours and Minutes and records OTJ for Standards or GLH for NVQ",
-    "Restores evidence thumbnails and shows a square Audio tile for audio-only evidence",
-    "Shows measured pack-building progress with a yellow spinner and real percentage while NVQ evidence packs are prepared"
+    "Prevents the full course title from flashing before the concise two-line title is ready",
+    "Fixes the post-evidence learning screen so only the intended UI is rendered",
+    "Completed evidence opportunities can be opened again to add more evidence instead of leaving a blank screen",
+    "Keeps the v160 thumbnail and measured download progress improvements"
   ],
-  "summary": "Evia v160 fixes the remaining homepage and evidence-flow issues without changing course mappings or evidence data.",
+  "summary": "Evia v161 fixes the three issues visible in the latest phone recording without changing qualification data or saved evidence.",
   "changes": [
-    "Stable concise course title",
-    "Single OTJ/GLH follow-up",
-    "Evidence thumbnails restored",
-    "Measured download progress"
+    "No course-title flash",
+    "Clean learning screen",
+    "Evidence list remains usable"
   ]
 }
