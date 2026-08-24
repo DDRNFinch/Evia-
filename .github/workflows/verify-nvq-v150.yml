@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v154
+name: Verify Evia NVQ v155
 
 on:
   push:
@@ -22,10 +22,11 @@ jobs:
           node --check assets/evia-nvq-structure-browser-v151.js
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
+          node --check assets/evia-signature-smooth-v155.js
           node --check assets/evia-post-evidence-otj-v149.js
           node --check assets/evia-arch-labels-v154.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v154.js
+          node --check assets/evia-version-v155.js
           node --check sw.js
           node --check public/sw.js
 
@@ -36,6 +37,7 @@ jobs:
           test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
           test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
           test "$(git hash-object assets/evia-st0171-v124.js)" = "d6c0a15cd88c054acdd245f6b62bad4e0e52558b"
+          test "$(git hash-object assets/evia-nvq-pack-export-v150.js)" = "8dd1b0a8c7376867368ad94b57821e5b6783b1f5"
 
       - name: Audit complete NVQ activity framework
         run: |
@@ -108,13 +110,21 @@ jobs:
           grep -q 'Units:"Test"' assets/evia-arch-labels-v154.js
           grep -q 'evia-arch-labels-v154.js?v=154' index.html
 
-      - name: Check v154 release wiring
+      - name: Check signature accuracy fix
         run: |
-          grep -q 'meta name="evia-app-version" content="154"' index.html
-          grep -q 'evia-version-v154.js?v=154' index.html
-          grep -q 'window.EviaAppVersion=154' assets/evia-version-v154.js
+          grep -q 'const VERSION=155' assets/evia-signature-smooth-v155.js
+          grep -q 'getCoalescedEvents' assets/evia-signature-smooth-v155.js
+          grep -q 'quadraticCurveTo' assets/evia-signature-smooth-v155.js
+          grep -q 'touchAction="none"' assets/evia-signature-smooth-v155.js
+          grep -q 'evia-signature-smooth-v155.js?v=155' index.html
+
+      - name: Check v155 release wiring
+        run: |
+          grep -q 'meta name="evia-app-version" content="155"' index.html
+          grep -q 'evia-version-v155.js?v=155' index.html
+          grep -q 'window.EviaAppVersion=155' assets/evia-version-v155.js
           cmp -s sw.js public/sw.js
-          grep -q "evia-shell-v154" sw.js
-          grep -q 'evia-arch-labels-v154.js' sw.js
+          grep -q "evia-shell-v155" sw.js
+          grep -q 'evia-signature-smooth-v155.js' sw.js
           cmp -s update.json public/update.json
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="154") process.exit(1)'
+          node -e 'const x=require("./update.json"); if(String(x.version)!=="155") process.exit(1)'
