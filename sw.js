@@ -1,5 +1,5 @@
-// Evia v167 refreshes the cached shell with the staged resume guard.
-const CACHE_NAME = 'evia-shell-v167';
+// Evia v168 refreshes the cached shell with evidence thumbnail and video audio stability fixes.
+const CACHE_NAME = 'evia-shell-v168';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -16,6 +16,7 @@ const CRITICAL = [
   './assets/evia-qr-neutral-v122.js',
   './assets/evia-welcome-v120.js',
   './assets/evia-evidence-media-v122.js',
+  './assets/evia-media-stability-v168.js',
   './assets/evia-evidence-hub-v109.js',
   './assets/evia-home-header-v110.js',
   './assets/evia-home-brand-v114.js',
