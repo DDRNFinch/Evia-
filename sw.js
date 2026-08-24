@@ -1,5 +1,5 @@
-// Evia v186 fixes evidence media hydration in both evidence tabs.
-const CACHE_NAME = 'evia-shell-v186';
+// Evia v187 removes Evia's directional eye-look animation.
+const CACHE_NAME = 'evia-shell-v187';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
