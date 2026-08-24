@@ -1,16 +1,15 @@
 {
-  "version": "182",
-  "title": "Course identity and Test label cleanup",
+  "version": "183",
+  "title": "Header flicker cleanup",
   "details": [
-    "Removes legacy duplicate course titles from underneath the Evia name",
-    "Keeps only the short course identity such as Trowel / 6570-05 and Bricklayer / ST0095",
-    "Applies the same short course identity rule across all courses",
-    "Removes the returning ARP home label and keeps the fourth progress arch labelled Test"
+    "Removes the legacy pathway title before the header can paint",
+    "Prevents 690 · Repairing & maintaining masonry flashing under Evia",
+    "Keeps only Trowel / 6570-05 and the learner name in the top-left header"
   ],
-  "summary": "Evia v182 removes old duplicate course titles and permanently keeps the assessment arch labelled Test.",
+  "summary": "Evia v183 removes the remaining legacy course-header flash.",
   "changes": [
-    "Short course identity only",
-    "Legacy course title removed",
-    "Permanent Test label"
+    "Legacy header removed before paint",
+    "No pathway-title flash",
+    "Short course identity only"
   ]
 }
