@@ -1,5 +1,5 @@
-// Evia v160 polishes the homepage, post-evidence learning flow, evidence thumbnails and measured pack progress.
-const CACHE_NAME = 'evia-shell-v160';
+// Evia v161 fixes course-title flash, post-evidence rendering and reopening completed evidence opportunities.
+const CACHE_NAME = 'evia-shell-v161';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -19,11 +19,12 @@ const CRITICAL = [
   './assets/evia-evidence-hub-v109.js',
   './assets/evia-home-header-v110.js',
   './assets/evia-home-brand-v114.js',
-  './assets/evia-course-title-v160.js',
+  './assets/evia-course-title-v161.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v160.js',
-  './assets/evia-smooth-flow-v160.js',
+  './assets/evia-version-v161.js',
+  './assets/evia-smooth-flow-v161.js',
+  './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
   './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
