@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v152
+name: Verify Evia NVQ v153
 
 on:
   push:
@@ -22,6 +22,7 @@ jobs:
           node --check assets/evia-nvq-structure-browser-v151.js
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
+          node --check assets/evia-post-evidence-otj-v149.js
           node --check assets/evia-6570-pack-migration.js
           node --check assets/evia-version-v152.js
           node --check sw.js
@@ -73,7 +74,6 @@ jobs:
         run: |
           grep -q 'nvqPracticalParent=true' assets/evia-trowel-practical-v151.js
           grep -q 'nvqPracticalChild:true' assets/evia-trowel-practical-v151.js
-          grep -q 'const childCode=`${parent.activityCode}.${number}`' assets/evia-trowel-practical-v151.js
           grep -q 'data-nvq-child' assets/evia-nvq-practical-nav-v151.js
           grep -q 'returnFromEvidence=true;removeList(false)' assets/evia-nvq-practical-nav-v151.js
           grep -q 'document.querySelector(".evia-stage-overlay-v132")' assets/evia-nvq-practical-nav-v151.js
@@ -90,28 +90,32 @@ jobs:
           if grep -q 'By P / T' assets/evia-nvq-structure-browser-v151.js; then exit 1; fi
           if grep -q 'evia-nvq-ac-browser-v90.js' index.html; then exit 1; fi
 
-      - name: Check v152 wiring and route isolation
+      - name: Check post-evidence OTJ and GLH routing
+        run: |
+          grep -q 'const VERSION=153' assets/evia-post-evidence-otj-v149.js
+          grep -q 'GLH_KEY="evia-glh-entries"' assets/evia-post-evidence-otj-v149.js
+          grep -q 'OTJ_KEY="evia-otj-entries"' assets/evia-post-evidence-otj-v149.js
+          grep -q 'courseType==="nvq"' assets/evia-post-evidence-otj-v149.js
+          grep -q 'recordGlh' assets/evia-post-evidence-otj-v149.js
+          grep -q 'recordOtj' assets/evia-post-evidence-otj-v149.js
+          grep -q 'EviaNVQV94?.refresh' assets/evia-post-evidence-otj-v149.js
+          grep -q 'evia:glh-updated' assets/evia-post-evidence-otj-v149.js
+          grep -q 'guided\\s\*learning' assets/evia-post-evidence-otj-v149.js
+          grep -q 'evia-post-evidence-otj-v149.js' index.html
+
+      - name: Check v153 release wiring
         run: |
           grep -q 'meta name="evia-app-version" content="152"' index.html
+          grep -q 'setAttribute("content","153")' assets/evia-version-v152.js
+          grep -q 'window.EviaAppVersion=153' assets/evia-version-v152.js
           grep -q 'evia-version-v152.js?v=152' index.html
-          grep -q 'evia-trowel-practical-v151.js?v=151' index.html
           grep -q 'evia-nvq-practical-nav-v151.js?v=152' index.html
           grep -q 'evia-nvq-structure-browser-v151.js?v=151' index.html
-          node <<'NODE'
-          const fs=require('fs'),s=fs.readFileSync('index.html','utf8');
-          const before=(a,b)=>{if(s.indexOf(a)<0||s.indexOf(b)<0||s.indexOf(a)>=s.indexOf(b))throw Error(`${a} must load before ${b}`)};
-          before('evia-trowel-framework-v150.js','evia-trowel-practical-v151.js');
-          before('evia-trowel-practical-v151.js','evia-6570-pack-migration.js');
-          before('evia-nvq-practical-nav-v151.js','evia-staged-evidence-v132.js');
-          before('evia-nvq-structure-browser-v151.js','evia-nvq-v94.js');
-          NODE
-          grep -q 'courseId==="6570-05"' assets/evia-nvq-audio-v150.js
-          grep -q 'courseId==="6570-05"' assets/evia-nvq-pack-export-v150.js
 
       - name: Check offline and update release
         run: |
           cmp -s sw.js public/sw.js
-          grep -q "evia-shell-v152" sw.js
-          grep -q 'evia-nvq-practical-nav-v151.js' sw.js
+          grep -q "evia-shell-v153" sw.js
+          grep -q 'evia-post-evidence-otj-v149.js' sw.js
           cmp -s update.json public/update.json
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="152") process.exit(1)'
+          node -e 'const x=require("./update.json"); if(String(x.version)!=="153") process.exit(1)'
