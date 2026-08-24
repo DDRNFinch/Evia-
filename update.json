@@ -1,14 +1,16 @@
 {
-  "version": "180",
-  "title": "Single completion tick correction",
+  "version": "181",
+  "title": "Evidence preview and home labels",
   "details": [
-    "Removes the remaining duplicate yellow tick on completed evidence rows",
-    "Keeps one completion indicator only",
-    "Does not change course progress, evidence data or navigation"
+    "Replaces unreliable evidence thumbnails with simple Photo, Video and Audio tiles in both New and Downloaded evidence",
+    "Keeps actual captured images in exported evidence PDFs",
+    "Locks the four home progress labels to Time, Course, Learn and Test",
+    "Prevents legacy AC, GLH, ARP, TOC, KSB and OTJ labels from returning on the home screen"
   ],
-  "summary": "Evia v180 removes the remaining duplicate completion marker so completed rows show one yellow tick.",
+  "summary": "Evia v181 simplifies evidence previews and makes Time, Course, Learn and Test the permanent home progress labels.",
   "changes": [
-    "One yellow completion tick",
-    "Duplicate marker removed"
+    "Simple evidence media tiles",
+    "Real images retained in PDFs",
+    "Permanent Time Course Learn Test labels"
   ]
 }
