@@ -1,20 +1,17 @@
 {
-  "version": "150",
-  "title": "Level 3 NVQ evidence framework",
+  "version": "151",
+  "title": "Clearer NVQ activity navigation",
   "details": [
-    "The 6570-05 Level 3 Trowel NVQ now uses Main Category > Sub-category > Activity > Evidence Method > mapped ACs",
-    "The full qualification is organised into 5 main categories, 20 sub-categories and 44 learner-facing activities with every official AC retained in the holistic mapping",
-    "Activities now offer the evidence method that genuinely fits: Photo plus text, guided Video, or guided Audio",
-    "Practical bricklaying activities keep visual workplace evidence and use staged evidence opportunities where needed",
-    "NVQ downloads now create one signed PDF evidence pack per main category plus sub-category/activity folders containing the original media",
-    "The existing Standards course flow, approved photo/video camera, photo speed, post-evidence OTJ connection and other Evia behaviour are unchanged"
+    "The Level 3 Trowel AC arch no longer uses the old P/T theme view and now follows the same A-E Main Category > Sub-category > Activity structure used for evidence",
+    "Section E practical activities now open visible evidence activity tiles such as E2.1.1, E2.1.2, E2.1.3 and E2.1.4 instead of forcing a hidden stage-by-stage workflow",
+    "Each practical evidence tile keeps its own Photo or Video prompts and saves underneath the overarching practical activity",
+    "The official AC mapping remains attached to the overarching activity and all learner routes retain their complete qualification AC coverage",
+    "The approved camera, photo/video saving, guided audio, OTJ, Standards courses and the rest of Evia are unchanged"
   ],
-  "summary": "Evia v150 rebuilds Level 3 Trowel NVQ evidence around a complete holistic activity framework without changing the Standards evidence flow.",
+  "summary": "Evia v151 removes P/T navigation and makes practical NVQ evidence activities directly selectable.",
   "changes": [
-    "5 NVQ main evidence categories",
-    "20 NVQ sub-categories",
-    "44 mapped NVQ activities",
-    "Guided audio evidence",
-    "Category PDF evidence packs"
+    "A-E AC coverage navigation",
+    "Visible E practical evidence tiles",
+    "No P/T theme browser"
   ]
 }
