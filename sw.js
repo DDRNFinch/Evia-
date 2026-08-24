@@ -1,5 +1,5 @@
-// Evia v154 uses learner-friendly arch labels and keeps automatic post-evidence OTJ/GLH routing.
-const CACHE_NAME = 'evia-shell-v154';
+// Evia v155 fixes NVQ signature stroke accuracy only.
+const CACHE_NAME = 'evia-shell-v155';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-home-brand-v114.js',
   './assets/evia-updater.js',
   './assets/evia-updater.css',
-  './assets/evia-version-v154.js',
+  './assets/evia-version-v155.js',
   './assets/evia-arch-labels-v154.js',
   './assets/evia-photo-fast-v140.js',
   './assets/evia-staged-evidence-v132.js',
@@ -30,6 +30,7 @@ const CRITICAL = [
   './assets/evia-post-evidence-otj-v149.js',
   './assets/evia-nvq-audio-v150.js',
   './assets/evia-nvq-pack-export-v150.js',
+  './assets/evia-signature-smooth-v155.js',
   './assets/evia-trowel-framework-v150.js',
   './assets/evia-trowel-practical-v151.js',
   './assets/evia-nvq-practical-nav-v151.js',
