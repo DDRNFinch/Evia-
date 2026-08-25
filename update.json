@@ -1,23 +1,18 @@
 {
-  "version": "194",
-  "title": "Maths and English practice rebuilt",
+  "version": "195",
+  "title": "Maths and English ARP placement fixed",
   "details": [
-    "Replaces the old mock-style Functional Skills screen with reliable multiple-choice practice",
-    "Maths Level 2 is split into 5 equal parts with 5 questions in each part",
-    "English Level 2 is split into 5 equal parts with 5 questions in each part",
-    "Every question has A, B and C answer choices plus D — Teach me",
-    "Wrong answers show the correct answer and explain how to reach it",
-    "Teach me shows the correct answer and explains why it is correct",
-    "The practice is self-contained so it does not wait for separate question-pack files to load"
+    "Fixes the timing issue that could leave Maths and English missing from the Assessment Readiness & Practice screen",
+    "Waits until the real Practical row has rendered before adding Functional Skills",
+    "Places Maths Level 2 directly below Practical and English Level 2 directly below Maths",
+    "Keeps the existing five-part, 25-question multiple-choice practice for each subject",
+    "Keeps D — Teach me and teaching feedback after incorrect answers"
   ],
-  "summary": "Evia v194 rebuilds Functional Skills Level 2 as five-part multiple-choice learning practice for Maths and English.",
+  "summary": "Evia v195 reliably places Maths and English directly below Practical in ARP.",
   "changes": [
-    "Removed the old Reading/Writing mock-style Functional Skills interface",
-    "Added 25 Maths Level 2 multiple-choice practice questions",
-    "Added 25 English Level 2 multiple-choice practice questions",
-    "Added D — Teach me to every question",
-    "Added teaching feedback after incorrect answers",
-    "Moved the practice into one self-contained offline asset for more reliable loading",
-    "Forced a new v194 offline shell so installed copies receive the rebuild"
+    "Fixed the ARP render timing race",
+    "Added an ARP content observer and short retry guard",
+    "Kept Maths and English in the Test arch only",
+    "Forced a new v195 offline shell so installed v194 copies receive the fix"
   ]
 }
