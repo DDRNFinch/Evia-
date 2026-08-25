@@ -1,16 +1,16 @@
 {
-  "version": "211",
-  "title": "Course coverage marker cleanup",
+  "version": "212",
+  "title": "Course coverage pale marker removal",
   "details": [
-    "Removes the obsolete pale yellow circles and pale white-tick markers from Course coverage",
-    "Keeps the dark yellow learner-evidence ticks exactly as they are",
+    "Removes every pale legacy marker from Course coverage",
+    "Keeps the dark yellow learner-evidence tick exactly as it is",
     "Keeps purple RPL, blue assessor-observation and orange witness-testimony ticks exactly as they are",
     "No other Evia behaviour is changed"
   ],
-  "summary": "Evia v211 delivers the Course coverage marker cleanup as a real app update so installed v210 copies can detect and install it.",
+  "summary": "Evia v212 removes the remaining pale legacy Course coverage markers without changing any other app behaviour.",
   "changes": [
-    "Bumped the app from v210 to v211",
-    "Kept only the requested legacy-marker removal",
-    "Created a fresh v211 offline cache"
+    "Bumped the app from v211 to v212",
+    "Suppressed every direct legacy marker span except the current evidence-source marker rail",
+    "Created a fresh v212 offline cache"
   ]
 }
