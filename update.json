@@ -1,16 +1,17 @@
 {
-  "version": "213",
-  "title": "Course coverage halo removal",
+  "version": "214",
+  "title": "Linked option evidence-source markers",
   "details": [
-    "Removes the unwanted yellow background halo around Course coverage source ticks",
-    "Keeps the dark yellow learner-evidence tick exactly as it is",
-    "Keeps purple RPL, blue assessor-observation and orange witness-testimony ticks exactly as they are",
-    "No other Evia behaviour is changed"
+    "Shows purple Recorded Prior Learning ticks on every Evia option linked to an RPL-covered KSB",
+    "Shows blue assessor-observation ticks on every linked Evia option covered by an assessor observation",
+    "Shows orange witness-testimony ticks on every linked Evia option covered by witness evidence",
+    "Keeps the existing Course coverage markers and learner evidence behaviour unchanged"
   ],
-  "summary": "Evia v213 removes only the inherited yellow background around the current Course coverage marker rail.",
+  "summary": "Evia v214 carries RPL, assessor-observation and witness-testimony status from Course coverage onto every linked Evia evidence option.",
   "changes": [
-    "Bumped the app from v212 to v213",
-    "Neutralised the legacy span background on the current KSB marker rail",
-    "Created a fresh v213 offline cache"
+    "Bumped the app from v213 to v214",
+    "Mapped each Evia option back to its linked course KSBs",
+    "Mirrored purple, blue and orange evidence-source markers onto matching options",
+    "Created a fresh v214 offline cache"
   ]
 }
