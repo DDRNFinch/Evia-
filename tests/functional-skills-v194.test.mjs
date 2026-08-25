@@ -40,12 +40,13 @@ test("v203 removes every dark evidence marker and preserves one light completion
   assert.match(evidenceState,/const DARK_SELECTORS=/);
   assert.match(evidenceState,/function removeDarkMarkers\(root=document\)/);
   assert.match(evidenceState,/root\.querySelectorAll\?\.\(DARK_SELECTORS\)\.forEach\(x=>x\.remove\(\)\)/);
+  assert.match(evidenceState,/function clearOpportunityDarkMarkers\(\)/);
   assert.match(evidenceState,/background:#f2db7d!important/);
   assert.match(evidenceState,/color:#6d5d1e!important/);
   assert.match(evidenceState,/setKsbLightTick\(btn,covered\.has\(code\)\)/);
-  assert.match(evidenceState,/setOppLightTick\(btn,complete\)/);
   assert.doesNotMatch(evidenceState,/createElement\("i"\)/);
   assert.doesNotMatch(evidenceState,/className=`evia-opportunity-source/);
+  assert.doesNotMatch(evidenceState,/evia-ksb-marker-v203 \$\{type\}/);
   assert.doesNotMatch(evidenceState,/MutationObserver/);
   assert.doesNotMatch(evidenceState,/setInterval\(/);
 });
