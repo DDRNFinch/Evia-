@@ -276,6 +276,7 @@ test("Discussion is permanently mock-only while retaining voice and transcript s
   const script = await read("assets/evia-arp-discussion-v82.js");
   const css = await read("assets/evia-arp-v82.css");
   const html = await read("index.html");
+  const version = String((await json("update.json")).version);
 
   assert.doesNotMatch(script, /data-discussion-mode="learn"/);
   assert.doesNotMatch(script, /data-discussion-mode="practice"/);
@@ -287,13 +288,14 @@ test("Discussion is permanently mock-only while retaining voice and transcript s
   assert.match(css, /\.evia-arp-voice-card/);
   assert.match(css, /\.evia-arp-strength-key/);
   assert.match(html, /assets\/evia-arp-v82\.css\?v=82/);
-  assert.match(html, /assets\/evia-arp-discussion-v82\.js\?v=209/);
+  assert.ok(html.includes(`assets/evia-arp-discussion-v82.js?v=${version}`));
 });
 
 test("Practical is permanently mock-only with evidence, camera, gallery, voice, timers and readiness history", async () => {
   const script = await read("assets/evia-arp-practical-v83.js");
   const css = await read("assets/evia-arp-practical-v83.css");
   const html = await read("index.html");
+  const version = String((await json("update.json")).version);
 
   assert.doesNotMatch(script, /data-practical-mode="learn"/);
   assert.doesNotMatch(script, /data-practical-mode="guided"/);
@@ -310,7 +312,7 @@ test("Practical is permanently mock-only with evidence, camera, gallery, voice, 
   assert.match(css, /\.evia-practical-ratings/);
   assert.match(css, /@media\(max-width:370px\)/);
   assert.match(html, /assets\/evia-arp-practical-v83\.css\?v=83/);
-  assert.match(html, /assets\/evia-arp-practical-v83\.js\?v=209/);
+  assert.ok(html.includes(`assets/evia-arp-practical-v83.js?v=${version}`));
 });
 
 test("current assessor QR exchange is retained and repository independent", async () => {
