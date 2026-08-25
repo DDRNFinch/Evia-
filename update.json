@@ -1,17 +1,17 @@
 {
-  "version": "202",
-  "title": "KSB circles removed and camera capture rebuilt",
+  "version": "203",
+  "title": "One light completion tick only",
   "details": [
-    "Blank KSB circles are no longer created; only real learner, RPL, assessor or witness ticks are shown",
-    "The old KSB state watcher, v201 cleanup layer and duplicate completion watcher are no longer loaded",
-    "Photo review now appears immediately from the captured canvas while JPEG encoding finishes asynchronously",
-    "The existing evidence explanation, save flow, video flow, Maths, English and EPA tools remain available"
+    "Dark filled evidence-source tick circles have been removed from Evia",
+    "The original light completion circle with its tick is kept as the single completion marker",
+    "Old dark marker classes are actively removed if a cached screen tries to restore them",
+    "The v202 faster photo review remains unchanged"
   ],
-  "summary": "Evia v202 replaces the conflicting KSB marker patches and removes the visible wait after taking a photo.",
+  "summary": "Evia v203 permanently removes the dark duplicate tick circles and keeps the light completion tick.",
   "changes": [
-    "Replaced the old KSB marker system with one event-driven evidence-state layer",
-    "Removed empty marker slots instead of hiding them",
-    "Removed two whole-app MutationObserver layers from the active runtime",
-    "Shows the captured photo frame immediately instead of waiting for JPEG encoding before review"
+    "Removed dark learner, RPL, assessor and witness marker circles from the active UI",
+    "Course coverage now uses one light tick for any evidenced KSB",
+    "Evidence opportunity rows use one light completion tick instead of stacked source markers",
+    "Added a legacy-marker cleanup guard so old dark circles cannot reappear"
   ]
 }
