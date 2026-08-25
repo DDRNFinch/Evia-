@@ -1,5 +1,5 @@
-// Evia v207 removes the v206 ARP observer freeze and uses finite event-based recovery checks only.
-const CACHE_NAME = 'evia-shell-v207';
+// Evia v208 restores Maths and English placement in ARP without changing other runtime behaviour.
+const CACHE_NAME = 'evia-shell-v208';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -39,6 +39,7 @@ const CRITICAL = [
   './assets/evia-version-v205.js',
   './assets/evia-version-v206.js',
   './assets/evia-version-v207.js',
+  './assets/evia-version-v208.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
