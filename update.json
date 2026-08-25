@@ -1,14 +1,18 @@
 {
-  "version": "208",
-  "title": "Maths and English restored",
+  "version": "209",
+  "title": "Evia stability repair",
   "details": [
-    "Maths Level 2 and English Level 2 are restored directly under Practical in the Test/ARP screen",
-    "The existing Maths and English question banks are unchanged",
-    "No other app behaviour is changed in this update"
+    "Discussion is permanently Mock Discussion only",
+    "Practical is permanently Mock Practical only, with separate Camera and Gallery choices",
+    "Maths Level 2 and English Level 2 are built directly into the Test/ARP screen below Practical",
+    "Legacy dark evidence markers and blank KSB circles are removed while learner, RPL, assessor and witness source ticks remain",
+    "A failed course map now provides a Choose course recovery button",
+    "Existing MCQ Mock Test, targets, download spinner and saved evidence are preserved"
   ],
-  "summary": "Evia v208 restores Maths and English to the Test/ARP screen only.",
+  "summary": "Evia v209 consolidates the agreed Test, Functional Skills, evidence marker and course recovery fixes into the real source screens and removes the obsolete patch layers.",
   "changes": [
-    "Restored Functional Skills placement after ARP renders",
-    "No other runtime changes"
+    "Removed obsolete ARP recovery and placement patch scripts",
+    "Created a clean v209 offline cache",
+    "Restored normal update delivery through the Evia updater"
   ]
 }
