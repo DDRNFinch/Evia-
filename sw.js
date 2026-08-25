@@ -1,5 +1,5 @@
-// Evia v199 keeps target progress aligned with live Test readiness.
-const CACHE_NAME = 'evia-shell-v199';
+// Evia v200 removes blank KSB circles while preserving coloured evidence ticks.
+const CACHE_NAME = 'evia-shell-v200';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -31,6 +31,7 @@ const CRITICAL = [
   './assets/evia-version-v197.js',
   './assets/evia-version-v198.js',
   './assets/evia-version-v199.js',
+  './assets/evia-version-v200.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
