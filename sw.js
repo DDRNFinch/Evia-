@@ -1,5 +1,5 @@
-// Evia v212: deliver the remaining Course coverage pale-marker removal as a real app update.
-const CACHE_NAME = 'evia-shell-v212';
+// Evia v213: remove only the inherited yellow KSB marker-rail halo.
+const CACHE_NAME = 'evia-shell-v213';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -44,6 +44,7 @@ const CRITICAL = [
   './assets/evia-version-v210.js',
   './assets/evia-version-v211.js',
   './assets/evia-version-v212.js',
+  './assets/evia-version-v213.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
