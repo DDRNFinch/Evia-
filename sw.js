@@ -1,5 +1,5 @@
-// Evia v209 consolidates ARP, Functional Skills, evidence ticks and course recovery into their real source files.
-const CACHE_NAME = 'evia-shell-v209';
+// Evia v210 fixes duplicate KSB source markers and forces Practical Camera to use the device camera.
+const CACHE_NAME = 'evia-shell-v210';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -41,6 +41,7 @@ const CRITICAL = [
   './assets/evia-version-v207.js',
   './assets/evia-version-v208.js',
   './assets/evia-version-v209.js',
+  './assets/evia-version-v210.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
@@ -76,6 +77,7 @@ const CRITICAL = [
   './assets/evia-arp-v80.js',
   './assets/evia-arp-discussion-v82.js',
   './assets/evia-arp-practical-v83.js',
+  './assets/evia-practical-camera-v210.js',
   './assets/evia-arp-home-score-v94.js',
   './assets/evia-arp-integrity-v118.js',
   './assets/evia-arp-distractors-v123.js',
