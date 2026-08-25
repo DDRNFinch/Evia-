@@ -1,5 +1,5 @@
-// Evia v210 fixes duplicate KSB source markers and forces Practical Camera to use the device camera.
-const CACHE_NAME = 'evia-shell-v210';
+// Evia v210 refresh: remove obsolete pale RPL marker from Course coverage only.
+const CACHE_NAME = 'evia-shell-v210-rpl-clean';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
