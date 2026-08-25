@@ -1,5 +1,5 @@
-// Evia v200 removes blank KSB circles while preserving coloured evidence ticks.
-const CACHE_NAME = 'evia-shell-v200';
+// Evia v201 removes legacy KSB markers and reduces runtime/camera overhead.
+const CACHE_NAME = 'evia-shell-v201';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -32,6 +32,7 @@ const CRITICAL = [
   './assets/evia-version-v198.js',
   './assets/evia-version-v199.js',
   './assets/evia-version-v200.js',
+  './assets/evia-version-v201.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
@@ -63,6 +64,7 @@ const CRITICAL = [
   './assets/evia-targets.js',
   './assets/evia-targets-milos-only-v123.js',
   './assets/evia-count-display-v94.js',
+  './assets/evia-ksb-clean-v201.js',
   './assets/evia-single-completion-tick-v173.js',
   './assets/evia-milos-observed-arch-v94.js',
   './assets/evia-rpl-evidence.js',
