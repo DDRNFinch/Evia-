@@ -5,6 +5,7 @@ import fs from "node:fs";
 const index=fs.readFileSync("index.html","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
+const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
 function bank(){
@@ -13,12 +14,15 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v194 Functional Skills is the only production Functional Skills UI",()=>{
-  assert.equal(String(manifest.version),"194");
-  assert.match(index,/evia-functional-skills-v194\.js\?v=194/);
+test("v194 Functional Skills engine is wired through the v195 release",()=>{
+  assert.equal(String(manifest.version),"195");
+  assert.match(index,/evia-functional-skills-v194\.js\?v=195/);
+  assert.match(index,/evia-functional-skills-v195\.js\?v=195/);
+  assert.match(index,/evia-version-v195\.js\?v=195/);
   assert.doesNotMatch(index,/evia-functional-skills-v192/);
   assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
   assert.match(sw,/evia-functional-skills-v194\.js/);
+  assert.match(sw,/evia-functional-skills-v195\.js/);
   assert.doesNotMatch(sw,/evia-functional-skills-v192/);
 });
 
@@ -52,7 +56,17 @@ test("Functional Skills rows are inserted directly after ARP Practical",()=>{
   assert.match(code,/Multiple choice · 5 parts · 5 questions each/);
 });
 
-test("v194 practice is self-contained and does not fetch question packs",()=>{
+test("v195 waits for actual ARP contents before refreshing rows",()=>{
+  assert.match(placement,/\.evia-arp-layer/);
+  assert.match(placement,/data-arp-option=\\?"practical\\?"/);
+  assert.match(placement,/EviaFunctionalSkills\?\.refresh\?\./);
+  assert.match(placement,/MutationObserver/);
+  assert.match(placement,/subtree:true/);
+  assert.match(placement,/setTimeout/);
+  assert.match(placement,/30,80,160,320,650/);
+});
+
+test("v194 practice remains self-contained and does not fetch question packs",()=>{
   assert.doesNotMatch(code,/fetch\(/);
   assert.doesNotMatch(code,/EviaFunctionalSkillsMathsL2|EviaFunctionalSkillsEnglishL2/);
   assert.match(code,/localStorage\.setItem/);
