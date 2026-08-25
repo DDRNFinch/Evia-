@@ -8,6 +8,7 @@ const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
 const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
+const targets=fs.readFileSync("assets/evia-targets.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
 function bank(){
@@ -16,20 +17,23 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v194 Functional Skills engine remains wired through the v198 release",()=>{
-  assert.equal(String(manifest.version),"198");
+test("v194 Functional Skills engine remains wired through the v199 release",()=>{
+  assert.equal(String(manifest.version),"199");
   assert.match(index,/evia-functional-skills-v194\.js\?v=195/);
   assert.match(index,/evia-functional-skills-v195\.js\?v=195/);
   assert.match(index,/evia-functional-skills-v196\.js\?v=196/);
-  assert.match(index,/evia-version-v198\.js\?v=198/);
+  assert.match(index,/evia-version-v199\.js\?v=199/);
   assert.match(index,/evia-arp-mock-only-v197\.js\?v=198/);
+  assert.match(index,/evia-targets\.js\?v=199/);
   assert.doesNotMatch(index,/evia-functional-skills-v192/);
   assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
-  assert.match(sw,/evia-shell-v198/);
+  assert.match(sw,/evia-shell-v199/);
+  assert.match(sw,/evia-version-v199\.js/);
   assert.match(sw,/evia-functional-skills-v194\.js/);
   assert.match(sw,/evia-functional-skills-v195\.js/);
   assert.match(sw,/evia-functional-skills-v196\.js/);
   assert.match(sw,/evia-arp-mock-only-v197\.js/);
+  assert.match(sw,/evia-targets\.js/);
   assert.doesNotMatch(sw,/evia-functional-skills-v192/);
 });
 
@@ -43,6 +47,13 @@ test("v198 removes only the redundant Discussion and Practical learning choices"
   assert.match(mockOnly,/24 course-specific scenarios · mock discussion/);
   assert.match(mockOnly,/12 course-specific tasks · mock practical/);
   assert.match(mockOnly,/small&&small\.textContent!==copy/);
+});
+
+test("v199 EPA targets use the same live readiness shown by the Test arch",()=>{
+  assert.match(targets,/EviaArpHomeScore\?\.progress\?\.\(\)/);
+  assert.match(targets,/live&&live\.id/);
+  assert.match(targets,/Number\(live\.percent\)/);
+  assert.match(targets,/met:m\.epa\.pct>=t\.targetPct/);
 });
 
 test("Maths and English each have five equal five-question parts",()=>{
