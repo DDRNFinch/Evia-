@@ -1,5 +1,5 @@
-// Evia v205 restores the standard evidence download spinner without changing other runtime behaviour.
-const CACHE_NAME = 'evia-shell-v205';
+// Evia v206 keeps mock tests mock-only, restores camera choice, and adds course recovery.
+const CACHE_NAME = 'evia-shell-v206';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -37,10 +37,12 @@ const CRITICAL = [
   './assets/evia-version-v203.js',
   './assets/evia-version-v204.js',
   './assets/evia-version-v205.js',
+  './assets/evia-version-v206.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
   './assets/evia-arp-mock-only-v197.js',
+  './assets/evia-recovery-v206.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
