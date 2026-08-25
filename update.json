@@ -1,18 +1,19 @@
 {
-  "version": "209",
-  "title": "Evia stability repair",
+  "version": "210",
+  "title": "KSB ticks and Practical camera fix",
   "details": [
-    "Discussion is permanently Mock Discussion only",
-    "Practical is permanently Mock Practical only, with separate Camera and Gallery choices",
-    "Maths Level 2 and English Level 2 are built directly into the Test/ARP screen below Practical",
-    "Legacy dark evidence markers and blank KSB circles are removed while learner, RPL, assessor and witness source ticks remain",
-    "A failed course map now provides a Choose course recovery button",
-    "Existing MCQ Mock Test, targets, download spinner and saved evidence are preserved"
+    "Course coverage now shows exactly one yellow learner-evidence tick",
+    "A covered KSB shows at most one additional external-source tick: purple RPL, otherwise blue assessor observation, otherwise orange witness testimony",
+    "Old dot, circle and duplicate tick elements are removed from each KSB tile before the correct source ticks are rebuilt",
+    "Mock Practical Camera now switches to image-only rear-camera capture before Android opens it, while Gallery remains separate",
+    "Discussion remains Mock Discussion only and Practical remains Mock Practical only",
+    "Maths Level 2 and English Level 2 remain directly under Practical in Test/ARP"
   ],
-  "summary": "Evia v209 consolidates the agreed Test, Functional Skills, evidence marker and course recovery fixes into the real source screens and removes the obsolete patch layers.",
+  "summary": "Evia v210 removes the remaining duplicate KSB markers shown on Course coverage and corrects the Android Mock Practical Camera route so Camera no longer uses the mixed image/video gallery picker.",
   "changes": [
-    "Removed obsolete ARP recovery and placement patch scripts",
-    "Created a clean v209 offline cache",
-    "Restored normal update delivery through the Evia updater"
+    "Strengthened KSB marker cleanup at source",
+    "Limited KSB display to one learner tick plus one external-source tick",
+    "Added direct Android camera routing without a MutationObserver",
+    "Created a clean v210 offline cache so old marker and camera behaviour is replaced"
   ]
 }
