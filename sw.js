@@ -1,5 +1,5 @@
-// Evia v197 simplifies EPA Discussion and Practical to mock-only choices.
-const CACHE_NAME = 'evia-shell-v197';
+// Evia v198 simplifies EPA Discussion and Practical to stable mock-only choices.
+const CACHE_NAME = 'evia-shell-v198';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -29,6 +29,7 @@ const CRITICAL = [
   './assets/evia-version-v195.js',
   './assets/evia-version-v196.js',
   './assets/evia-version-v197.js',
+  './assets/evia-version-v198.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
