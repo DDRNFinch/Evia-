@@ -1,5 +1,5 @@
-// Evia v206 keeps mock tests mock-only, restores camera choice, and adds course recovery.
-const CACHE_NAME = 'evia-shell-v206';
+// Evia v207 removes the v206 ARP observer freeze and uses finite event-based recovery checks only.
+const CACHE_NAME = 'evia-shell-v207';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
