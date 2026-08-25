@@ -1,15 +1,15 @@
 {
-  "version": "189",
-  "title": "QR gaze animation deleted",
+  "version": "190",
+  "title": "Faster evidence display",
   "details": [
-    "Deletes the old four-step gaze sequence that still ran when the QR/team button was pressed",
-    "Removes the lower-left, lower-right and downward gaze triggers from the interaction script",
-    "Keeps the unrelated touch and menu interaction fixes unchanged"
+    "Prepares media cards before showing their text",
+    "Removes the temporary text-only layout when switching evidence tabs",
+    "Loads local media previews faster"
   ],
-  "summary": "Evia v189 removes the remaining QR/team gaze animation from its source rather than overriding it.",
+  "summary": "Evia v190 improves the evidence screen rendering order.",
   "changes": [
-    "Legacy gaze sequence deleted",
-    "QR button no longer starts eye movement",
-    "Other interaction behaviour retained"
+    "Media cards prepared first",
+    "Text-only flash removed",
+    "Faster local preview loading"
   ]
 }
