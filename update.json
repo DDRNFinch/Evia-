@@ -1,17 +1,17 @@
 {
-  "version": "203",
-  "title": "One light completion tick only",
+  "version": "204",
+  "title": "Task-row duplicate ticks removed",
   "details": [
-    "Dark filled evidence-source tick circles have been removed from Evia",
-    "The original light completion circle with its tick is kept as the single completion marker",
-    "Old dark marker classes are actively removed if a cached screen tries to restore them",
-    "The v202 faster photo review remains unchanged"
+    "Evidence task rows now keep only Evia's original pale-yellow completion tick",
+    "The smaller darker duplicate tick circles are no longer generated and old copies are removed",
+    "Course coverage still keeps the yellow learner, purple RPL, blue assessor and orange witness ticks",
+    "No other evidence, camera, EPA, Maths, English or target behaviour is changed"
   ],
-  "summary": "Evia v203 permanently removes the dark duplicate tick circles and keeps the light completion tick.",
+  "summary": "Evia v204 removes only the duplicate dark task-row ticks and preserves the coloured KSB evidence-source tracker.",
   "changes": [
-    "Removed dark learner, RPL, assessor and witness marker circles from the active UI",
-    "Course coverage now uses one light tick for any evidenced KSB",
-    "Evidence opportunity rows use one light completion tick instead of stacked source markers",
-    "Added a legacy-marker cleanup guard so old dark circles cannot reappear"
+    "Removed generated source markers from evidence task rows",
+    "Preserved the original pale completion tick on task rows",
+    "Preserved all four coloured KSB evidence-source markers",
+    "Replaced the v203 marker layer with the corrected v204 implementation"
   ]
 }
