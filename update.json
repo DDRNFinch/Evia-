@@ -1,17 +1,18 @@
 {
-  "version": "205",
-  "title": "Download spinner restored",
+  "version": "206",
+  "title": "Mock, camera and course recovery fixes",
   "details": [
-    "The spinning download circle is restored for standard Sign & download evidence exports",
-    "The existing NVQ measured download progress remains unchanged",
-    "The v204 task-row tick and KSB tracker behaviour remains unchanged",
-    "No camera, EPA, Maths, English, targets or evidence content behaviour is changed"
+    "Discussion and Practical keep Mock only across all courses; Learn and Practice cannot reappear after delayed rendering",
+    "Mock practical evidence checkpoints now show separate Camera and Gallery controls, with Camera requesting the device camera",
+    "A failed course map now offers a Choose course recovery route instead of trapping the learner on an error screen",
+    "Future course changes keep the previous course available as a recovery option",
+    "The v205 download spinner and v204 evidence tick behaviour remain unchanged"
   ],
-  "summary": "Evia v205 restores the spinning download progress overlay without changing other app behaviour.",
+  "summary": "Evia v206 permanently enforces mock-only ARP screens, restores camera access in mock practical evidence and adds safe course recovery.",
   "changes": [
-    "Restored the spinning progress circle when a standard evidence download starts",
-    "Keeps the spinner visible while the evidence ZIP is being prepared",
-    "Closes the spinner when the download starts",
-    "No unrelated runtime changes"
+    "Removed Learn and Practice modes from delayed ARP renders",
+    "Added explicit Camera and Gallery choices to mock practical evidence checkpoints",
+    "Added course-selection recovery when a course map cannot load",
+    "Preserved existing evidence, targets, download and progress behaviour"
   ]
 }
