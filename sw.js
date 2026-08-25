@@ -1,5 +1,5 @@
-// Evia v189 removes the legacy QR/team gaze sequence from its source.
-const CACHE_NAME = 'evia-shell-v189';
+// Evia v190 prepares evidence media before its text is shown.
+const CACHE_NAME = 'evia-shell-v190';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
