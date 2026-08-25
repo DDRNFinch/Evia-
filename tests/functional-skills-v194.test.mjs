@@ -9,7 +9,8 @@ const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
-const evidenceState=fs.readFileSync("assets/evia-evidence-state-v203.js","utf8");
+const evidenceState=fs.readFileSync("assets/evia-evidence-state-v204.js","utf8");
+const exportStatus=fs.readFileSync("assets/evia-export-status.js","utf8");
 const staged=fs.readFileSync("assets/evia-staged-evidence-v202.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
@@ -19,36 +20,47 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v203 runtime is wired without the failed marker and photo workaround layers",()=>{
-  assert.equal(String(manifest.version),"203");
-  assert.match(index,/evia-version-v203\.js\?v=203/);
+test("v205 runtime keeps the corrected v204 evidence-state layer",()=>{
+  assert.equal(String(manifest.version),"205");
+  assert.match(index,/evia-version-v205\.js\?v=205/);
   assert.match(index,/evia-staged-evidence-v202\.js\?v=202/);
-  assert.match(index,/evia-evidence-state-v203\.js\?v=203/);
+  assert.match(index,/evia-evidence-state-v204\.js\?v=204/);
+  assert.doesNotMatch(index,/evia-evidence-state-v203\.js/);
   assert.doesNotMatch(index,/evia-evidence-state-v202\.js/);
   assert.doesNotMatch(index,/evia-count-display-v94\.js/);
   assert.doesNotMatch(index,/evia-ksb-clean-v201\.js/);
   assert.doesNotMatch(index,/evia-single-completion-tick-v173\.js/);
   assert.doesNotMatch(index,/evia-photo-fast-v140\.js/);
-  assert.match(sw,/evia-shell-v203/);
-  assert.match(sw,/evia-version-v203\.js/);
+  assert.match(sw,/evia-shell-v205/);
+  assert.match(sw,/evia-version-v205\.js/);
   assert.match(sw,/evia-staged-evidence-v202\.js/);
-  assert.match(sw,/evia-evidence-state-v203\.js/);
-  assert.doesNotMatch(sw,/evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
+  assert.match(sw,/evia-evidence-state-v204\.js/);
+  assert.doesNotMatch(sw,/evia-evidence-state-v203\.js|evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
 });
 
-test("v203 removes every dark evidence marker and preserves one light completion tick",()=>{
-  assert.match(evidenceState,/const DARK_SELECTORS=/);
-  assert.match(evidenceState,/function removeDarkMarkers\(root=document\)/);
-  assert.match(evidenceState,/root\.querySelectorAll\?\.\(DARK_SELECTORS\)\.forEach\(x=>x\.remove\(\)\)/);
-  assert.match(evidenceState,/function clearOpportunityDarkMarkers\(\)/);
-  assert.match(evidenceState,/background:#f2db7d!important/);
-  assert.match(evidenceState,/color:#6d5d1e!important/);
-  assert.match(evidenceState,/setKsbLightTick\(btn,covered\.has\(code\)\)/);
-  assert.doesNotMatch(evidenceState,/createElement\("i"\)/);
-  assert.doesNotMatch(evidenceState,/className=`evia-opportunity-source/);
-  assert.doesNotMatch(evidenceState,/evia-ksb-marker-v203 \$\{type\}/);
+test("v204 keeps the original pale task tick and preserves coloured KSB source ticks",()=>{
+  assert.match(evidenceState,/function clearOpportunityExtras\(\)/);
+  assert.match(evidenceState,/:scope > span/);
+  assert.doesNotMatch(evidenceState,/addOppMark|evia-opportunity-source-v204/);
+  assert.match(evidenceState,/function setKsbMarkers\(btn,learner,rpl,milos,witness\)/);
+  assert.match(evidenceState,/createElement\("i"\)/);
+  for(const source of ["learner","rpl","milos","witness"]){
+    assert.match(evidenceState,new RegExp(`evia-ksb-marker-v204\\.${source}`));
+  }
+  assert.match(evidenceState,/background:#efc33d/);
+  assert.match(evidenceState,/background:#7b3fc6/);
+  assert.match(evidenceState,/background:#367fd0/);
+  assert.match(evidenceState,/background:#d88b45/);
   assert.doesNotMatch(evidenceState,/MutationObserver/);
-  assert.doesNotMatch(evidenceState,/setInterval\(/);
+});
+
+test("v205 restores the spinning circle to standard Sign and download",()=>{
+  assert.match(index,/evia-export-status\.js\?v=205/);
+  assert.match(exportStatus,/\[data-sign-download\]/);
+  assert.match(exportStatus,/function showProgress\(\)/);
+  assert.match(exportStatus,/evia-export-progress-ring-v205/);
+  assert.match(exportStatus,/@keyframes eviaExportSpin205/);
+  assert.match(exportStatus,/Evia-New-Evidence-/);
 });
 
 test("v202 photo review is still shown from the captured canvas before JPEG encoding finishes",()=>{
