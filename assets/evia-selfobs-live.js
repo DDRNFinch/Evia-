@@ -51,131 +51,37 @@ function shell(){
 function title(a,b=""){return `<h2 class="self-title">${esc(a)}</h2>${b?`<p class="self-copy">${esc(b)}</p>`:""}`}
 function pill(a,b="",n=0,attrs=""){return `<button class="option-row" ${attrs}><span class="option-row-copy"><span>${esc(a)}</span>${b?`<small>${esc(b)}</small>`:""}</span><span class="self-side">${n?`<b>${dots(n)}</b>`:""}<i>›</i></span></button>`}
 function back(){return `<button class="self-back" data-action="back">‹ Back</button>`}
-function recapText(){
-  const n=today().length;
-  if(n)return `You’ve collected ${n} evidence moment${n===1?"":"s"} today. Pick the job you’re doing now.`;
-  if(recap?.count)return `Last time you collected ${recap.count} evidence moment${recap.count===1?"":"s"}. You now have evidence against ${touched()} of ${CODES.length} KSBs.`;
-  return COURSE.pathway==="architectural-joiner"?"Tell me what you’re doing in the workshop. I’ll show you the evidence you could get from that job.":"Tell me what you’re doing on site. I’ll show you the evidence you could get from that job."
-}
+function recapText(){const n=today().length;if(n)return `You’ve collected ${n} evidence moment${n===1?"":"s"} today. Pick the job you’re doing now.`;if(recap?.count)return `Last time you collected ${recap.count} evidence moment${recap.count===1?"":"s"}. You now have evidence against ${touched()} of ${CODES.length} KSBs.`;return COURSE.pathway==="architectural-joiner"?"Tell me what you’re doing in the workshop. I’ll show you the evidence you could get from that job.":"Tell me what you’re doing on site. I’ll show you the evidence you could get from that job."}
 function mount(){document.getElementById("root").innerHTML=shell();bindShell();render()}
-function refreshShellMeta(){
-  const quick=$("[data-quick]");if(quick)quick.textContent=`Evidence · ${fresh().length} new`;
-  const values={TOC:timeline(),KSB:Math.round(touched()/CODES.length*100),OTJ:otj(),EPA:epa()};
-  document.querySelectorAll("[data-arch]").forEach(button=>{const pct=values[button.dataset.arch];if(pct==null)return;const path=button.querySelector(".arch-value"),number=button.querySelector(".arch-number"),shown=ARCH_LABELS[button.dataset.arch]||button.dataset.arch;if(path)path.setAttribute("stroke-dasharray",`${pct} 100`);if(number)number.textContent=`${pct}%`;button.setAttribute("aria-label",`${shown} ${pct}%`)})
-}
-function syncShell(){
-  const app=$(".evia-app"),stage=$(".menu-stage"),avatar=$("[data-evia]");
-  if(!app)return;
-  app.classList.toggle("is-open",open);
-  if(avatar)avatar.setAttribute("aria-expanded",open?"true":"false");
-  if(stage)stage.setAttribute("aria-hidden",open?"false":"true");
-  refreshShellMeta();
-  if(open)render()
-}
-function bindShell(){
-  $("[data-evia]").onclick=()=>{open=!open;if(!open){view="home";cat=job=opp=null}syncShell()};
-  $("[data-quick]").onclick=()=>{open=true;view="evidence";syncShell()};
-  document.querySelectorAll("[data-arch]").forEach(b=>b.onclick=()=>{if(b.dataset.arch==="KSB"){open=true;view="coverage";syncShell()}else toast(`${ARCH_LABELS[b.dataset.arch]||b.dataset.arch} is still available from the arch bar.`)});
-  $("#selfPhoto").onchange=e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;photo=f;if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(f);render()}
-}
-const MENU_FADE_VIEWS=new Set(["home","jobs","opps","evidence","coverage","day"]);
-let menuFadeToken=0,menuFadeOut=null,menuFadeIn=null;
+function refreshShellMeta(){const quick=$("[data-quick]");if(quick)quick.textContent=`Evidence · ${fresh().length} new`;const values={TOC:timeline(),KSB:Math.round(touched()/CODES.length*100),OTJ:otj(),EPA:epa()};document.querySelectorAll("[data-arch]").forEach(button=>{const pct=values[button.dataset.arch];if(pct==null)return;const path=button.querySelector(".arch-value"),number=button.querySelector(".arch-number"),shown=ARCH_LABELS[button.dataset.arch]||button.dataset.arch;if(path)path.setAttribute("stroke-dasharray",`${pct} 100`);if(number)number.textContent=`${pct}%`;button.setAttribute("aria-label",`${shown} ${pct}%`)})}
+function syncShell(){const app=$(".evia-app"),stage=$(".menu-stage"),avatar=$("[data-evia]");if(!app)return;app.classList.toggle("is-open",open);if(avatar)avatar.setAttribute("aria-expanded",open?"true":"false");if(stage)stage.setAttribute("aria-hidden",open?"false":"true");refreshShellMeta();if(open)render()}
+function bindShell(){$("[data-evia]").onclick=()=>{open=!open;if(!open){view="home";cat=job=opp=null}syncShell()};$("[data-quick]").onclick=()=>{open=true;view="evidence";syncShell()};document.querySelectorAll("[data-arch]").forEach(b=>b.onclick=()=>{if(b.dataset.arch==="KSB"){open=true;view="coverage";syncShell()}else toast(`${ARCH_LABELS[b.dataset.arch]||b.dataset.arch} is still available from the arch bar.`)});$("#selfPhoto").onchange=e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;photo=f;if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(f);render()}}
+const MENU_FADE_VIEWS=new Set(["home","jobs","opps","evidence","coverage","day"]);let menuFadeToken=0,menuFadeOut=null,menuFadeIn=null;
 function stopMenuFade(p){try{menuFadeOut?.cancel?.()}catch{}try{menuFadeIn?.cancel?.()}catch{}menuFadeOut=menuFadeIn=null;if(p)p.style.removeProperty("opacity")}
+function freeze(){}
 function paint(p){if(view==="home")home(p);else if(view==="jobs")jobs(p);else if(view==="opps")opps(p);else if(view==="capture")capture(p);else if(view==="question")question(p);else if(view==="answer")answer(p);else if(view==="evidence")evidence(p);else if(view==="coverage")coverage(p);else if(view==="day")day(p);p.dataset.eviaView=view;bindPanel()}
-function render(transition=false){
-  const p=$(".self-panel");if(!p||!open)return;
-  const previous=p.dataset.eviaView||"",next=view;
-  const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-  const safe=transition&&MENU_FADE_VIEWS.has(previous)&&MENU_FADE_VIEWS.has(next)&&previous!==next&&!document.querySelector(".evia-stage-overlay-v132")&&!reduced&&typeof p.animate==="function";
-  if(!safe){menuFadeToken++;stopMenuFade(p);paint(p);return}
-  const token=++menuFadeToken;stopMenuFade(p);
-  menuFadeOut=p.animate([{opacity:1},{opacity:.04}],{duration:85,easing:"cubic-bezier(.4,0,1,1)",fill:"forwards"});
-  menuFadeOut.onfinish=()=>{
-    if(token!==menuFadeToken)return;
-    p.style.opacity=".04";try{menuFadeOut?.cancel?.()}catch{}menuFadeOut=null;
-    paint(p);
-    requestAnimationFrame(()=>{
-      if(token!==menuFadeToken)return;
-      menuFadeIn=p.animate([{opacity:.04},{opacity:1}],{duration:145,easing:"cubic-bezier(.16,1,.3,1)",fill:"forwards"});
-      menuFadeIn.onfinish=()=>{if(token!==menuFadeToken)return;p.style.opacity="1";try{menuFadeIn?.cancel?.()}catch{}menuFadeIn=null;p.style.removeProperty("opacity")};
-    });
-  }
-}
-function home(p){
-  const heading=COURSE.pathway==="architectural-joiner"?"What are you doing in the workshop today?":"What are you doing on site today?";
-  let h=title(heading,recapText())+'<div class="self-list">';
-  DATA.forEach(c=>h+=pill(c.title,`${c.jobs.length} ${COURSE.pathway==="architectural-joiner"?"workshop":"site"} tasks`,count("categoryId",c.id),`data-cat="${c.id}"`));
-  h+=`</div><div class="self-mini"><button data-action="evidence"><strong>Evidence</strong><span>${fresh().length} new evidence</span></button><button data-action="coverage"><strong>Course coverage</strong><span>${touched()} of ${CODES.length} evidenced</span></button></div>`;
-  p.innerHTML=h
-}
+function render(transition=false){const p=$(".self-panel");if(!p||!open)return;const previous=p.dataset.eviaView||"",next=view,reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches,safe=transition&&MENU_FADE_VIEWS.has(previous)&&MENU_FADE_VIEWS.has(next)&&previous!==next&&!document.querySelector(".evia-stage-overlay-v132")&&!reduced&&typeof p.animate==="function";if(!safe){menuFadeToken++;stopMenuFade(p);paint(p);return}const token=++menuFadeToken;stopMenuFade(p);menuFadeOut=p.animate([{opacity:1},{opacity:.04}],{duration:85,easing:"cubic-bezier(.4,0,1,1)",fill:"forwards"});menuFadeOut.onfinish=()=>{if(token!==menuFadeToken)return;p.style.opacity=".04";try{menuFadeOut?.cancel?.()}catch{}menuFadeOut=null;paint(p);requestAnimationFrame(()=>{if(token!==menuFadeToken)return;menuFadeIn=p.animate([{opacity:.04},{opacity:1}],{duration:145,easing:"cubic-bezier(.16,1,.3,1)",fill:"forwards"});menuFadeIn.onfinish=()=>{if(token!==menuFadeToken)return;p.style.opacity="1";try{menuFadeIn?.cancel?.()}catch{}menuFadeIn=null;p.style.removeProperty("opacity")}})}}
+function home(p){const heading=COURSE.pathway==="architectural-joiner"?"What are you doing in the workshop today?":"What are you doing on site today?";let h=title(heading,recapText())+'<div class="self-list">';DATA.forEach(c=>h+=pill(c.title,`${c.jobs.length} ${COURSE.pathway==="architectural-joiner"?"workshop":"site"} tasks`,count("categoryId",c.id),`data-cat="${c.id}"`));h+=`</div><div class="self-mini"><button data-action="evidence"><strong>Evidence</strong><span>${fresh().length} new evidence</span></button><button data-action="coverage"><strong>Course coverage</strong><span>${touched()} of ${CODES.length} evidenced</span></button></div>`;p.innerHTML=h}
 function jobs(p){p.innerHTML=back()+title(cat.title,"Choose the task closest to what you’re doing today.")+'<div class="self-list">'+cat.jobs.map(j=>pill(j.title,"",count("jobId",j.id),`data-job="${j.id}"`)).join("")+"</div>"}
 function opps(p){p.innerHTML=back()+title(job.title,`There are ${job.opps.length} useful things you could get from this job. Get the ones you can and leave the rest.`)+'<div class="self-list">'+job.opps.map(o=>pill(o.title,o.instruction,count("opportunityId",o.id),`data-opp="${o.id}"`)).join("")+`</div><div class="self-actions"><button class="self-button primary" data-action="submit">Submit this job & go home</button><button class="self-button" data-action="finish">Finish for today</button></div>`}
 function clearCapture(){if(photoUrl)URL.revokeObjectURL(photoUrl);photo=null;photoUrl="";typed="";audio=null;mode="type";stopRec(true)}
 function capture(p){p.innerHTML=back()+title(opp.title,opp.instruction)+`<div class="self-card photo"><span>One clear photo</span><button class="self-button primary" data-pick>${photo?"Change photo":"Take / choose photo"}</button>${photoUrl?`<img src="${photoUrl}" alt="Evidence preview">`:""}</div><button class="self-button primary" data-action="next" ${photo?"":"disabled"}>Continue</button>`}
 function question(p){p.innerHTML=back()+title(opp.title)+`<div class="self-question">${esc(opp.question)}</div><div class="self-actions"><button class="self-button primary" data-mode="talk">Talk</button><button class="self-button" data-mode="type">Type</button></div>`}
-function answer(p){
-  if(mode==="type")p.innerHTML=back()+title("Keep it short",opp.question)+`<textarea id="selfText" placeholder="A sentence or two is enough.">${esc(typed)}</textarea><button class="self-button primary" data-action="save">Save evidence</button>`;
-  else p.innerHTML=back()+title("Talk about it",opp.question)+`<div class="self-card record"><span>${audio?"Answer recorded":recorder&&recorder.state==="recording"?"Recording…":"Ready to record"}</span><div class="self-actions">${recorder&&recorder.state==="recording"?'<button class="self-button primary" data-action="stop">Stop</button>':'<button class="self-button primary" data-action="record">Start recording</button>'}<button class="self-button" data-mode="type">Type instead</button></div></div>${audio?'<button class="self-button primary" data-action="save">Save evidence</button>':""}`
-}
-function evidence(p){
-  const list=tab==="new"?fresh():archived(),groups={};list.forEach(e=>(groups[e.bundle]||(groups[e.bundle]=[])).push(e));
-  let h=back()+title("Evidence",tab==="new"?"Only new evidence is included in the next download.":"Downloaded evidence stays here and still counts towards your yellow evidence marks.")+`<div class="self-tabs"><button class="${tab==="new"?"on":""}" data-tab="new">New evidence · ${fresh().length}</button><button class="${tab==="downloaded"?"on":""}" data-tab="downloaded">Downloaded · ${archived().length}</button></div>`;
-  if(tab==="new")h+=`<button class="self-button primary" data-action="download" ${list.length?"":"disabled"}>Download new evidence</button>`;
-  Object.keys(groups).sort().forEach(g=>{h+=`<div class="self-card group"><strong>${esc(g)} <em>${dots(groups[g].length)}</em></strong>`;groups[g].forEach(e=>h+=`<div class="self-entry"><b>${esc(e.title)} · ${esc(e.jobTitle)}</b><span>${esc(e.answerText||"Voice answer")}</span><small>${(e.codes||[]).join(" · ")} · ${new Date(e.createdAt).toLocaleDateString("en-GB")}</small></div>`);h+="</div>"});
-  if(!list.length)h+='<div class="self-card"><span>Nothing here yet.</span></div>';p.innerHTML=h
-}
-function coverage(p){const x=counts();p.innerHTML=back()+title("Course coverage","Nothing is marked complete. A yellow tick shows that you have evidence against that KSB. Tap any code to get a suitable photo or question.")+`<div class="self-ksbs">${CODES.map(c=>`<button data-code="${c}"><b>${c}</b><span>${dots(x[c]||0)}</span></button>`).join("")}</div>`}
+function answer(p){if(mode==="type")p.innerHTML=back()+title("Keep it short",opp.question)+`<textarea id="selfText" placeholder="A sentence or two is enough.">${esc(typed)}</textarea><button class="self-button primary" data-action="save">Save evidence</button>`;else p.innerHTML=back()+title("Talk about it",opp.question)+`<div class="self-card record"><span>${audio?"Answer recorded":recorder&&recorder.state==="recording"?"Recording…":"Ready to record"}</span><div class="self-actions">${recorder&&recorder.state==="recording"?'<button class="self-button primary" data-action="stop">Stop</button>':'<button class="self-button primary" data-action="record">Start recording</button>'}<button class="self-button" data-mode="type">Type instead</button></div></div>${audio?'<button class="self-button primary" data-action="save">Save evidence</button>':""}`}
+function evidence(p){const list=tab==="new"?fresh():archived(),groups={};list.forEach(e=>(groups[e.bundle]||(groups[e.bundle]=[])).push(e));let h=back()+title("Evidence",tab==="new"?"Only new evidence is included in the next download.":"Downloaded evidence stays here and still counts towards your yellow evidence marks.")+`<div class="self-tabs"><button class="${tab==="new"?"on":""}" data-tab="new">New evidence · ${fresh().length}</button><button class="${tab==="downloaded"?"on":""}" data-tab="downloaded">Downloaded · ${archived().length}</button></div>`;if(tab==="new")h+=`<button class="self-button primary" data-action="download" ${list.length?"":"disabled"}>Download new evidence</button>`;Object.keys(groups).sort().forEach(g=>{h+=`<div class="self-card group"><strong>${esc(g)} <em>${dots(groups[g].length)}</em></strong>`;groups[g].forEach(e=>h+=`<div class="self-entry"><b>${esc(e.title)} · ${esc(e.jobTitle)}</b><span>${esc(e.answerText||"Voice answer")}</span><small>${(e.codes||[]).join(" · ")} · ${new Date(e.createdAt).toLocaleDateString("en-GB")}</small></div>`);h+="</div>"});if(!list.length)h+='<div class="self-card"><span>Nothing here yet.</span></div>';p.innerHTML=h}
+function coverage(p){p.innerHTML=back()+title("Course coverage","Nothing is marked complete. A yellow tick shows that you have evidence against that KSB. Tap any code to get a suitable photo or question.")+`<div class="self-ksbs">${CODES.map(c=>`<button data-code="${c}"><b>${c}</b></button>`).join("")}</div>`}
 function day(p){p.innerHTML=title("That’s enough for today",recap?.count?`You collected ${recap.count} evidence moment${recap.count===1?"":"s"}. I’ll remind you next time.`:"Nothing was forced or marked missing.")+`<button class="self-button primary" data-action="home">Back home</button>`}
-function bindPanel(){
-  document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=findCat(b.dataset.cat);view="jobs";render(true)});
-  document.querySelectorAll("[data-job]").forEach(b=>b.onclick=()=>{job=findJob(cat,b.dataset.job);view="opps";render(true)});
-  document.querySelectorAll("[data-opp]").forEach(b=>b.onclick=()=>{opp=findOpp(job,b.dataset.opp);clearCapture();view=opp.media==="talk"?"question":"capture";render()});
-  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;view="answer";render()});
-  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render(true)});
-  document.querySelectorAll("[data-code]").forEach(b=>b.onclick=()=>routeCode(b.dataset.code));
-  document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>action(b.dataset.action));
-  const pick=$("[data-pick]");if(pick)pick.onclick=()=>$("#selfPhoto").click();
-  const ta=$("#selfText");if(ta)ta.oninput=e=>typed=e.target.value
-}
+function bindPanel(){document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=findCat(b.dataset.cat);view="jobs";render(true)});document.querySelectorAll("[data-job]").forEach(b=>b.onclick=()=>{job=findJob(cat,b.dataset.job);view="opps";render(true)});document.querySelectorAll("[data-opp]").forEach(b=>b.onclick=()=>{opp=findOpp(job,b.dataset.opp);clearCapture();view=opp.media==="talk"?"question":"capture";render()});document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;view="answer";render()});document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render(true)});document.querySelectorAll("[data-code]").forEach(b=>b.onclick=()=>routeCode(b.dataset.code));document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>action(b.dataset.action));const pick=$("[data-pick]");if(pick)pick.onclick=()=>$("#selfPhoto").click();const ta=$("#selfText");if(ta)ta.oninput=e=>typed=e.target.value}
 function goBack(){if(view==="jobs")view="home";else if(view==="opps")view="jobs";else if(view==="capture"||view==="question")view="opps";else if(view==="answer")view="question";else view="home";render(true)}
-async function action(a){
-  if(a==="back")goBack();
-  else if(a==="next"){view="question";render()}
-  else if(a==="save")save();
-  else if(a==="record")startRec();
-  else if(a==="stop")stopRec();
-  else if(a==="submit"){cat=job=opp=null;view="home";open=false;syncShell();toast("Job submitted. Start another job whenever you’re ready.")}
-  else if(a==="finish")finish();
-  else if(a==="home"){view="home";render(true)}
-  else if(a==="evidence"){view="evidence";render(true)}
-  else if(a==="coverage"){view="coverage";render(true)}
-  else if(a==="download")download()
-}
+async function action(a){if(a==="back")goBack();else if(a==="next"){view="question";render()}else if(a==="save")save();else if(a==="record")startRec();else if(a==="stop")stopRec();else if(a==="submit"){cat=job=opp=null;view="home";open=false;syncShell();toast("Job submitted. Start another job whenever you’re ready.")}else if(a==="finish")finish();else if(a==="home"){view="home";render(true)}else if(a==="evidence"){view="evidence";render(true)}else if(a==="coverage"){view="coverage";render(true)}else if(a==="download")download()}
 function openDb(){return new Promise((res,rej)=>{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(DBS))q.result.createObjectStore(DBS,{keyPath:"id"})};q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
 async function storeBlob(blob,name,type){const db=await openDb(),id=`m-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;await new Promise((res,rej)=>{const t=db.transaction(DBS,"readwrite");t.objectStore(DBS).put({id,blob,name,type});t.oncomplete=res;t.onerror=()=>rej(t.error)});db.close();return id}
 async function getBlob(id){if(!id)return null;const db=await openDb();const v=await new Promise((res,rej)=>{const q=db.transaction(DBS,"readonly").objectStore(DBS).get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)});db.close();return v}
-async function saveExternalAudioEvidence({context,file,answerText="",startedAt=null,promptMarkers=[],durationSeconds=null}={}){
-  const c=context?.cat,j=context?.job,o=context?.opp;if(!c||!j||!o||!(file instanceof Blob))throw Error("audio evidence context unavailable");
-  const audioId=await storeBlob(file,file.name||`${o.id}.webm`,file.type||"audio/webm"),now=Date.now();
-  const e={id:`e-${now}-${Math.random().toString(36).slice(2,7)}`,createdAt:now,courseId:COURSE.courseId,pathway:COURSE.pathway||null,categoryId:c.id,categoryTitle:c.title,jobId:j.id,jobTitle:j.title,opportunityId:o.id,title:o.title,bundle:o.bundle,question:o.question,codes:[...(o.codes||[])],answerMode:"talk",answerText:String(answerText||"").trim()||null,photoId:null,audioId,downloadedAt:null,mediaKind:"audio",audioStartedAt:startedAt||null,audioPromptMarkers:Array.isArray(promptMarkers)?promptMarkers:[],audioDurationSeconds:durationSeconds??null,activityCode:o.activityCode||null,groupId:o.groupId||c.id,groupTitle:o.groupTitle||c.title,subCategoryId:o.subCategoryId||j.id,subCategoryTitle:o.subCategoryTitle||j.title};
-  entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);cat=c;job=j;opp=o;clearCapture();view="opps";open=true;syncShell();return e
-}
-async function save(){
-  if(opp.media!=="talk"&&!photo){toast("Add one photo first.");return}
-  if(mode==="type"&&(typed.trim().match(/\S+/g)||[]).length<3){toast("Just add a little more so I know what you mean.");return}
-  if(mode==="talk"&&!audio){toast("Record a short answer first.");return}
-  try{
-    const now=Date.now(),photoId=photo?await storeBlob(photo,photo.name||`${opp.id}.jpg`,photo.type||"image/jpeg"):null,audioId=audio?await storeBlob(audio,`${opp.id}.webm`,audio.type||"audio/webm"):null;
-    const e={id:`e-${now}-${Math.random().toString(36).slice(2,7)}`,createdAt:now,courseId:COURSE.courseId,pathway:COURSE.pathway||null,categoryId:cat.id,categoryTitle:cat.title,jobId:job.id,jobTitle:job.title,opportunityId:opp.id,title:opp.title,bundle:opp.bundle,question:opp.question,codes:[...opp.codes],answerMode:mode,answerText:mode==="type"?typed.trim():null,photoId,audioId,downloadedAt:null};
-    entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);clearCapture();view="opps";open=true;syncShell();toast("Evidence saved. About one minute, done.")
-  }catch(e){console.error(e);toast("That evidence could not be saved.")}
-}
+async function saveExternalAudioEvidence({context,file,answerText="",startedAt=null,promptMarkers=[],durationSeconds=null}={}){const c=context?.cat,j=context?.job,o=context?.opp;if(!c||!j||!o||!(file instanceof Blob))throw Error("audio evidence context unavailable");const audioId=await storeBlob(file,file.name||`${o.id}.webm`,file.type||"audio/webm"),now=Date.now(),e={id:`e-${now}-${Math.random().toString(36).slice(2,7)}`,createdAt:now,courseId:COURSE.courseId,pathway:COURSE.pathway||null,categoryId:c.id,categoryTitle:c.title,jobId:j.id,jobTitle:j.title,opportunityId:o.id,title:o.title,bundle:o.bundle,question:o.question,codes:[...(o.codes||[])],answerMode:"talk",answerText:String(answerText||"").trim()||null,photoId:null,audioId,downloadedAt:null,mediaKind:"audio",audioStartedAt:startedAt||null,audioPromptMarkers:Array.isArray(promptMarkers)?promptMarkers:[],audioDurationSeconds:durationSeconds??null,activityCode:o.activityCode||null,groupId:o.groupId||c.id,groupTitle:o.groupTitle||c.title,subCategoryId:o.subCategoryId||j.id,subCategoryTitle:o.subCategoryTitle||j.title};entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);cat=c;job=j;opp=o;clearCapture();view="opps";open=true;syncShell();return e}
+async function save(){if(opp.media!=="talk"&&!photo){toast("Add one photo first.");return}if(mode==="type"&&(typed.trim().match(/\S+/g)||[]).length<3){toast("Just add a little more so I know what you mean.");return}if(mode==="talk"&&!audio){toast("Record a short answer first.");return}try{const now=Date.now(),photoId=photo?await storeBlob(photo,photo.name||`${opp.id}.jpg`,photo.type||"image/jpeg"):null,audioId=audio?await storeBlob(audio,`${opp.id}.webm`,audio.type||"audio/webm"):null,e={id:`e-${now}-${Math.random().toString(36).slice(2,7)}`,createdAt:now,courseId:COURSE.courseId,pathway:COURSE.pathway||null,categoryId:cat.id,categoryTitle:cat.title,jobId:job.id,jobTitle:job.title,opportunityId:opp.id,title:opp.title,bundle:opp.bundle,question:opp.question,codes:[...opp.codes],answerMode:mode,answerText:mode==="type"?typed.trim():null,photoId,audioId,downloadedAt:null};entries.unshift(e);dayIds.push(e.id);write(STORE,entries);write(DAY,dayIds);clearCapture();view="opps";open=true;syncShell();toast("Evidence saved. About one minute, done.")}catch(e){console.error(e);toast("That evidence could not be saved.")}}
 function finish(){const n=today().length;recap={at:Date.now(),count:n,touched:touched()};write(RECAP,recap);dayIds=[];write(DAY,dayIds);cat=job=opp=null;view="day";render(true)}
 function routeCode(code){for(const c of DATA)for(const j of c.jobs)for(const o of j.opps)if(o.codes.includes(code)){cat=c;job=j;opp=o;clearCapture();view=o.media==="talk"?"question":"capture";render();toast(`Here’s a way to gather more ${code} evidence.`);return}}
-async function startRec(){
-  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){toast("Microphone isn’t available here. Use Type instead.");return}
-  try{stopRec(true);stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onstop=()=>{audio=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});stream?.getTracks().forEach(t=>t.stop());stream=null;recorder=null;render()};recorder.start(250);render()}catch{toast("Microphone permission wasn’t available. Use Type instead.")}
-}
+async function startRec(){if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){toast("Microphone isn’t available here. Use Type instead.");return}try{stopRec(true);stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onstop=()=>{audio=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});stream?.getTracks().forEach(t=>t.stop());stream=null;recorder=null;render()};recorder.start(250);render()}catch{toast("Microphone permission wasn’t available. Use Type instead.")}}
 function stopRec(silent=false){if(recorder&&recorder.state!=="inactive"){if(silent)recorder.onstop=null;try{recorder.stop()}catch{}}stream?.getTracks().forEach(t=>t.stop());stream=null;if(silent)recorder=null}
 function crc32(d){let c=0xffffffff;for(const b of d){c^=b;for(let j=0;j<8;j++)c=(c>>>1)^(0xedb88320&-(c&1))}return(c^0xffffffff)>>>0}
 function catBytes(ps){const n=ps.reduce((a,p)=>a+p.length,0),o=new Uint8Array(n);let x=0;ps.forEach(p=>{o.set(p,x);x+=p.length});return o}
@@ -183,30 +89,9 @@ function le16(v){return new Uint8Array([v&255,v>>>8&255])}
 function le32(v){return new Uint8Array([v&255,v>>>8&255,v>>>16&255,v>>>24&255])}
 function zip(fs){const en=new TextEncoder(),ls=[],cs=[];let off=0;for(const f of fs){const n=en.encode(f.name),cr=crc32(f.data),l=catBytes([le32(0x04034b50),le16(20),le16(0),le16(0),le16(0),le16(0),le32(cr),le32(f.data.length),le32(f.data.length),le16(n.length),le16(0),n,f.data]);ls.push(l);cs.push(catBytes([le32(0x02014b50),le16(20),le16(20),le16(0),le16(0),le16(0),le16(0),le32(cr),le32(f.data.length),le32(f.data.length),le16(n.length),le16(0),le16(0),le16(0),le16(0),le32(0),le32(off),n]));off+=l.length}const l=catBytes(ls),c=catBytes(cs);return new Blob([l,c,catBytes([le32(0x06054b50),le16(0),le16(0),le16(fs.length),le16(fs.length),le32(c.length),le32(l.length),le16(0)])],{type:"application/zip"})}
 const csv=s=>/[",\r\n]/.test(String(s))?`"${String(s).replace(/"/g,'""')}"`:String(s??""),safe=s=>String(s).replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"").slice(0,50)||"evidence";
-async function download(){
-  const list=fresh();if(!list.length){toast("There is no new evidence waiting for download.");return}
-  try{
-    const en=new TextEncoder(),fs=[],rows=[["Date","Job","Evidence","Question","Answer","KSBs"]];
-    for(let i=0;i<list.length;i++){const e=list[i],pre=`${String(i+1).padStart(2,"0")}-${safe(e.title)}`,ans=e.answerMode==="type"?(e.answerText||""):"See audio";rows.push([new Date(e.createdAt).toLocaleString("en-GB"),e.jobTitle,e.title,e.question,ans,e.codes.join(" ")]);const p=await getBlob(e.photoId),a=await getBlob(e.audioId);if(p)fs.push({name:`${pre}-photo.${p.type?.split("/")[1]||"jpg"}`,data:new Uint8Array(await p.blob.arrayBuffer())});if(a)fs.push({name:`${pre}-answer.webm`,data:new Uint8Array(await a.blob.arrayBuffer())})}
-    fs.unshift({name:"Evia-New-Evidence.csv",data:en.encode(rows.map(r=>r.map(csv).join(",")).join("\r\n"))});
-    const u=URL.createObjectURL(zip(fs)),a=document.createElement("a");a.href=u;a.download=`Evia-New-Evidence-${new Date().toISOString().slice(0,10)}.zip`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);
-    const now=Date.now();entries=entries.map(e=>!e.downloadedAt?{...e,downloadedAt:now}:e);write(STORE,entries);tab="downloaded";view="evidence";open=true;syncShell();toast(`${list.length} evidence item${list.length===1?"":"s"} moved to Downloaded.`)
-  }catch(e){console.error(e);toast("The evidence download could not be built.")}
-}
+async function download(){const list=fresh();if(!list.length){toast("There is no new evidence waiting for download.");return}try{const en=new TextEncoder(),fs=[],rows=[["Date","Job","Evidence","Question","Answer","KSBs"]];for(let i=0;i<list.length;i++){const e=list[i],pre=`${String(i+1).padStart(2,"0")}-${safe(e.title)}`,ans=e.answerMode==="type"?(e.answerText||""):"See audio";rows.push([new Date(e.createdAt).toLocaleString("en-GB"),e.jobTitle,e.title,e.question,ans,e.codes.join(" ")]);const p=await getBlob(e.photoId),a=await getBlob(e.audioId);if(p)fs.push({name:`${pre}-photo.${p.type?.split("/")[1]||"jpg"}`,data:new Uint8Array(await p.blob.arrayBuffer())});if(a)fs.push({name:`${pre}-answer.webm`,data:new Uint8Array(await a.blob.arrayBuffer())})}fs.unshift({name:"Evia-New-Evidence.csv",data:en.encode(rows.map(r=>r.map(csv).join(",")).join("\r\n"))});const u=URL.createObjectURL(zip(fs)),a=document.createElement("a");a.href=u;a.download=`Evia-New-Evidence-${new Date().toISOString().slice(0,10)}.zip`;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);const now=Date.now();entries=entries.map(e=>!e.downloadedAt?{...e,downloadedAt:now}:e);write(STORE,entries);tab="downloaded";view="evidence";open=true;syncShell();toast(`${list.length} evidence item${list.length===1?"":"s"} moved to Downloaded.`)}catch(e){console.error(e);toast("The evidence download could not be built.")}}
 function toast(m){const t=$(".app-toast");if(!t)return;clearTimeout(toastTimer);t.textContent=m;t.classList.add("is-visible");toastTimer=setTimeout(()=>t.classList.remove("is-visible"),2600)}
-async function loadData(){
-  try{
-    const prefix=COURSE.dataPrefix||"evia-site-data";
-    const parts=await Promise.all([1,2,3].map(async n=>{
-      const t=await fetch(`./app/${prefix}-${n}.ts?v=99`,{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()});
-      const m=t.match(/export const SITE_DATA_\d+:SiteCategory\[\]=(.*);\s*$/s);if(!m)throw Error("data parse");return JSON.parse(m[1])
-    }));
-    DATA=parts.flat();
-    const mapped=new Set(DATA.flatMap(c=>c.jobs.flatMap(j=>j.opps.flatMap(o=>o.codes))));
-    if(mapped.size!==CODES.length||CODES.some(c=>!mapped.has(c)))throw Error(`only ${mapped.size}/${CODES.length} mapped`);
-    mount()
-  }catch(e){console.error(e);document.getElementById("root").innerHTML='<main class="evia-app selfobs is-ready"><div class="self-load-error">Evia could not load the course map. Refresh once and try again.</div></main>'}
-}
+async function loadData(){try{const prefix=COURSE.dataPrefix||"evia-site-data",parts=await Promise.all([1,2,3].map(async n=>{const t=await fetch(`./app/${prefix}-${n}.ts?v=99`,{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()}),m=t.match(/export const SITE_DATA_\d+:SiteCategory\[\]=(.*);\s*$/s);if(!m)throw Error("data parse");return JSON.parse(m[1])}));DATA=parts.flat();const mapped=new Set(DATA.flatMap(c=>c.jobs.flatMap(j=>j.opps.flatMap(o=>o.codes))));if(mapped.size!==CODES.length||CODES.some(c=>!mapped.has(c)))throw Error(`only ${mapped.size}/${CODES.length} mapped`);mount()}catch(e){console.error(e);const root=document.getElementById("root");root.innerHTML='<main class="evia-app selfobs is-ready"><div class="self-load-error"><p>Evia could not load the course map.</p><button type="button" class="self-button primary" data-course-recover>Choose course</button></div></main>';root.querySelector("[data-course-recover]")?.addEventListener("click",()=>{const packs=window.EviaCoursePacks;if(packs?.manager)packs.manager(()=>location.reload());else location.reload()})}}
 window.EviaEvidenceCore=Object.freeze({saveExternalAudioEvidence});
 loadData();
 })();
