@@ -1,18 +1,14 @@
 {
-  "version": "207",
-  "title": "Test screen freeze fixed",
+  "version": "208",
+  "title": "Maths and English restored",
   "details": [
-    "Removed the continuous v206 ARP MutationObserver that could freeze Evia when Test opened",
-    "Mock-only Discussion and Practical now use short finite checks only when those screens open",
-    "Camera and Gallery remain separate choices in mock practical evidence",
-    "Course-map recovery remains available without continuously watching the app",
-    "Existing evidence, targets, progress, Functional Skills and download behaviour are unchanged"
+    "Maths Level 2 and English Level 2 are restored directly under Practical in the Test/ARP screen",
+    "The existing Maths and English question banks are unchanged",
+    "No other app behaviour is changed in this update"
   ],
-  "summary": "Evia v207 removes the v206 Test-screen freeze and keeps the requested mock-only, camera and course-recovery fixes using finite event-based checks.",
+  "summary": "Evia v208 restores Maths and English to the Test/ARP screen only.",
   "changes": [
-    "Removed the continuous ARP DOM observer",
-    "Replaced it with finite event-triggered checks",
-    "Forced a clean v207 offline cache",
-    "Preserved the rest of Evia"
+    "Restored Functional Skills placement after ARP renders",
+    "No other runtime changes"
   ]
 }
