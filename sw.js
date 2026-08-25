@@ -1,5 +1,5 @@
-// Evia v196 keeps Functional Skills above the ARP screen.
-const CACHE_NAME = 'evia-shell-v196';
+// Evia v197 simplifies EPA Discussion and Practical to mock-only choices.
+const CACHE_NAME = 'evia-shell-v197';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -28,9 +28,11 @@ const CRITICAL = [
   './assets/evia-version-v194.js',
   './assets/evia-version-v195.js',
   './assets/evia-version-v196.js',
+  './assets/evia-version-v197.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
+  './assets/evia-arp-mock-only-v197.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
