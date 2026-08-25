@@ -1,17 +1,17 @@
 {
-  "version": "204",
-  "title": "Task-row duplicate ticks removed",
+  "version": "205",
+  "title": "Download spinner restored",
   "details": [
-    "Evidence task rows now keep only Evia's original pale-yellow completion tick",
-    "The smaller darker duplicate tick circles are no longer generated and old copies are removed",
-    "Course coverage still keeps the yellow learner, purple RPL, blue assessor and orange witness ticks",
-    "No other evidence, camera, EPA, Maths, English or target behaviour is changed"
+    "The spinning download circle is restored for standard Sign & download evidence exports",
+    "The existing NVQ measured download progress remains unchanged",
+    "The v204 task-row tick and KSB tracker behaviour remains unchanged",
+    "No camera, EPA, Maths, English, targets or evidence content behaviour is changed"
   ],
-  "summary": "Evia v204 removes only the duplicate dark task-row ticks and preserves the coloured KSB evidence-source tracker.",
+  "summary": "Evia v205 restores the spinning download progress overlay without changing other app behaviour.",
   "changes": [
-    "Removed generated source markers from evidence task rows",
-    "Preserved the original pale completion tick on task rows",
-    "Preserved all four coloured KSB evidence-source markers",
-    "Replaced the v203 marker layer with the corrected v204 implementation"
+    "Restored the spinning progress circle when a standard evidence download starts",
+    "Keeps the spinner visible while the evidence ZIP is being prepared",
+    "Closes the spinner when the download starts",
+    "No unrelated runtime changes"
   ]
 }
