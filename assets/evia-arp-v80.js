@@ -125,8 +125,10 @@ function renderHome(){
     <p class="evia-tools-copy">Short, course-specific practice to build confidence before assessment.</p>
     <div class="evia-arp-summary" data-arp-summary><b>Multiple-choice bank</b><span>${progress?.attempts?`${progress.attempts} mock${progress.attempts===1?"":"s"} completed · best ${progress.bestPercent}%`:"Loading this course's question bank…"}</span></div>
     <button type="button" class="evia-tools-row" data-arp-option="multiple-choice"><span><b>Multiple Choice</b><small data-arp-bank-count>10-question practice mock</small></span><i>›</i></button>
-    <button type="button" class="evia-tools-row" data-arp-option="discussion"><span><b>Discussion</b><small>Planned for the next ARP bank</small></span><i>›</i></button>
-    <button type="button" class="evia-tools-row" data-arp-option="practical"><span><b>Practical</b><small>Planned for the next ARP bank</small></span><i>›</i></button>`;
+    <button type="button" class="evia-tools-row" data-arp-option="discussion"><span><b>Discussion</b><small>24 course-specific scenarios · mock discussion</small></span><i>›</i></button>
+    <button type="button" class="evia-tools-row" data-arp-option="practical"><span><b>Practical</b><small>12 course-specific tasks · mock practical</small></span><i>›</i></button>
+    <button type="button" class="evia-tools-row" data-fs194-subject="maths"><span><b>Maths Level 2</b><small>Multiple choice · 5 parts · 5 questions each</small></span><i>›</i></button>
+    <button type="button" class="evia-tools-row" data-fs194-subject="english"><span><b>English Level 2</b><small>Multiple choice · 5 parts · 5 questions each</small></span><i>›</i></button>`;
   target.querySelector('[data-arp-option="multiple-choice"]')?.addEventListener("click",startMock);
   target.querySelectorAll('[data-arp-option="discussion"],[data-arp-option="practical"]').forEach(button=>button.addEventListener("click",()=>renderPlanned(button.dataset.arpOption)));
   currentBank().then(bank=>{
