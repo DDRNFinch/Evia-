@@ -1,39 +1,154 @@
 (()=>{
 "use strict";
 const VERSION=203,STORE="evia-selfobs-live-v3",RPL_KEY="evia-rpl-ksbs-v1",OBS_KEY="evia-mini-milos-observed-v1",WITNESS_KEY="evia-tinos-witnessed-v1",STYLE_ID="evia-evidence-state-v203-style";
-let DATA=[],dataKey="",dataPromise=null,queued=false;
+let queued=false;
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
 const ctx=()=>window.EviaCourseContext?.current?.()||null;
-function routeId(c=ctx()){if(!c||c.noCourse)return"";if(c.courseId==="st0095-v1-2")return"ST0095";if(c.courseId==="st0264-v1-4")return c.pathway==="architectural-joiner"?"ST0264-AJ":"ST0264-SITE";if(c.courseId==="6570-05"){const p=String(c.pathway||"thin").toUpperCase();return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||"6570-05-THIN"}return""}
+function routeId(c=ctx()){
+  if(!c||c.noCourse)return"";
+  if(c.courseId==="st0095-v1-2")return"ST0095";
+  if(c.courseId==="st0264-v1-4")return c.pathway==="architectural-joiner"?"ST0264-AJ":"ST0264-SITE";
+  if(c.courseId==="6570-05"){
+    const p=String(c.pathway||"thin").toUpperCase();
+    return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||"6570-05-THIN";
+  }
+  return"";
+}
 function entries(){const x=read(STORE,[]);return Array.isArray(x)?x:[]}
-function learnerOppSet(xs=entries()){return new Set(xs.map(e=>e?.opportunityId).filter(Boolean).map(String))}
-function learnerCodeSet(xs=entries()){const out=new Set();xs.forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).forEach(c=>out.add(String(c).toUpperCase())));return out}
+function learnerCodeSet(xs=entries()){
+  const out=new Set();
+  xs.forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).forEach(c=>out.add(String(c).toUpperCase())));
+  return out;
+}
 function allowedSet(){return new Set((ctx()?.codes||[]).map(c=>String(c).toUpperCase()))}
-function rplSet(){const allowed=allowedSet(),x=read(RPL_KEY,[]);return new Set((Array.isArray(x)?x:[]).map(c=>String(c).toUpperCase()).filter(c=>!allowed.size||allowed.has(c)))}
-function routeMapSet(key){const c=ctx(),route=routeId(c),allowed=allowedSet(),map=read(key,{}),bucket=route&&map&&typeof map[route]==="object"?map[route]:{};return new Set(Object.keys(bucket||{}).map(x=>String(x).toUpperCase()).filter(code=>!allowed.size||allowed.has(code)))}
+function rplSet(){
+  const allowed=allowedSet(),x=read(RPL_KEY,[]);
+  return new Set((Array.isArray(x)?x:[]).map(c=>String(c).toUpperCase()).filter(c=>!allowed.size||allowed.has(c)));
+}
+function routeMapSet(key){
+  const c=ctx(),route=routeId(c),allowed=allowedSet(),map=read(key,{}),bucket=route&&map&&typeof map[route]==="object"?map[route]:{};
+  return new Set(Object.keys(bucket||{}).map(x=>String(x).toUpperCase()).filter(code=>!allowed.size||allowed.has(code)));
+}
 const milosSet=()=>routeMapSet(OBS_KEY),witnessSet=()=>routeMapSet(WITNESS_KEY);
-function combinedCodeSet(xs=entries()){const out=learnerCodeSet(xs);rplSet().forEach(c=>out.add(c));milosSet().forEach(c=>out.add(c));witnessSet().forEach(c=>out.add(c));return out}
-async function ensureData(){const c=ctx();if(!c||c.noCourse||!c.dataPrefix)return[];const key=`${c.courseId}|${c.pathway||""}|${c.dataPrefix}`;if(DATA.length&&dataKey===key)return DATA;if(dataPromise&&dataKey===key)return dataPromise;dataKey=key;dataPromise=(async()=>{try{const parts=await Promise.all([1,2,3].map(async n=>{const t=await fetch(`./app/${c.dataPrefix}-${n}.ts?v=${VERSION}`,{cache:"force-cache"}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()});const m=t.match(/export const SITE_DATA_\d+:SiteCategory\[\]=(.*);\s*$/s);if(!m)throw Error("data parse");return JSON.parse(m[1])}));DATA=parts.flat();return DATA}catch(e){console.warn("Evia evidence state could not load course map",e);DATA=[];return[]}finally{dataPromise=null}})();return dataPromise}
-function findOpp(id){for(const c of DATA)for(const j of c.jobs||[]){const o=(j.opps||[]).find(x=>String(x.id)===String(id));if(o)return o}return null}
-const codesOf=o=>(o?.codes||[]).map(c=>String(c).toUpperCase()).filter(Boolean);
-function allBy(o,set){const codes=codesOf(o);return !!codes.length&&codes.every(c=>set.has(c))}
-const side=btn=>btn?.querySelector?.(".self-side")||null;
-const DARK_SELECTORS=[
-  ".evia-ksb-marker-rail-v202",".evia-ksb-marker-v202",".evia-opportunity-source-v202",".evia-coverage-key-v202",
-  ".evia-ksb-marker-rail-v107",".evia-ksb-marker-rail-v106",".evia-opportunity-source-v107",".evia-opportunity-source-v106",
-  ".evia-rpl-evidence-marks",".evia-milos-evidence-marks",".evia-source-tick-v105",".evia-rpl-o",".evia-milos-arch-marker",".evia-milos-observed-marker"
-].join(",");
-function removeDarkMarkers(root=document){root.querySelectorAll?.(DARK_SELECTORS).forEach(x=>x.remove())}
-function setOppLightTick(btn,on){const s=side(btn);if(!s)return;removeDarkMarkers(s);let tick=[...s.children].find(el=>el.tagName==="B"&&!el.classList.contains("evia-section-progress-v175"))||null;if(on){if(!tick){tick=document.createElement("b");const arrow=s.querySelector(":scope > i");if(arrow)s.insertBefore(tick,arrow);else s.appendChild(tick)}tick.textContent="✓";tick.classList.add("evia-light-completion-v203");tick.title="Evidence recorded";tick.setAttribute("aria-label","Evidence recorded")}else{tick?.remove()}}
-function setKsbLightTick(btn,on){removeDarkMarkers(btn);let tick=[...btn.children].find(el=>el.tagName==="SPAN")||null;if(!tick){tick=document.createElement("span");btn.appendChild(tick)}tick.textContent=on?"✓":"";tick.classList.toggle("evia-light-completion-v203",!!on);if(on){tick.title="Evidence recorded";tick.setAttribute("aria-label","Evidence recorded")}else{tick.removeAttribute("title");tick.removeAttribute("aria-label")}}
-function setGroup(card,on){const em=card.querySelector("strong em");if(!em)return;em.textContent=on?"✓":"";em.classList.toggle("evia-light-completion-v203",!!on)}
-function setArchCoverage(covered){const c=ctx(),codes=(c?.codes||[]).map(x=>String(x).toUpperCase());if(!codes.length)return;const n=codes.filter(code=>covered.has(code)).length,pct=Math.round(n/codes.length*100),arch=document.querySelector('[data-arch="KSB"],[data-arch="AC"]');if(arch){const path=arch.querySelector(".arch-value"),num=arch.querySelector(".arch-number"),dash=`${pct} 100`;if(path)path.setAttribute("stroke-dasharray",dash);if(num)num.textContent=`${pct}%`}const mini=[...document.querySelectorAll(".self-mini button")].find(b=>/course coverage/i.test(b.textContent||"")),text=mini?.querySelector("span");if(text)text.textContent=`${n} of ${codes.length} evidenced`}
-function restoreCoverageCopy(){document.querySelectorAll(".evia-coverage-key-v202,.evia-coverage-key-v107").forEach(x=>x.remove());const title=[...document.querySelectorAll(".self-title")].find(x=>(x.textContent||"").trim()==="Course coverage");if(!title)return;if(title.nextElementSibling?.classList?.contains("self-copy"))return;const copy=document.createElement("p");copy.className="self-copy";copy.textContent="A light tick shows that you have evidence against that KSB. Tap any code to get a suitable photo or question.";title.insertAdjacentElement("afterend",copy)}
-async function patch(){queued=false;await ensureData();removeDarkMarkers();const xs=entries(),learnerOpp=learnerOppSet(xs),rpl=rplSet(),milos=milosSet(),witness=witnessSet(),covered=combinedCodeSet(xs);document.querySelectorAll("button[data-opp]").forEach(btn=>{const o=findOpp(btn.dataset.opp),complete=learnerOpp.has(String(btn.dataset.opp))||allBy(o,rpl)||allBy(o,milos)||allBy(o,witness);setOppLightTick(btn,complete)});document.querySelectorAll(".self-ksbs button[data-code]").forEach(btn=>{const code=String(btn.dataset.code||"").toUpperCase();setKsbLightTick(btn,covered.has(code))});document.querySelectorAll(".self-card.group").forEach(card=>setGroup(card,!!card.querySelector(".self-entry")));setArchCoverage(covered);restoreCoverageCopy()}
+function combinedCodeSet(xs=entries()){
+  const out=learnerCodeSet(xs);
+  rplSet().forEach(c=>out.add(c));
+  milosSet().forEach(c=>out.add(c));
+  witnessSet().forEach(c=>out.add(c));
+  return out;
+}
+function clearOpportunityExtras(){
+  document.querySelectorAll("button[data-opp] .self-side").forEach(side=>{
+    side.querySelectorAll(":scope > span,:scope > b.evia-learner-source-v107,:scope > b.evia-evidence-check").forEach(mark=>mark.remove());
+  });
+}
+function cleanKsbButton(btn){
+  [...btn.children].forEach(el=>{if(el.tagName==="SPAN")el.remove()});
+  btn.querySelectorAll(":scope > .evia-rpl-o,:scope > .evia-milos-arch-marker,:scope > .evia-milos-observed-marker").forEach(x=>x.remove());
+}
+function setKsbMarkers(btn,learner,rpl,milos,witness){
+  cleanKsbButton(btn);
+  const states=[["learner",learner,"Learner evidence"],["rpl",rpl,"Recorded Prior Learning"],["milos",milos,"Assessor Observation"],["witness",witness,"Witness testimony"]].filter(([,on])=>on);
+  if(!states.length)return;
+  const rail=document.createElement("span");
+  rail.className="evia-ksb-marker-rail-v203";
+  rail.setAttribute("aria-label","Evidence sources");
+  for(const[type,,label]of states){
+    const mark=document.createElement("i");
+    mark.className=`evia-ksb-marker-v203 ${type}`;
+    mark.textContent="✓";
+    mark.title=label;
+    mark.setAttribute("aria-label",label);
+    mark.setAttribute("role","img");
+    rail.appendChild(mark);
+  }
+  btn.appendChild(rail);
+}
+function setGroup(card,on){
+  const em=card.querySelector("strong em");
+  if(!em)return;
+  em.textContent=on?"✓":"";
+  em.classList.toggle("evia-group-check-v203",!!on);
+}
+function setArchCoverage(covered){
+  const c=ctx(),codes=(c?.codes||[]).map(x=>String(x).toUpperCase());
+  if(!codes.length)return;
+  const n=codes.filter(code=>covered.has(code)).length,pct=Math.round(n/codes.length*100),arch=document.querySelector('[data-arch="KSB"],[data-arch="AC"]');
+  if(arch){
+    const path=arch.querySelector(".arch-value"),num=arch.querySelector(".arch-number"),dash=`${pct} 100`;
+    if(path)path.setAttribute("stroke-dasharray",dash);
+    if(num)num.textContent=`${pct}%`;
+  }
+  const mini=[...document.querySelectorAll(".self-mini button")].find(b=>/course coverage/i.test(b.textContent||"")),text=mini?.querySelector("span");
+  if(text)text.textContent=`${n} of ${codes.length} evidenced`;
+}
+function legend(){
+  const title=[...document.querySelectorAll(".self-title")].find(x=>(x.textContent||"").trim()==="Course coverage");
+  if(!title)return;
+  title.nextElementSibling?.classList?.contains("self-copy")&&title.nextElementSibling.remove();
+  title.parentElement?.querySelectorAll(":scope > .evia-coverage-key-v202,:scope > .evia-coverage-key-v107").forEach(x=>x.remove());
+  let key=title.parentElement?.querySelector(":scope > .evia-coverage-key-v203");
+  if(key)return;
+  key=document.createElement("div");
+  key.className="evia-coverage-key-v203";
+  key.innerHTML='<span><i class="learner">✓</i><b>Learner evidence</b></span><span><i class="rpl">✓</i><b>Recorded Prior Learning</b></span><span><i class="milos">✓</i><b>Assessor Observation</b></span><span><i class="witness">✓</i><b>Witness testimony</b></span>';
+  title.insertAdjacentElement("afterend",key);
+}
+function patch(){
+  queued=false;
+  clearOpportunityExtras();
+  const xs=entries(),learner=learnerCodeSet(xs),rpl=rplSet(),milos=milosSet(),witness=witnessSet(),covered=combinedCodeSet(xs);
+  document.querySelectorAll(".self-ksbs button[data-code]").forEach(btn=>{
+    const code=String(btn.dataset.code||"").toUpperCase();
+    setKsbMarkers(btn,learner.has(code),rpl.has(code),milos.has(code),witness.has(code));
+  });
+  document.querySelectorAll(".self-card.group").forEach(card=>setGroup(card,!!card.querySelector(".self-entry")));
+  setArchCoverage(covered);
+  legend();
+}
 function queue(){if(queued)return;queued=true;requestAnimationFrame(patch)}
-function hookStorage(){if(window.__eviaEvidenceStateStorageV203)return;window.__eviaEvidenceStateStorageV203=true;const native=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){const out=native.call(this,key,value);if(this===localStorage&&[STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(String(key)))queue();return out}}
-function start(){hookStorage();removeDarkMarkers();queue();document.addEventListener("click",event=>{if(event.target?.closest?.('[data-evia],[data-cat],[data-job],[data-action="back"],[data-action="coverage"],.progress-arch[data-arch="KSB"],.progress-arch[data-arch="AC"]'))queue()},false);window.addEventListener("pageshow",()=>{removeDarkMarkers();queue()});window.addEventListener("storage",e=>{if([STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(e.key))queue()});window.addEventListener("evia:milos-observed-changed",queue);window.addEventListener("evia:witness-changed",queue)}
-const style=document.createElement("style");style.id=STYLE_ID;style.textContent=`${DARK_SELECTORS}{display:none!important;visibility:hidden!important;width:0!important;height:0!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}.selfobs .self-ksbs button[data-code]>span:not(:empty),.selfobs .option-row .self-side>b:not([hidden]):not(:empty),.selfobs .self-card.group>strong>em:not(:empty){display:inline-grid!important;place-items:center!important;width:1.28rem!important;height:1.28rem!important;min-width:1.28rem!important;min-height:1.28rem!important;margin:.15rem auto 0!important;padding:0!important;border:0!important;border-radius:50%!important;background:#f2db7d!important;color:#6d5d1e!important;font:800 .52rem/1 system-ui,-apple-system,sans-serif!important;font-style:normal!important;letter-spacing:0!important;box-shadow:none!important}.selfobs .option-row .self-side>b:not([hidden]):not(:empty){margin:0!important}.selfobs .self-card.group>strong>em:not(:empty){margin:0 0 0 .2rem!important;vertical-align:middle!important}`;document.head.appendChild(style);
+function hookStorage(){
+  if(window.__eviaEvidenceStateStorageV203)return;
+  window.__eviaEvidenceStateStorageV203=true;
+  const native=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    const out=native.call(this,key,value);
+    if(this===localStorage&&[STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(String(key)))queue();
+    return out;
+  };
+}
+function start(){
+  hookStorage();
+  queue();
+  document.addEventListener("click",event=>{
+    if(event.target?.closest?.('[data-evia],[data-cat],[data-job],[data-opp],[data-action="back"],[data-action="coverage"],.progress-arch[data-arch="KSB"],.progress-arch[data-arch="AC"]'))queue();
+  },false);
+  window.addEventListener("pageshow",queue);
+  window.addEventListener("storage",e=>{if([STORE,RPL_KEY,OBS_KEY,WITNESS_KEY].includes(e.key))queue()});
+  window.addEventListener("evia:milos-observed-changed",queue);
+  window.addEventListener("evia:witness-changed",queue);
+}
+const style=document.createElement("style");
+style.id=STYLE_ID;
+style.textContent=`
+.selfobs .self-ksbs button[data-code]>span:not(.evia-ksb-marker-rail-v203){display:none!important}
+.selfobs .evia-ksb-marker-rail-v203{display:flex!important;justify-content:center!important;align-items:center!important;gap:.1rem!important;min-height:.86rem!important;margin:.18rem auto 0!important}
+.selfobs .evia-ksb-marker-v203,.evia-coverage-key-v203 i{display:inline-grid!important;place-items:center!important;width:.86rem!important;height:.86rem!important;min-width:.86rem!important;border-radius:50%!important;font:850 .58rem/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI",sans-serif!important;font-style:normal!important;box-shadow:none!important}
+.selfobs .evia-ksb-marker-v203.learner,.evia-coverage-key-v203 i.learner{background:#efc33d!important;color:#4c3b0b!important}
+.selfobs .evia-ksb-marker-v203.rpl,.evia-coverage-key-v203 i.rpl{background:#7b3fc6!important;color:#fff!important}
+.selfobs .evia-ksb-marker-v203.milos,.evia-coverage-key-v203 i.milos{background:#367fd0!important;color:#fff!important}
+.selfobs .evia-ksb-marker-v203.witness,.evia-coverage-key-v203 i.witness{background:#d88b45!important;color:#fff!important}
+.evia-coverage-key-v203{display:grid;grid-template-columns:repeat(2,max-content);justify-content:center;gap:.34rem .85rem;margin:.45rem auto .7rem;max-width:100%;font-size:.55rem;color:#6f6d73}
+.evia-coverage-key-v203>span{display:flex;align-items:center;gap:.32rem;white-space:nowrap}
+.evia-coverage-key-v203 b{font:500 .55rem/1.2 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI",sans-serif;color:#6f6d73}
+.evia-group-check-v203{color:#d3a817!important}
+`;
+document.head.appendChild(style);
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
-const api=Object.freeze({version:VERSION,refresh:queue,covered:()=>[...combinedCodeSet()],rpl:()=>[...rplSet()],milos:()=>[...milosSet()],witness:()=>[...witnessSet()]});window.EviaEvidenceStateV203=api;window.EviaEvidenceStateV202=api;window.EviaEvidenceStateV107=api;window.EviaEvidenceStateV106=api;window.EviaEvidenceStateV105=api;
+const api=Object.freeze({version:VERSION,refresh:queue,covered:()=>[...combinedCodeSet()],rpl:()=>[...rplSet()],milos:()=>[...milosSet()],witness:()=>[...witnessSet()]});
+window.EviaEvidenceStateV203=api;
+window.EviaEvidenceStateV202=api;
+window.EviaEvidenceStateV107=api;
+window.EviaEvidenceStateV106=api;
+window.EviaEvidenceStateV105=api;
 })();
