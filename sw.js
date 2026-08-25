@@ -1,5 +1,5 @@
-// Evia v190 prepares evidence media before its text is shown.
-const CACHE_NAME = 'evia-shell-v190';
+// Evia v191 uses a stable text evidence list and loads media only inside the evidence preview.
+const CACHE_NAME = 'evia-shell-v191';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
