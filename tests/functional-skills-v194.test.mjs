@@ -9,6 +9,7 @@ const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
+const ksbState=fs.readFileSync("assets/evia-count-display-v94.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
 function bank(){
@@ -17,23 +18,25 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v194 Functional Skills engine remains wired through the v199 release",()=>{
-  assert.equal(String(manifest.version),"199");
+test("v194 Functional Skills engine remains wired through the v200 release",()=>{
+  assert.equal(String(manifest.version),"200");
   assert.match(index,/evia-functional-skills-v194\.js\?v=195/);
   assert.match(index,/evia-functional-skills-v195\.js\?v=195/);
   assert.match(index,/evia-functional-skills-v196\.js\?v=196/);
-  assert.match(index,/evia-version-v199\.js\?v=199/);
+  assert.match(index,/evia-version-v200\.js\?v=200/);
   assert.match(index,/evia-arp-mock-only-v197\.js\?v=198/);
   assert.match(index,/evia-targets\.js\?v=199/);
+  assert.match(index,/evia-count-display-v94\.js\?v=200/);
   assert.doesNotMatch(index,/evia-functional-skills-v192/);
   assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
-  assert.match(sw,/evia-shell-v199/);
-  assert.match(sw,/evia-version-v199\.js/);
+  assert.match(sw,/evia-shell-v200/);
+  assert.match(sw,/evia-version-v200\.js/);
   assert.match(sw,/evia-functional-skills-v194\.js/);
   assert.match(sw,/evia-functional-skills-v195\.js/);
   assert.match(sw,/evia-functional-skills-v196\.js/);
   assert.match(sw,/evia-arp-mock-only-v197\.js/);
   assert.match(sw,/evia-targets\.js/);
+  assert.match(sw,/evia-count-display-v94\.js/);
   assert.doesNotMatch(sw,/evia-functional-skills-v192/);
 });
 
@@ -54,6 +57,18 @@ test("v199 EPA targets use the same live readiness shown by the Test arch",()=>{
   assert.match(targets,/live&&live\.id/);
   assert.match(targets,/Number\(live\.percent\)/);
   assert.match(targets,/met:m\.epa\.pct>=t\.targetPct/);
+});
+
+test("v200 removes blank KSB circles but preserves all four source ticks",()=>{
+  assert.match(ksbState,/const VERSION=200/);
+  assert.match(ksbState,/span:not\(\.evia-ksb-marker-rail-v107\)\{display:none!important;visibility:hidden!important/);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\{[^}]*visibility:hidden!important;opacity:0!important;background:transparent!important;color:transparent!important/s);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\.on\{visibility:visible!important;opacity:1!important\}/);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\.learner\.on\{background:#efc33d!important;color:#4c3b0b!important\}/);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\.rpl\.on\{background:#7b3fc6!important;color:#fff!important\}/);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\.milos\.on\{background:#367fd0!important;color:#fff!important\}/);
+  assert.match(ksbState,/\.evia-ksb-slot-v107\.witness\.on\{background:#d88b45!important;color:#fff!important\}/);
+  assert.match(ksbState,/\[\["learner",learner,"Learner evidence"\],\["rpl",rpl,"Recorded Prior Learning"\],\["milos",milos,"Assessor Observation"\],\["witness",witness,"Witness testimony"\]\]/);
 });
 
 test("Maths and English each have five equal five-question parts",()=>{
