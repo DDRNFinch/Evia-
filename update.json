@@ -1,5 +1,5 @@
 {
-  "version": "197",
+  "version": "198",
   "title": "EPA practice simplified",
   "details": [
     "MCQ Mock Test is unchanged",
@@ -8,12 +8,13 @@
     "Discussion and Practical subtitles now describe the simplified mock-only flow",
     "Maths and English practice are unchanged"
   ],
-  "summary": "Evia v197 removes the redundant Learn and Practice choices from EPA Discussion and Practical.",
+  "summary": "Evia v198 removes the redundant Learn and Practice choices from EPA Discussion and Practical.",
   "changes": [
     "Removed Discussion Learn mode",
     "Removed Discussion Practice mode",
     "Removed Practical Learn the Task mode",
     "Removed Practical Guided Practice mode",
-    "Left MCQ Mock Test untouched"
+    "Left MCQ Mock Test untouched",
+    "Stabilised the ARP simplifier so it only changes content when needed"
   ]
 }
