@@ -1,20 +1,16 @@
 {
-  "version": "198",
-  "title": "EPA practice simplified",
+  "version": "199",
+  "title": "EPA target progress fixed",
   "details": [
-    "MCQ Mock Test is unchanged",
-    "Discussion now keeps Mock Discussion only; Learn and Practice have been removed",
-    "Practical now keeps Mock Practical only; Learn the Task and Guided Practice have been removed",
-    "Discussion and Practical subtitles now describe the simplified mock-only flow",
-    "Maths and English practice are unchanged"
+    "Targets now use the same live Test readiness score shown on the home arch",
+    "EPA readiness targets complete automatically when the live percentage reaches or exceeds the target",
+    "Existing Milos targets and review dates are preserved",
+    "MCQ Mock Test, Discussion, Practical, Maths and English are unchanged"
   ],
-  "summary": "Evia v198 removes the redundant Learn and Practice choices from EPA Discussion and Practical.",
+  "summary": "Evia v199 fixes EPA readiness targets that could stay at 0% after completing assessment practice.",
   "changes": [
-    "Removed Discussion Learn mode",
-    "Removed Discussion Practice mode",
-    "Removed Practical Learn the Task mode",
-    "Removed Practical Guided Practice mode",
-    "Left MCQ Mock Test untouched",
-    "Stabilised the ARP simplifier so it only changes content when needed"
+    "Aligned EPA target progress with the live Test arch calculation",
+    "Preserved the existing target threshold rule of current percentage greater than or equal to target percentage",
+    "Refreshed the offline cache so installed apps receive the corrected Targets code"
   ]
 }
