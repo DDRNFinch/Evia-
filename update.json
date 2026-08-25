@@ -1,17 +1,17 @@
 {
-  "version": "201",
-  "title": "KSB tracker and camera performance fixed",
+  "version": "202",
+  "title": "KSB circles removed and camera capture rebuilt",
   "details": [
-    "Legacy blank yellow KSB circles are removed while learner, RPL, assessor and witness ticks remain unchanged",
-    "Recent Functional Skills and ARP helpers no longer watch the whole app continuously",
-    "Photo capture now uses the existing single native 1024px JPEG encoding path instead of processing the same shot twice",
-    "MCQ, Discussion, Practical, Maths, English, Targets and evidence content are unchanged"
+    "Blank KSB circles are no longer created; only real learner, RPL, assessor or witness ticks are shown",
+    "The old KSB state watcher, v201 cleanup layer and duplicate completion watcher are no longer loaded",
+    "Photo review now appears immediately from the captured canvas while JPEG encoding finishes asynchronously",
+    "The existing evidence explanation, save flow, video flow, Maths, English and EPA tools remain available"
   ],
-  "summary": "Evia v201 removes the unwanted KSB circles and reduces background work that could slow navigation and photo capture.",
+  "summary": "Evia v202 replaces the conflicting KSB marker patches and removes the visible wait after taking a photo.",
   "changes": [
-    "Removed the obsolete per-KSB marker element when Course coverage opens",
-    "Preserved yellow learner, purple RPL, blue assessor and orange witness ticks",
-    "Removed three recent full-page observers and the camera-return focus retry",
-    "Removed duplicate canvas photo conversion while retaining the existing image size and quality path"
+    "Replaced the old KSB marker system with one event-driven evidence-state layer",
+    "Removed empty marker slots instead of hiding them",
+    "Removed two whole-app MutationObserver layers from the active runtime",
+    "Shows the captured photo frame immediately instead of waiting for JPEG encoding before review"
   ]
 }
