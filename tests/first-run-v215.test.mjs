@@ -38,7 +38,10 @@ test("demo uses the real pack engine with one route and three evidence opportuni
   assert.match(first,/id:DEMO_ID,familyId:"ST0095"/);
   assert.match(first,/compatStorageSuffix:"demo-v1"/);
   assert.match(first,/codes:\["K13","S8","S9"\]/);
-  assert.equal((first.match(/id:"demo-[^"]+",title:/g)||[]).length,3);
+  assert.equal((first.match(/bundle:"Demo evidence"/g)||[]).length,3);
+  assert.match(first,/id:"demo-use-tool"/);
+  assert.match(first,/id:"demo-care-tool"/);
+  assert.match(first,/id:"demo-explain-tool"/);
   assert.match(first,/packs\.install\(DEMO_PACK\)/);
   assert.match(first,/packs\.activate\(pack\.id\)/);
   assert.match(demo,/evidenceCount\(\)<3/);
@@ -53,7 +56,7 @@ test("demo exposes Practical only in ARP and keeps activation available",()=>{
   assert.match(demo,/data-arp-option=\"discussion\"/);
   assert.match(demo,/data-fs194-subject=\"maths\"/);
   assert.match(demo,/data-fs194-subject=\"english\"/);
-  assert.doesNotMatch(demo,/data-arp-option=\"practical\"\]\{display:none/);
+  assert.match(demo,/data-arp-option=\"practical\"/);
   assert.match(demo,/Activate full Evia/);
   assert.match(demo,/activateFullFromDemo/);
 });
