@@ -1,0 +1,59 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+
+const index=fs.readFileSync("index.html","utf8");
+const sw=fs.readFileSync("sw.js","utf8");
+const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
+const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
+
+function bank(){
+  const match=code.match(/const BANK=(\{.*\});\nlet layer=/s);
+  assert.ok(match,"Functional Skills BANK must be embedded in the v194 asset");
+  return JSON.parse(match[1]);
+}
+
+test("v194 Functional Skills is the only production Functional Skills UI",()=>{
+  assert.equal(String(manifest.version),"194");
+  assert.match(index,/evia-functional-skills-v194\.js\?v=194/);
+  assert.doesNotMatch(index,/evia-functional-skills-v192/);
+  assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
+  assert.match(sw,/evia-functional-skills-v194\.js/);
+  assert.doesNotMatch(sw,/evia-functional-skills-v192/);
+});
+
+test("Maths and English each have five equal five-question parts",()=>{
+  const data=bank();
+  for(const subject of ["maths","english"]){
+    assert.equal(data[subject].length,5,`${subject} must have five parts`);
+    assert.equal(data[subject].flatMap(x=>x.questions).length,25,`${subject} must have 25 questions`);
+    for(const part of data[subject])assert.equal(part.questions.length,5,`${subject} parts must be equal`);
+  }
+});
+
+test("every practice question has three answers plus D Teach me support",()=>{
+  const data=bank();
+  for(const q of Object.values(data).flatMap(parts=>parts.flatMap(x=>x.questions))){
+    assert.equal(q.options.length,3);
+    assert.ok(Number.isInteger(q.answer)&&q.answer>=0&&q.answer<=2);
+    assert.ok(String(q.explain||"").length>20,"each question needs a teaching explanation");
+  }
+  assert.match(code,/D · Teach me/);
+  assert.match(code,/data-fs194-teach/);
+  assert.match(code,/Not quite · The answer is/);
+  assert.match(code,/Teach me · The answer is/);
+});
+
+test("Functional Skills rows are inserted directly after ARP Practical",()=>{
+  assert.match(code,/data-arp-option="practical"/);
+  assert.match(code,/practical\.after\(m,e\)/);
+  assert.match(code,/Maths Level 2/);
+  assert.match(code,/English Level 2/);
+  assert.match(code,/Multiple choice · 5 parts · 5 questions each/);
+});
+
+test("v194 practice is self-contained and does not fetch question packs",()=>{
+  assert.doesNotMatch(code,/fetch\(/);
+  assert.doesNotMatch(code,/EviaFunctionalSkillsMathsL2|EviaFunctionalSkillsEnglishL2/);
+  assert.match(code,/localStorage\.setItem/);
+});
