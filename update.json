@@ -1,19 +1,18 @@
 {
-  "version": "215",
-  "title": "First-launch setup, walkthrough and limited demo",
+  "version": "216",
+  "title": "Richer Evia college demo",
   "details": [
-    "Fresh installs now open with Set up my Evia, Try Evia Demo and Show me around",
-    "The demo uses one real Evia course route with a maximum of three evidence submissions, evidence download and one Mock Practical",
-    "The full learner route starts with an Evia Course QR, then completes the learner profile with an optional online portfolio link",
-    "Existing activated learners bypass the new first-run screen and continue into their current Evia setup"
+    "Maths Level 2 and English Level 2 are now available in the demo alongside one Mock Practical",
+    "The demo course now has two clear evidence paths and three evidence opportunities including an audio reflection",
+    "QR sharing, receiving and provider course-management areas now explain what they do instead of appearing broken in the demo",
+    "The DEMO indicator is now a small yellow circle below Targets rather than a bar covering Evia"
   ],
-  "summary": "Evia v215 adds the fresh-install demo and QR-activated learner onboarding journey without interrupting existing activated learners.",
+  "summary": "Evia v216 makes the college demo easier to understand while keeping the full QR-activated learner version unchanged.",
   "changes": [
-    "Added a four-step first-launch walkthrough",
-    "Added a locally isolated Bricklayer demo course pack with one route and three evidence opportunities",
-    "Limited demo assessment access to one Mock Practical and kept evidence download available",
-    "Added QR-first learner activation followed by profile setup with optional portfolio URL",
-    "Locked course selection in the profile for newly QR-activated learners",
-    "Created a fresh v215 offline cache"
+    "Exposed Maths and English in Demo mode",
+    "Expanded the demo course to two navigation paths with photo and audio evidence",
+    "Added demo explanations for full-version QR exchange and licensed course-pack features",
+    "Moved the demo badge away from Evia into a compact yellow circle below Targets",
+    "Created a fresh v216 offline cache"
   ]
 }
