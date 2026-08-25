@@ -1,5 +1,5 @@
-// Evia v208 restores Maths and English placement in ARP without changing other runtime behaviour.
-const CACHE_NAME = 'evia-shell-v208';
+// Evia v209 consolidates ARP, Functional Skills, evidence ticks and course recovery into their real source files.
+const CACHE_NAME = 'evia-shell-v209';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -40,11 +40,8 @@ const CRITICAL = [
   './assets/evia-version-v206.js',
   './assets/evia-version-v207.js',
   './assets/evia-version-v208.js',
+  './assets/evia-version-v209.js',
   './assets/evia-functional-skills-v194.js',
-  './assets/evia-functional-skills-v195.js',
-  './assets/evia-functional-skills-v196.js',
-  './assets/evia-arp-mock-only-v197.js',
-  './assets/evia-recovery-v207.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
