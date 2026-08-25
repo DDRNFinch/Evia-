@@ -8,6 +8,7 @@ const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
 const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
+const recovery=fs.readFileSync("assets/evia-recovery-v206.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
 const evidenceState=fs.readFileSync("assets/evia-evidence-state-v204.js","utf8");
 const exportStatus=fs.readFileSync("assets/evia-export-status.js","utf8");
@@ -20,9 +21,10 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v205 runtime keeps the corrected v204 evidence-state layer",()=>{
-  assert.equal(String(manifest.version),"205");
-  assert.match(index,/evia-version-v205\.js\?v=205/);
+test("v206 runtime keeps the corrected v204 evidence-state layer",()=>{
+  assert.equal(String(manifest.version),"206");
+  assert.match(index,/evia-version-v206\.js\?v=206/);
+  assert.match(index,/evia-recovery-v206\.js\?v=206/);
   assert.match(index,/evia-staged-evidence-v202\.js\?v=202/);
   assert.match(index,/evia-evidence-state-v204\.js\?v=204/);
   assert.doesNotMatch(index,/evia-evidence-state-v203\.js/);
@@ -31,8 +33,9 @@ test("v205 runtime keeps the corrected v204 evidence-state layer",()=>{
   assert.doesNotMatch(index,/evia-ksb-clean-v201\.js/);
   assert.doesNotMatch(index,/evia-single-completion-tick-v173\.js/);
   assert.doesNotMatch(index,/evia-photo-fast-v140\.js/);
-  assert.match(sw,/evia-shell-v205/);
-  assert.match(sw,/evia-version-v205\.js/);
+  assert.match(sw,/evia-shell-v206/);
+  assert.match(sw,/evia-version-v206\.js/);
+  assert.match(sw,/evia-recovery-v206\.js/);
   assert.match(sw,/evia-staged-evidence-v202\.js/);
   assert.match(sw,/evia-evidence-state-v204\.js/);
   assert.doesNotMatch(sw,/evia-evidence-state-v203\.js|evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
@@ -54,7 +57,7 @@ test("v204 keeps the original pale task tick and preserves coloured KSB source t
   assert.doesNotMatch(evidenceState,/MutationObserver/);
 });
 
-test("v205 restores the spinning circle to standard Sign and download",()=>{
+test("v205 spinning Sign and download circle remains intact",()=>{
   assert.match(index,/evia-export-status\.js\?v=205/);
   assert.match(exportStatus,/\[data-sign-download\]/);
   assert.match(exportStatus,/function showProgress\(\)/);
@@ -71,12 +74,32 @@ test("v202 photo review is still shown from the captured canvas before JPEG enco
   assert.match(staged,/const file=await filePromise/);
 });
 
-test("mock-only ARP flow keeps MCQ untouched and removes redundant learning choices",()=>{
+test("v206 permanently enforces mock-only Discussion and Practical",()=>{
   assert.match(mockOnly,/data-discussion-mode=\"learn\"/);
   assert.match(mockOnly,/data-discussion-mode=\"practice\"/);
   assert.match(mockOnly,/data-practical-mode=\"learn\"/);
   assert.match(mockOnly,/data-practical-mode=\"guided\"/);
   assert.doesNotMatch(mockOnly,/data-arp-option=\"multiple-choice\"/);
+  assert.match(recovery,/const FORBIDDEN=/);
+  assert.match(recovery,/MutationObserver/);
+  assert.match(recovery,/stopImmediatePropagation/);
+  assert.match(recovery,/enforceMockOnly/);
+});
+
+test("v206 mock practical has explicit Camera and Gallery controls",()=>{
+  assert.match(recovery,/data-evidence-file/);
+  assert.match(recovery,/textContent="Camera"/);
+  assert.match(recovery,/textContent="Gallery"/);
+  assert.match(recovery,/setAttribute\("capture","environment"\)/);
+  assert.match(recovery,/removeAttribute\("capture"\)/);
+});
+
+test("v206 course-map failure has a recovery path",()=>{
+  assert.match(recovery,/\.self-load-error/);
+  assert.match(recovery,/Choose course/);
+  assert.match(recovery,/Return to previous course/);
+  assert.match(recovery,/evia-course-timeline-backup-v206/);
+  assert.match(recovery,/EviaCoursePacks/);
 });
 
 test("EPA targets still use the same live readiness shown by the Test arch",()=>{
