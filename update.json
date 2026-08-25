@@ -1,18 +1,17 @@
 {
-  "version": "200",
-  "title": "KSB tracker cleaned up",
+  "version": "201",
+  "title": "KSB tracker and camera performance fixed",
   "details": [
-    "Removed the unwanted blank yellow circles from the Course coverage KSB tracker",
-    "Learner evidence yellow ticks are unchanged",
-    "Recorded Prior Learning purple ticks are unchanged",
-    "Assessor Observation blue ticks are unchanged",
-    "Witness testimony orange ticks are unchanged",
-    "No other Evia behaviour or screens were changed"
+    "Legacy blank yellow KSB circles are removed while learner, RPL, assessor and witness ticks remain unchanged",
+    "Recent Functional Skills and ARP helpers no longer watch the whole app continuously",
+    "Photo capture now uses the existing single native 1024px JPEG encoding path instead of processing the same shot twice",
+    "MCQ, Discussion, Practical, Maths, English, Targets and evidence content are unchanged"
   ],
-  "summary": "Evia v200 removes blank KSB marker circles while preserving all four evidence-source ticks.",
+  "summary": "Evia v201 removes the unwanted KSB circles and reduces background work that could slow navigation and photo capture.",
   "changes": [
-    "Hidden the old blank per-KSB marker completely",
-    "Hidden inactive evidence-source slots without changing their saved state",
-    "Kept active learner, RPL, assessor and witness ticks visible with their existing colours"
+    "Removed the obsolete per-KSB marker element when Course coverage opens",
+    "Preserved yellow learner, purple RPL, blue assessor and orange witness ticks",
+    "Removed three recent full-page observers and the camera-return focus retry",
+    "Removed duplicate canvas photo conversion while retaining the existing image size and quality path"
   ]
 }
