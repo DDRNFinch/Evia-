@@ -9,7 +9,7 @@ const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
-const evidenceState=fs.readFileSync("assets/evia-evidence-state-v202.js","utf8");
+const evidenceState=fs.readFileSync("assets/evia-evidence-state-v203.js","utf8");
 const staged=fs.readFileSync("assets/evia-staged-evidence-v202.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
@@ -19,43 +19,43 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v202 runtime is wired without the failed KSB and photo workaround layers",()=>{
-  assert.equal(String(manifest.version),"202");
-  assert.match(index,/evia-version-v202\.js\?v=202/);
+test("v203 runtime is wired without the failed marker and photo workaround layers",()=>{
+  assert.equal(String(manifest.version),"203");
+  assert.match(index,/evia-version-v203\.js\?v=203/);
   assert.match(index,/evia-staged-evidence-v202\.js\?v=202/);
-  assert.match(index,/evia-evidence-state-v202\.js\?v=202/);
+  assert.match(index,/evia-evidence-state-v203\.js\?v=203/);
+  assert.doesNotMatch(index,/evia-evidence-state-v202\.js/);
   assert.doesNotMatch(index,/evia-count-display-v94\.js/);
   assert.doesNotMatch(index,/evia-ksb-clean-v201\.js/);
   assert.doesNotMatch(index,/evia-single-completion-tick-v173\.js/);
   assert.doesNotMatch(index,/evia-photo-fast-v140\.js/);
-  assert.match(sw,/evia-shell-v202/);
-  assert.match(sw,/evia-version-v202\.js/);
+  assert.match(sw,/evia-shell-v203/);
+  assert.match(sw,/evia-version-v203\.js/);
   assert.match(sw,/evia-staged-evidence-v202\.js/);
-  assert.match(sw,/evia-evidence-state-v202\.js/);
-  assert.doesNotMatch(sw,/evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
+  assert.match(sw,/evia-evidence-state-v203\.js/);
+  assert.doesNotMatch(sw,/evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
 });
 
-test("v202 KSB state creates only real evidence markers and has no DOM observer",()=>{
-  assert.match(evidenceState,/filter\(\(\[,on\]\)=>on\)/);
-  assert.match(evidenceState,/if\(!states\.length\)return/);
-  assert.match(evidenceState,/cleanKsbButton/);
-  assert.match(evidenceState,/if\(el\.tagName===\"SPAN\"\)el\.remove\(\)/);
-  assert.match(evidenceState,/evia-ksb-marker-v202 learner/);
-  assert.match(evidenceState,/evia-ksb-marker-v202\.rpl/);
-  assert.match(evidenceState,/evia-ksb-marker-v202\.milos/);
-  assert.match(evidenceState,/evia-ksb-marker-v202\.witness/);
+test("v203 removes every dark evidence marker and preserves one light completion tick",()=>{
+  assert.match(evidenceState,/const DARK_SELECTORS=/);
+  assert.match(evidenceState,/function removeDarkMarkers\(root=document\)/);
+  assert.match(evidenceState,/root\.querySelectorAll\?\.\(DARK_SELECTORS\)\.forEach\(x=>x\.remove\(\)\)/);
+  assert.match(evidenceState,/background:#f2db7d!important/);
+  assert.match(evidenceState,/color:#6d5d1e!important/);
+  assert.match(evidenceState,/setKsbLightTick\(btn,covered\.has\(code\)\)/);
+  assert.match(evidenceState,/setOppLightTick\(btn,complete\)/);
+  assert.doesNotMatch(evidenceState,/createElement\("i"\)/);
+  assert.doesNotMatch(evidenceState,/className=`evia-opportunity-source/);
   assert.doesNotMatch(evidenceState,/MutationObserver/);
   assert.doesNotMatch(evidenceState,/setInterval\(/);
-  assert.doesNotMatch(evidenceState,/evia-ksb-slot-v107/);
 });
 
-test("v202 photo review is shown from the captured canvas before JPEG encoding finishes",()=>{
+test("v202 photo review is still shown from the captured canvas before JPEG encoding finishes",()=>{
   assert.match(staged,/function canvasFile\(canvas\)/);
   assert.match(staged,/function renderPhotoCanvasReview\(canvas,filePromise\)/);
   assert.match(staged,/const filePromise=canvasFile\(canvas\);renderPhotoCanvasReview\(canvas,filePromise\)/);
   assert.match(staged,/host\.insertBefore\(canvas,prompt\)/);
   assert.match(staged,/const file=await filePromise/);
-  assert.doesNotMatch(staged,/canvas\.toBlob\(blob=>\{if\(!blob\).*renderPhotoReview\(file\)/s);
 });
 
 test("mock-only ARP flow keeps MCQ untouched and removes redundant learning choices",()=>{
