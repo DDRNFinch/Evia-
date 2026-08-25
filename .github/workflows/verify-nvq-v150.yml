@@ -113,12 +113,12 @@ jobs:
 
       - name: Check learning PDF in evidence packs
         run: |
-          grep -q 'const VERSION=156' assets/evia-otj-export.js
+          grep -q 'const VERSION=164' assets/evia-otj-export.js
           grep -q 'OTJ_KEY="evia-otj-entries"' assets/evia-otj-export.js
           grep -q 'GLH_KEY="evia-glh-entries"' assets/evia-otj-export.js
-          grep -q 'Overall ${p.short} since last download' assets/evia-otj-export.js
-          grep -q 'Evia-GLH.pdf' assets/evia-otj-export.js
-          grep -q 'Evia-Off-the-Job.pdf' assets/evia-otj-export.js
+          grep -q 'Recent ${p.short} total since last portfolio upload' assets/evia-otj-export.js
+          grep -q 'Guided-Learning-Hours-Since-Last-Portfolio-Upload.pdf' assets/evia-otj-export.js
+          grep -q 'Off-the-Job-Learning-Since-Last-Portfolio-Upload.pdf' assets/evia-otj-export.js
           grep -q 'data-nvq-pack-download' assets/evia-otj-export.js
           grep -q 'Evia-NVQ-Evidence-Packs-' assets/evia-otj-export.js
           grep -q 'Evia-New-Evidence-' assets/evia-otj-export.js
@@ -143,6 +143,6 @@ jobs:
           grep -q "window.EviaAppVersion=${EVIA_VERSION}" "assets/evia-version-v${EVIA_VERSION}.js"
           grep -q "evia-shell-v${EVIA_VERSION}" sw.js
           grep -q 'evia-staged-evidence-v202.js' index.html
-          grep -q 'evia-evidence-state-v204.js?v=209' index.html
+          grep -q "evia-evidence-state-v204.js?v=${EVIA_VERSION}" index.html
           if grep -q 'evia-evidence-state-v203.js\|evia-evidence-state-v202.js' index.html; then exit 1; fi
           grep -q 'evia-otj-export.js' sw.js
