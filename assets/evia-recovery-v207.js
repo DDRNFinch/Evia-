@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=207,BACKUP_KEY="evia-course-timeline-backup-v206",STYLE_ID="evia-recovery-v207-style";
+const VERSION=208,BACKUP_KEY="evia-course-timeline-backup-v206",STYLE_ID="evia-recovery-v207-style";
 const FORBIDDEN='[data-discussion-mode="learn"],[data-discussion-mode="practice"],[data-practical-mode="learn"],[data-practical-mode="guided"]';
 function ensureStyle(){
   if(document.getElementById(STYLE_ID))return;
@@ -49,7 +49,8 @@ function repairCourseError(){
   error.querySelector("[data-course-restore-v207]")?.addEventListener("click",()=>{packs.activate(previous.courseId,previous.pathway||"");location.reload()});
   error.querySelector("[data-course-choose-v207]")?.addEventListener("click",()=>{if(packs?.manager)packs.manager(()=>location.reload());else location.reload()})
 }
-function apply(){enforceMockOnly();splitCameraGallery();wrapCourseActivation();repairCourseError()}
+function restoreFunctionalSkills(){window.EviaFunctionalSkills?.refresh?.()}
+function apply(){enforceMockOnly();splitCameraGallery();wrapCourseActivation();repairCourseError();restoreFunctionalSkills()}
 function retry(){[0,40,100,200,400,700].forEach(ms=>setTimeout(apply,ms))}
 function start(){
   [0,100,350,800,1600,3000].forEach(ms=>setTimeout(apply,ms));
@@ -60,5 +61,5 @@ function start(){
   window.addEventListener("pageshow",retry)
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
-window.EviaRecoveryV207=Object.freeze({version:VERSION,apply,enforceMockOnly,splitCameraGallery,repairCourseError});
+window.EviaRecoveryV207=Object.freeze({version:VERSION,apply,enforceMockOnly,splitCameraGallery,repairCourseError,restoreFunctionalSkills});
 })();
