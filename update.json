@@ -1,15 +1,16 @@
 {
-  "version": "190",
-  "title": "Faster evidence display",
+  "version": "191",
+  "title": "Simpler evidence list",
   "details": [
-    "Prepares media cards before showing their text",
-    "Removes the temporary text-only layout when switching evidence tabs",
-    "Loads local media previews faster"
+    "Replaces the thumbnail-heavy evidence list with a stable text list",
+    "Tap any evidence item to open its photo, video or audio in a dedicated preview",
+    "Adds Add to evidence and Delete evidence actions inside the preview"
   ],
-  "summary": "Evia v190 improves the evidence screen rendering order.",
+  "summary": "Evia v191 removes evidence-list flashing by loading media only when an evidence item is opened.",
   "changes": [
-    "Media cards prepared first",
-    "Text-only flash removed",
-    "Faster local preview loading"
+    "Stable text-only evidence list",
+    "Evidence preview on tap",
+    "Add to evidence action",
+    "Delete evidence action"
   ]
 }
