@@ -10,6 +10,8 @@ const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8")
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
 const ksbState=fs.readFileSync("assets/evia-count-display-v94.js","utf8");
+const ksbClean=fs.readFileSync("assets/evia-ksb-clean-v201.js","utf8");
+const photoFast=fs.readFileSync("assets/evia-photo-fast-v140.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
 function bank(){
@@ -18,57 +20,74 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v194 Functional Skills engine remains wired through the v200 release",()=>{
-  assert.equal(String(manifest.version),"200");
+test("v194 Functional Skills engine remains wired through the v201 release",()=>{
+  assert.equal(String(manifest.version),"201");
   assert.match(index,/evia-functional-skills-v194\.js\?v=195/);
-  assert.match(index,/evia-functional-skills-v195\.js\?v=195/);
-  assert.match(index,/evia-functional-skills-v196\.js\?v=196/);
-  assert.match(index,/evia-version-v200\.js\?v=200/);
-  assert.match(index,/evia-arp-mock-only-v197\.js\?v=198/);
+  assert.match(index,/evia-functional-skills-v195\.js\?v=201/);
+  assert.match(index,/evia-functional-skills-v196\.js\?v=201/);
+  assert.match(index,/evia-version-v201\.js\?v=201/);
+  assert.match(index,/evia-arp-mock-only-v197\.js\?v=201/);
   assert.match(index,/evia-targets\.js\?v=199/);
   assert.match(index,/evia-count-display-v94\.js\?v=200/);
+  assert.match(index,/evia-ksb-clean-v201\.js\?v=201/);
+  assert.match(index,/evia-photo-fast-v140\.js\?v=201/);
   assert.doesNotMatch(index,/evia-functional-skills-v192/);
   assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
-  assert.match(sw,/evia-shell-v200/);
-  assert.match(sw,/evia-version-v200\.js/);
+  assert.match(sw,/evia-shell-v201/);
+  assert.match(sw,/evia-version-v201\.js/);
   assert.match(sw,/evia-functional-skills-v194\.js/);
   assert.match(sw,/evia-functional-skills-v195\.js/);
   assert.match(sw,/evia-functional-skills-v196\.js/);
   assert.match(sw,/evia-arp-mock-only-v197\.js/);
   assert.match(sw,/evia-targets\.js/);
   assert.match(sw,/evia-count-display-v94\.js/);
+  assert.match(sw,/evia-ksb-clean-v201\.js/);
+  assert.match(sw,/evia-photo-fast-v140\.js/);
   assert.doesNotMatch(sw,/evia-functional-skills-v192/);
 });
 
-test("v198 removes only the redundant Discussion and Practical learning choices",()=>{
-  assert.match(mockOnly,/const VERSION=198/);
-  assert.match(mockOnly,/data-discussion-mode=\\?"learn\\?"/);
-  assert.match(mockOnly,/data-discussion-mode=\\?"practice\\?"/);
-  assert.match(mockOnly,/data-practical-mode=\\?"learn\\?"/);
-  assert.match(mockOnly,/data-practical-mode=\\?"guided\\?"/);
-  assert.doesNotMatch(mockOnly,/data-arp-option=\\?"multiple-choice\\?"/);
+test("mock-only ARP flow keeps MCQ untouched and removes redundant learning choices",()=>{
+  assert.match(mockOnly,/const VERSION=201/);
+  assert.match(mockOnly,/data-discussion-mode=\"learn\"/);
+  assert.match(mockOnly,/data-discussion-mode=\"practice\"/);
+  assert.match(mockOnly,/data-practical-mode=\"learn\"/);
+  assert.match(mockOnly,/data-practical-mode=\"guided\"/);
+  assert.doesNotMatch(mockOnly,/data-arp-option=\"multiple-choice\"/);
   assert.match(mockOnly,/24 course-specific scenarios · mock discussion/);
   assert.match(mockOnly,/12 course-specific tasks · mock practical/);
   assert.match(mockOnly,/small&&small\.textContent!==copy/);
 });
 
-test("v199 EPA targets use the same live readiness shown by the Test arch",()=>{
+test("v199 EPA targets still use the same live readiness shown by the Test arch",()=>{
   assert.match(targets,/EviaArpHomeScore\?\.progress\?\.\(\)/);
   assert.match(targets,/live&&live\.id/);
   assert.match(targets,/Number\(live\.percent\)/);
   assert.match(targets,/met:m\.epa\.pct>=t\.targetPct/);
 });
 
-test("v200 removes blank KSB circles but preserves all four source ticks",()=>{
-  assert.match(ksbState,/const VERSION=200/);
-  assert.match(ksbState,/span:not\(\.evia-ksb-marker-rail-v107\)\{display:none!important;visibility:hidden!important/);
-  assert.match(ksbState,/\.evia-ksb-slot-v107\{[^}]*visibility:hidden!important;opacity:0!important;background:transparent!important;color:transparent!important/s);
-  assert.match(ksbState,/\.evia-ksb-slot-v107\.on\{visibility:visible!important;opacity:1!important\}/);
+test("v201 physically removes only the legacy KSB marker and preserves source ticks",()=>{
+  assert.match(ksbClean,/span:not\(\.evia-ksb-marker-rail-v107\)/);
+  assert.match(ksbClean,/!el\.classList\.contains\("evia-ksb-marker-rail-v107"\)/);
+  assert.doesNotMatch(ksbClean,/evia-ksb-slot-v107/);
   assert.match(ksbState,/\.evia-ksb-slot-v107\.learner\.on\{background:#efc33d!important;color:#4c3b0b!important\}/);
   assert.match(ksbState,/\.evia-ksb-slot-v107\.rpl\.on\{background:#7b3fc6!important;color:#fff!important\}/);
   assert.match(ksbState,/\.evia-ksb-slot-v107\.milos\.on\{background:#367fd0!important;color:#fff!important\}/);
   assert.match(ksbState,/\.evia-ksb-slot-v107\.witness\.on\{background:#d88b45!important;color:#fff!important\}/);
   assert.match(ksbState,/\[\["learner",learner,"Learner evidence"\],\["rpl",rpl,"Recorded Prior Learning"\],\["milos",milos,"Assessor Observation"\],\["witness",witness,"Witness testimony"\]\]/);
+});
+
+test("v201 recent ARP helpers do not continuously observe the whole app",()=>{
+  assert.doesNotMatch(placement,/new MutationObserver/);
+  assert.doesNotMatch(placement,/addEventListener\("focus"/);
+  assert.doesNotMatch(foreground,/new MutationObserver/);
+  assert.doesNotMatch(mockOnly,/new MutationObserver/);
+  assert.match(placement,/30,80,160,320,650/);
+});
+
+test("v201 photo path no longer re-encodes the camera canvas a second time",()=>{
+  assert.match(photoFast,/nativeCanvasEncoding:true/);
+  assert.doesNotMatch(photoFast,/HTMLCanvasElement\.prototype\.toBlob\s*=/);
+  assert.doesNotMatch(photoFast,/OffscreenCanvas|createImageBitmap/);
 });
 
 test("Maths and English each have five equal five-question parts",()=>{
@@ -101,25 +120,23 @@ test("Functional Skills rows are inserted directly after ARP Practical",()=>{
   assert.match(code,/Multiple choice · 5 parts · 5 questions each/);
 });
 
-test("v195 waits for actual ARP contents before refreshing rows",()=>{
+test("Functional Skills placement still retries when ARP is deliberately opened",()=>{
   assert.match(placement,/\.evia-arp-layer/);
-  assert.match(placement,/data-arp-option=\\?"practical\\?"/);
+  assert.match(placement,/data-arp-option=\"practical\"/);
   assert.match(placement,/EviaFunctionalSkills\?\.refresh\?\./);
-  assert.match(placement,/MutationObserver/);
-  assert.match(placement,/subtree:true/);
   assert.match(placement,/setTimeout/);
   assert.match(placement,/30,80,160,320,650/);
 });
 
-test("v196 keeps Functional Skills above the ARP tools layer",()=>{
+test("Functional Skills foreground remains above the ARP tools layer without a global observer",()=>{
   const arpCss=fs.readFileSync("assets/evia-tools.css","utf8");
   const arpZ=Number(arpCss.match(/\.evia-tools-layer\{[^}]*z-index:(\d+)/)?.[1]||0);
-  const fsZ=Number(foreground.match(/const VERSION=196,Z=(\d+)/)?.[1]||0);
+  const fsZ=Number(foreground.match(/const VERSION=201,Z=(\d+)/)?.[1]||0);
   assert.equal(arpZ,100000,"ARP tools layer should remain at its established stack level");
   assert.ok(fsZ>arpZ,`Functional Skills ${fsZ} must be above ARP ${arpZ}`);
   assert.match(foreground,/z-index:\$\{Z\}!important/);
   assert.match(foreground,/setProperty\("z-index",String\(Z\),"important"\)/);
-  assert.match(foreground,/MutationObserver/);
+  assert.doesNotMatch(foreground,/MutationObserver/);
 });
 
 test("v194 practice remains self-contained and does not fetch question packs",()=>{
