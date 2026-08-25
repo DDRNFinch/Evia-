@@ -1,16 +1,17 @@
 {
-  "version": "191",
-  "title": "Simpler evidence list",
+  "version": "192",
+  "title": "Level 2 Maths and English Tests added",
   "details": [
-    "Replaces the thumbnail-heavy evidence list with a stable text list",
-    "Tap any evidence item to open its photo, video or audio in a dedicated preview",
-    "Adds Add to evidence and Delete evidence actions inside the preview"
+    "Adds a Tests shortcut inside Evia",
+    "Adds a Level 2 Maths mock with non-calculator and calculator sections",
+    "Adds Level 2 English Reading, Writing and Speaking, Listening and Communicating practice",
+    "Answers and self-marked progress stay on the learner's device"
   ],
-  "summary": "Evia v191 removes evidence-list flashing by loading media only when an evidence item is opened.",
+  "summary": "Evia v192 adds offline Functional Skills Level 2 Maths and English mock practice without changing the current evidence workflow.",
   "changes": [
-    "Stable text-only evidence list",
-    "Evidence preview on tap",
-    "Add to evidence action",
-    "Delete evidence action"
+    "Level 2 Maths mock pack",
+    "Level 2 English mock pack",
+    "Local answers and self-marking",
+    "Offline Tests area"
   ]
 }
