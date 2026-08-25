@@ -1,15 +1,15 @@
 {
-  "version": "188",
-  "title": "Evia eye movement fully removed",
+  "version": "189",
+  "title": "QR gaze animation deleted",
   "details": [
-    "Removes the remaining menu-state eye movement from the core Evia CSS",
-    "Locks Evia's eyes to the centred position in normal, menu and QR/scan states",
-    "Keeps blinking but removes all eye-position travel"
+    "Deletes the old four-step gaze sequence that still ran when the QR/team button was pressed",
+    "Removes the lower-left, lower-right and downward gaze triggers from the interaction script",
+    "Keeps the unrelated touch and menu interaction fixes unchanged"
   ],
-  "summary": "Evia v188 permanently locks the eye position to centre in every menu state.",
+  "summary": "Evia v189 removes the remaining QR/team gaze animation from its source rather than overriding it.",
   "changes": [
-    "Menu eye shift removed",
-    "QR/scan eye position locked",
-    "Blinking retained without gaze movement"
+    "Legacy gaze sequence deleted",
+    "QR button no longer starts eye movement",
+    "Other interaction behaviour retained"
   ]
 }
