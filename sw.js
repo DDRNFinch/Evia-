@@ -1,5 +1,5 @@
-// Evia v188 permanently centres Evia's eyes in every menu state.
-const CACHE_NAME = 'evia-shell-v188';
+// Evia v189 removes the legacy QR/team gaze sequence from its source.
+const CACHE_NAME = 'evia-shell-v189';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -13,6 +13,7 @@ const CRITICAL = [
   './assets/evia-selfobs-fixes.css',
   './assets/evia-selfobs-live.js',
   './assets/evia-menu-response-v173.js',
+  './assets/evia-v69-interaction-fixes.js',
   './assets/evia-avatar-life-v108.js',
   './assets/evia-qr-neutral-v122.js',
   './assets/evia-welcome-v120.js',
