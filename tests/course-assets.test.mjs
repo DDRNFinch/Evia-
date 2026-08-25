@@ -183,7 +183,7 @@ test("TOC exposes all seven labelled QR downloads and keeps pack management avai
   }
 });
 
-test("ARP selects all seven configured banks and builds 24 graded discussion scenarios for each pathway", async () => {
+test("ARP selects all seven configured banks and builds 24 mock discussion scenarios for each pathway", async () => {
   const registry = await json("course-delivery/registry-v1.json");
   let current = null;
   const requested = [];
@@ -260,10 +260,9 @@ test("ARP selects all seven configured banks and builds 24 graded discussion sce
       const correct = source.options[source.correctIndex];
       assert.equal(scenario.sourceQuestionId, source.id);
       assert.deepEqual([...scenario.mapsTo], [...source.mapsTo]);
-      assert.equal(scenario.responses.length, 4);
-      assert.deepEqual(Array.from(scenario.responses, (response) => response.strength), [1, 2, 3, 4]);
-      assert.ok(Array.from(scenario.responses).every((response) => response.text.includes(correct)));
-      assert.ok(Array.from(scenario.responses).every((response) => response.feedback.length > 40));
+      assert.equal(scenario.responses.length, 1);
+      assert.equal(scenario.responses[0].strength, 4);
+      assert.ok(scenario.responses[0].text.includes(correct));
       assert.ok(scenario.followUp.endsWith("?"));
     }
     const practical = await window.EviaArpPractical.currentBank();
@@ -273,34 +272,36 @@ test("ARP selects all seven configured banks and builds 24 graded discussion sce
   assert.equal(requested.length, 14);
 });
 
-test("Discussion Coach includes graded choice, voice, transcript and mock flows", async () => {
+test("Discussion is permanently mock-only while retaining voice and transcript support", async () => {
   const script = await read("assets/evia-arp-discussion-v82.js");
   const css = await read("assets/evia-arp-v82.css");
   const html = await read("index.html");
 
-  assert.match(script, /data-discussion-mode="learn"/);
-  assert.match(script, /data-discussion-mode="practice"/);
+  assert.doesNotMatch(script, /data-discussion-mode="learn"/);
+  assert.doesNotMatch(script, /data-discussion-mode="practice"/);
   assert.match(script, /data-discussion-mode="mock"/);
   assert.match(script, /Speak for about 60–90 seconds/);
   assert.match(script, /window\.MediaRecorder/);
   assert.match(script, /window\.SpeechRecognition\|\|window\.webkitSpeechRecognition/);
   assert.match(script, /Evia follow-up/);
-  assert.match(script, /Every response is factually correct/);
   assert.match(css, /\.evia-arp-voice-card/);
   assert.match(css, /\.evia-arp-strength-key/);
   assert.match(html, /assets\/evia-arp-v82\.css\?v=82/);
-  assert.match(html, /assets\/evia-arp-discussion-v82\.js/);
+  assert.match(html, /assets\/evia-arp-discussion-v82\.js\?v=209/);
 });
 
-test("Practical Coach includes learn, guided, mock, evidence, voice, timers and readiness history", async () => {
+test("Practical is permanently mock-only with evidence, camera, gallery, voice, timers and readiness history", async () => {
   const script = await read("assets/evia-arp-practical-v83.js");
   const css = await read("assets/evia-arp-practical-v83.css");
   const html = await read("index.html");
 
-  assert.match(script, /data-practical-mode="learn"/);
-  assert.match(script, /data-practical-mode="guided"/);
+  assert.doesNotMatch(script, /data-practical-mode="learn"/);
+  assert.doesNotMatch(script, /data-practical-mode="guided"/);
   assert.match(script, /data-practical-mode="mock"/);
   assert.match(script, /Evidence checkpoints/);
+  assert.match(script, /capture="environment" data-evidence-file/);
+  assert.match(script, />Camera<\/span>/);
+  assert.match(script, />Gallery<\/span>/);
   assert.match(script, /Mock time remaining/);
   assert.match(script, /window\.SpeechRecognition\|\|window\.webkitSpeechRecognition/);
   assert.match(script, /Tutor or assessor verified/);
@@ -309,7 +310,7 @@ test("Practical Coach includes learn, guided, mock, evidence, voice, timers and 
   assert.match(css, /\.evia-practical-ratings/);
   assert.match(css, /@media\(max-width:370px\)/);
   assert.match(html, /assets\/evia-arp-practical-v83\.css\?v=83/);
-  assert.match(html, /assets\/evia-arp-practical-v83\.js/);
+  assert.match(html, /assets\/evia-arp-practical-v83\.js\?v=209/);
 });
 
 test("current assessor QR exchange is retained and repository independent", async () => {
