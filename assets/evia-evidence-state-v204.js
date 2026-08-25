@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=209,STORE="evia-selfobs-live-v3",RPL_KEY="evia-rpl-ksbs-v1",OBS_KEY="evia-mini-milos-observed-v1",WITNESS_KEY="evia-tinos-witnessed-v1",STYLE_ID="evia-evidence-state-v204-style";
+const VERSION=210,STORE="evia-selfobs-live-v3",RPL_KEY="evia-rpl-ksbs-v1",OBS_KEY="evia-mini-milos-observed-v1",WITNESS_KEY="evia-tinos-witnessed-v1",STYLE_ID="evia-evidence-state-v204-style";
 let queued=false;
 const LEGACY_MARKERS=[
   ".evia-ksb-marker-rail-v203",".evia-ksb-marker-v203",".evia-coverage-key-v203",
@@ -34,14 +34,17 @@ function clearOpportunityExtras(){
 }
 function cleanKsbButton(btn){
   removeLegacyMarkers(btn);
-  [...btn.children].forEach(el=>{if(el.tagName==="SPAN")el.remove()});
+  [...btn.children].forEach(el=>{if(el.tagName!=="B")el.remove()});
 }
 function setKsbMarkers(btn,learner,rpl,milos,witness){
   cleanKsbButton(btn);
-  const states=[["learner",learner,"Learner evidence"],["rpl",rpl,"Recorded Prior Learning"],["milos",milos,"Assessor Observation"],["witness",witness,"Witness testimony"]].filter(([,on])=>on);
+  const states=[];
+  if(learner)states.push(["learner","Learner evidence"]);
+  const secondary=rpl?["rpl","Recorded Prior Learning"]:milos?["milos","Assessor Observation"]:witness?["witness","Witness testimony"]:null;
+  if(secondary)states.push(secondary);
   if(!states.length)return;
   const rail=document.createElement("span");rail.className="evia-ksb-marker-rail-v204";rail.setAttribute("aria-label","Evidence sources");
-  for(const[type,,label]of states){const mark=document.createElement("i");mark.className=`evia-ksb-marker-v204 ${type}`;mark.textContent="✓";mark.title=label;mark.setAttribute("aria-label",label);mark.setAttribute("role","img");rail.appendChild(mark)}
+  for(const[type,label]of states){const mark=document.createElement("i");mark.className=`evia-ksb-marker-v204 ${type}`;mark.textContent="✓";mark.title=label;mark.setAttribute("aria-label",label);mark.setAttribute("role","img");rail.appendChild(mark)}
   btn.appendChild(rail)
 }
 function setGroup(card,on){const em=card.querySelector("strong em");if(!em)return;em.textContent=on?"✓":"";em.classList.toggle("evia-group-check-v204",!!on)}
