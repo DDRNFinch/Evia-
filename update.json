@@ -1,18 +1,17 @@
 {
-  "version": "192",
-  "title": "Level 2 Maths and English added to ARP",
+  "version": "193",
+  "title": "Maths and English moved into ARP",
   "details": [
-    "Adds Maths Level 2 directly below Practical in Assessment Readiness & Practice",
-    "Adds English Level 2 directly below Maths in Assessment Readiness & Practice",
-    "Includes a Level 2 Maths mock with non-calculator and calculator sections",
-    "Includes Level 2 English Reading, Writing and Speaking, Listening and Communicating practice",
-    "Answers and self-marked progress stay on the learner's device"
+    "Removes the separate Tests shortcut from Evia",
+    "Places Maths Level 2 directly below Practical in Assessment Readiness & Practice",
+    "Places English Level 2 directly below Maths in Assessment Readiness & Practice",
+    "Keeps the existing Maths and English mock content and local progress"
   ],
-  "summary": "Evia v192 adds offline Functional Skills Level 2 Maths and English directly inside the Test/ARP area, below Practical.",
+  "summary": "Evia v193 moves the Functional Skills Level 2 tests into the existing ARP screen, directly below Practical.",
   "changes": [
-    "Maths Level 2 under ARP Practical",
-    "English Level 2 under ARP Practical",
-    "Local answers and self-marking",
-    "Offline Functional Skills practice"
+    "Removed separate Tests shortcut",
+    "Maths Level 2 moved under ARP Practical",
+    "English Level 2 moved under Maths Level 2",
+    "Forced a new offline shell so installed copies receive the placement change"
   ]
 }
