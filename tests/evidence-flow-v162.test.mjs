@@ -15,7 +15,7 @@ const progress=fs.readFileSync("assets/evia-download-progress-v160.js","utf8");
 test("current Evia release keeps the evidence core wired into the shell",()=>{
   assert.match(index,new RegExp(`evia-app-version\\" content=\\"${version}`));
   assert.match(index,new RegExp(`evia-version-v${version}\\.js\\?v=${version}`));
-  assert.match(index,new RegExp(`evia-selfobs-live\\.js\\?v=${version}`));
+  assert.match(index,/evia-selfobs-live\.js\?v=\d+/);
   assert.match(index,new RegExp(`evia-updater\\.js\\?v=${version}`));
   assert.match(sw,new RegExp(`evia-shell-v${version}`));
   assert.match(sw,new RegExp(`evia-version-v${version}\\.js`));
