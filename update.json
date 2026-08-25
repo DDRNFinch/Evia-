@@ -1,16 +1,18 @@
 {
-  "version": "199",
-  "title": "EPA target progress fixed",
+  "version": "200",
+  "title": "KSB tracker cleaned up",
   "details": [
-    "Targets now use the same live Test readiness score shown on the home arch",
-    "EPA readiness targets complete automatically when the live percentage reaches or exceeds the target",
-    "Existing Milos targets and review dates are preserved",
-    "MCQ Mock Test, Discussion, Practical, Maths and English are unchanged"
+    "Removed the unwanted blank yellow circles from the Course coverage KSB tracker",
+    "Learner evidence yellow ticks are unchanged",
+    "Recorded Prior Learning purple ticks are unchanged",
+    "Assessor Observation blue ticks are unchanged",
+    "Witness testimony orange ticks are unchanged",
+    "No other Evia behaviour or screens were changed"
   ],
-  "summary": "Evia v199 fixes EPA readiness targets that could stay at 0% after completing assessment practice.",
+  "summary": "Evia v200 removes blank KSB marker circles while preserving all four evidence-source ticks.",
   "changes": [
-    "Aligned EPA target progress with the live Test arch calculation",
-    "Preserved the existing target threshold rule of current percentage greater than or equal to target percentage",
-    "Refreshed the offline cache so installed apps receive the corrected Targets code"
+    "Hidden the old blank per-KSB marker completely",
+    "Hidden inactive evidence-source slots without changing their saved state",
+    "Kept active learner, RPL, assessor and witness ticks visible with their existing colours"
   ]
 }
