@@ -1,17 +1,19 @@
 {
-  "version": "214",
-  "title": "Linked option evidence-source markers",
+  "version": "215",
+  "title": "First-launch setup, walkthrough and limited demo",
   "details": [
-    "Shows purple Recorded Prior Learning ticks on every Evia option linked to an RPL-covered KSB",
-    "Shows blue assessor-observation ticks on every linked Evia option covered by an assessor observation",
-    "Shows orange witness-testimony ticks on every linked Evia option covered by witness evidence",
-    "Keeps the existing Course coverage markers and learner evidence behaviour unchanged"
+    "Fresh installs now open with Set up my Evia, Try Evia Demo and Show me around",
+    "The demo uses one real Evia course route with a maximum of three evidence submissions, evidence download and one Mock Practical",
+    "The full learner route starts with an Evia Course QR, then completes the learner profile with an optional online portfolio link",
+    "Existing activated learners bypass the new first-run screen and continue into their current Evia setup"
   ],
-  "summary": "Evia v214 carries RPL, assessor-observation and witness-testimony status from Course coverage onto every linked Evia evidence option.",
+  "summary": "Evia v215 adds the fresh-install demo and QR-activated learner onboarding journey without interrupting existing activated learners.",
   "changes": [
-    "Bumped the app from v213 to v214",
-    "Mapped each Evia option back to its linked course KSBs",
-    "Mirrored purple, blue and orange evidence-source markers onto matching options",
-    "Created a fresh v214 offline cache"
+    "Added a four-step first-launch walkthrough",
+    "Added a locally isolated Bricklayer demo course pack with one route and three evidence opportunities",
+    "Limited demo assessment access to one Mock Practical and kept evidence download available",
+    "Added QR-first learner activation followed by profile setup with optional portfolio URL",
+    "Locked course selection in the profile for newly QR-activated learners",
+    "Created a fresh v215 offline cache"
   ]
 }
