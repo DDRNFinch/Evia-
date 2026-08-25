@@ -1,18 +1,18 @@
 {
-  "version": "206",
-  "title": "Mock, camera and course recovery fixes",
+  "version": "207",
+  "title": "Test screen freeze fixed",
   "details": [
-    "Discussion and Practical keep Mock only across all courses; Learn and Practice cannot reappear after delayed rendering",
-    "Mock practical evidence checkpoints now show separate Camera and Gallery controls, with Camera requesting the device camera",
-    "A failed course map now offers a Choose course recovery route instead of trapping the learner on an error screen",
-    "Future course changes keep the previous course available as a recovery option",
-    "The v205 download spinner and v204 evidence tick behaviour remain unchanged"
+    "Removed the continuous v206 ARP MutationObserver that could freeze Evia when Test opened",
+    "Mock-only Discussion and Practical now use short finite checks only when those screens open",
+    "Camera and Gallery remain separate choices in mock practical evidence",
+    "Course-map recovery remains available without continuously watching the app",
+    "Existing evidence, targets, progress, Functional Skills and download behaviour are unchanged"
   ],
-  "summary": "Evia v206 permanently enforces mock-only ARP screens, restores camera access in mock practical evidence and adds safe course recovery.",
+  "summary": "Evia v207 removes the v206 Test-screen freeze and keeps the requested mock-only, camera and course-recovery fixes using finite event-based checks.",
   "changes": [
-    "Removed Learn and Practice modes from delayed ARP renders",
-    "Added explicit Camera and Gallery choices to mock practical evidence checkpoints",
-    "Added course-selection recovery when a course map cannot load",
-    "Preserved existing evidence, targets, download and progress behaviour"
+    "Removed the continuous ARP DOM observer",
+    "Replaced it with finite event-triggered checks",
+    "Forced a clean v207 offline cache",
+    "Preserved the rest of Evia"
   ]
 }
