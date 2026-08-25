@@ -1,18 +1,17 @@
 {
-  "version": "195",
-  "title": "Maths and English ARP placement fixed",
+  "version": "196",
+  "title": "Maths and English now open in front",
   "details": [
-    "Fixes the timing issue that could leave Maths and English missing from the Assessment Readiness & Practice screen",
-    "Waits until the real Practical row has rendered before adding Functional Skills",
-    "Places Maths Level 2 directly below Practical and English Level 2 directly below Maths",
-    "Keeps the existing five-part, 25-question multiple-choice practice for each subject",
-    "Keeps D — Teach me and teaching feedback after incorrect answers"
+    "Fixes Maths and English practice opening underneath the Assessment Readiness & Practice screen",
+    "Raises the Functional Skills practice screen above the ARP layer so it appears immediately when tapped",
+    "Back now returns to the ARP screen instead of revealing a screen that had been hidden underneath",
+    "Keeps the existing Maths and English rows, five-part practice and 25 questions per subject unchanged"
   ],
-  "summary": "Evia v195 reliably places Maths and English directly below Practical in ARP.",
+  "summary": "Evia v196 fixes the Functional Skills screen stacking fault shown in the recording.",
   "changes": [
-    "Fixed the ARP render timing race",
-    "Added an ARP content observer and short retry guard",
-    "Kept Maths and English in the Test arch only",
-    "Forced a new v195 offline shell so installed v194 copies receive the fix"
+    "Corrected the Functional Skills layer stacking order",
+    "Added a foreground guard for newly opened Maths and English screens",
+    "Kept all existing ARP content and Functional Skills question data unchanged",
+    "Forced a new v196 offline shell so installed copies receive the fix"
   ]
 }
