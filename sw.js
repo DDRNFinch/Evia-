@@ -1,5 +1,5 @@
-// Evia v192 adds offline Functional Skills Level 2 Maths and English mock tests.
-const CACHE_NAME = 'evia-shell-v192';
+// Evia v193 moves Functional Skills Level 2 Maths and English into the ARP screen below Practical.
+const CACHE_NAME = 'evia-shell-v193';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -25,7 +25,7 @@ const CRITICAL = [
   './assets/evia-updater.js',
   './assets/evia-updater.css',
   './assets/evia-version-v162.js',
-  './assets/evia-version-v192.js',
+  './assets/evia-version-v193.js',
   './assets/evia-functional-skills-v192.js',
   './course-delivery/functional-skills/maths-level-2-v1.js',
   './course-delivery/functional-skills/english-level-2-v1.js',
