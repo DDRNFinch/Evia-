@@ -1,19 +1,16 @@
 {
-  "version": "210",
-  "title": "KSB ticks and Practical camera fix",
+  "version": "211",
+  "title": "Course coverage marker cleanup",
   "details": [
-    "Course coverage now shows exactly one yellow learner-evidence tick",
-    "A covered KSB shows at most one additional external-source tick: purple RPL, otherwise blue assessor observation, otherwise orange witness testimony",
-    "Old dot, circle and duplicate tick elements are removed from each KSB tile before the correct source ticks are rebuilt",
-    "Mock Practical Camera now switches to image-only rear-camera capture before Android opens it, while Gallery remains separate",
-    "Discussion remains Mock Discussion only and Practical remains Mock Practical only",
-    "Maths Level 2 and English Level 2 remain directly under Practical in Test/ARP"
+    "Removes the obsolete pale yellow circles and pale white-tick markers from Course coverage",
+    "Keeps the dark yellow learner-evidence ticks exactly as they are",
+    "Keeps purple RPL, blue assessor-observation and orange witness-testimony ticks exactly as they are",
+    "No other Evia behaviour is changed"
   ],
-  "summary": "Evia v210 removes the remaining duplicate KSB markers shown on Course coverage and corrects the Android Mock Practical Camera route so Camera no longer uses the mixed image/video gallery picker.",
+  "summary": "Evia v211 delivers the Course coverage marker cleanup as a real app update so installed v210 copies can detect and install it.",
   "changes": [
-    "Strengthened KSB marker cleanup at source",
-    "Limited KSB display to one learner tick plus one external-source tick",
-    "Added direct Android camera routing without a MutationObserver",
-    "Created a clean v210 offline cache so old marker and camera behaviour is replaced"
+    "Bumped the app from v210 to v211",
+    "Kept only the requested legacy-marker removal",
+    "Created a fresh v211 offline cache"
   ]
 }
