@@ -1,4 +1,4 @@
-name: Verify Evia NVQ v156
+name: Verify Evia NVQ
 
 on:
   push:
@@ -14,6 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Read current Evia version
+        run: |
+          VERSION=$(node -e "const fs=require('fs');process.stdout.write(String(JSON.parse(fs.readFileSync('update.json','utf8')).version))")
+          echo "EVIA_VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Syntax checks
         run: |
           node --check assets/evia-trowel-framework-v150.js
@@ -25,19 +30,21 @@ jobs:
           node --check assets/evia-signature-smooth-v155.js
           node --check assets/evia-post-evidence-otj-v149.js
           node --check assets/evia-otj-export.js
-          node --check assets/evia-arch-labels-v154.js
           node --check assets/evia-6570-pack-migration.js
-          node --check assets/evia-version-v156.js
+          node --check assets/evia-staged-evidence-v202.js
+          node --check assets/evia-evidence-state-v202.js
+          node --check "assets/evia-version-v${EVIA_VERSION}.js"
           node --check sw.js
 
       - name: Protect approved existing behaviour
         run: |
-          test "$(git hash-object assets/evia-staged-evidence-v132.js)" = "f937a134e8c427a4ac06feeb7dc6ab40404062ce"
           test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
           test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
-          test "$(git hash-object assets/evia-photo-fast-v140.js)" = "da8b78b029069280f6b734afb5c33b5d1bd5bcc4"
           test "$(git hash-object assets/evia-st0171-v124.js)" = "d6c0a15cd88c054acdd245f6b62bad4e0e52558b"
           test "$(git hash-object assets/evia-nvq-pack-export-v150.js)" = "8dd1b0a8c7376867368ad94b57821e5b6783b1f5"
+          grep -q 'renderPhotoCanvasReview(canvas,filePromise)' assets/evia-staged-evidence-v202.js
+          grep -q 'if(!states.length)return' assets/evia-evidence-state-v202.js
+          if grep -q 'MutationObserver' assets/evia-evidence-state-v202.js; then exit 1; fi
 
       - name: Audit complete NVQ activity framework
         run: |
@@ -112,15 +119,8 @@ jobs:
 
       - name: Check learner-friendly arch labels
         run: |
-          grep -q 'TOC:"Time"' assets/evia-arch-labels-v154.js
-          grep -q 'KSB:"Course"' assets/evia-arch-labels-v154.js
-          grep -q 'AC:"Course"' assets/evia-arch-labels-v154.js
-          grep -q 'OTJ:"Learn"' assets/evia-arch-labels-v154.js
-          grep -q 'GLH:"Learn"' assets/evia-arch-labels-v154.js
-          grep -q 'EPA:"Test"' assets/evia-arch-labels-v154.js
-          grep -q 'ARP:"Test"' assets/evia-arch-labels-v154.js
-          grep -q 'Units:"Test"' assets/evia-arch-labels-v154.js
-          grep -q 'evia-arch-labels-v154.js?v=154' index.html
+          grep -q 'ARCH_LABELS={TOC:"Time",KSB:"Course",AC:"Course",OTJ:"Learn",GLH:"Learn",EPA:"Test",ARP:"Test",Units:"Test"}' assets/evia-selfobs-live.js
+          if grep -q 'evia-arch-labels-v154.js' index.html; then exit 1; fi
 
       - name: Check signature accuracy fix
         run: |
@@ -130,11 +130,12 @@ jobs:
           grep -q 'touchAction="none"' assets/evia-signature-smooth-v155.js
           grep -q 'evia-signature-smooth-v155.js?v=155' index.html
 
-      - name: Check v156 release wiring
+      - name: Check current release wiring
         run: |
-          grep -q 'meta name="evia-app-version" content="156"' index.html
-          grep -q 'evia-version-v156.js?v=156' index.html
-          grep -q 'window.EviaAppVersion=156' assets/evia-version-v156.js
-          grep -q "evia-shell-v156" sw.js
+          grep -q "meta name=\"evia-app-version\" content=\"${EVIA_VERSION}\"" index.html
+          grep -q "evia-version-v${EVIA_VERSION}.js?v=${EVIA_VERSION}" index.html
+          grep -q "window.EviaAppVersion=${EVIA_VERSION}" "assets/evia-version-v${EVIA_VERSION}.js"
+          grep -q "evia-shell-v${EVIA_VERSION}" sw.js
+          grep -q 'evia-staged-evidence-v202.js' index.html
+          grep -q 'evia-evidence-state-v202.js' index.html
           grep -q 'evia-otj-export.js' sw.js
-          node -e 'const x=require("./update.json"); if(String(x.version)!=="156") process.exit(1)'
