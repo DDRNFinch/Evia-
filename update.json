@@ -1,17 +1,23 @@
 {
-  "version": "193",
-  "title": "Maths and English moved into ARP",
+  "version": "194",
+  "title": "Maths and English practice rebuilt",
   "details": [
-    "Removes the separate Tests shortcut from Evia",
-    "Places Maths Level 2 directly below Practical in Assessment Readiness & Practice",
-    "Places English Level 2 directly below Maths in Assessment Readiness & Practice",
-    "Keeps the existing Maths and English mock content and local progress"
+    "Replaces the old mock-style Functional Skills screen with reliable multiple-choice practice",
+    "Maths Level 2 is split into 5 equal parts with 5 questions in each part",
+    "English Level 2 is split into 5 equal parts with 5 questions in each part",
+    "Every question has A, B and C answer choices plus D — Teach me",
+    "Wrong answers show the correct answer and explain how to reach it",
+    "Teach me shows the correct answer and explains why it is correct",
+    "The practice is self-contained so it does not wait for separate question-pack files to load"
   ],
-  "summary": "Evia v193 moves the Functional Skills Level 2 tests into the existing ARP screen, directly below Practical.",
+  "summary": "Evia v194 rebuilds Functional Skills Level 2 as five-part multiple-choice learning practice for Maths and English.",
   "changes": [
-    "Removed separate Tests shortcut",
-    "Maths Level 2 moved under ARP Practical",
-    "English Level 2 moved under Maths Level 2",
-    "Forced a new offline shell so installed copies receive the placement change"
+    "Removed the old Reading/Writing mock-style Functional Skills interface",
+    "Added 25 Maths Level 2 multiple-choice practice questions",
+    "Added 25 English Level 2 multiple-choice practice questions",
+    "Added D — Teach me to every question",
+    "Added teaching feedback after incorrect answers",
+    "Moved the practice into one self-contained offline asset for more reliable loading",
+    "Forced a new v194 offline shell so installed copies receive the rebuild"
   ]
 }
