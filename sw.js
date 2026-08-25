@@ -1,5 +1,5 @@
-// Evia v191 uses a stable text evidence list and loads media only inside the evidence preview.
-const CACHE_NAME = 'evia-shell-v191';
+// Evia v192 adds offline Functional Skills Level 2 Maths and English mock tests.
+const CACHE_NAME = 'evia-shell-v192';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -25,6 +25,10 @@ const CRITICAL = [
   './assets/evia-updater.js',
   './assets/evia-updater.css',
   './assets/evia-version-v162.js',
+  './assets/evia-version-v192.js',
+  './assets/evia-functional-skills-v192.js',
+  './course-delivery/functional-skills/maths-level-2-v1.js',
+  './course-delivery/functional-skills/english-level-2-v1.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
