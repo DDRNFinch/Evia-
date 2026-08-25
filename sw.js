@@ -1,5 +1,5 @@
-// Evia v213: remove only the inherited yellow KSB marker-rail halo.
-const CACHE_NAME = 'evia-shell-v213';
+// Evia v214: mirror external evidence-source ticks onto linked Evia options.
+const CACHE_NAME = 'evia-shell-v214';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -45,6 +45,7 @@ const CRITICAL = [
   './assets/evia-version-v211.js',
   './assets/evia-version-v212.js',
   './assets/evia-version-v213.js',
+  './assets/evia-version-v214.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
@@ -72,6 +73,7 @@ const CRITICAL = [
   './assets/evia-targets.js',
   './assets/evia-targets-milos-only-v123.js',
   './assets/evia-evidence-state-v204.js',
+  './assets/evia-option-source-sync-v214.js',
   './assets/evia-milos-observed-arch-v94.js',
   './assets/evia-rpl-evidence.js',
   './assets/evia-rpl-evidence.css',
