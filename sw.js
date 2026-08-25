@@ -1,5 +1,5 @@
-// Evia v210 refresh: remove obsolete pale RPL marker from Course coverage only.
-const CACHE_NAME = 'evia-shell-v210-rpl-clean';
+// Evia v211: deliver the Course coverage legacy-marker cleanup as a real app update.
+const CACHE_NAME = 'evia-shell-v211';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -42,6 +42,7 @@ const CRITICAL = [
   './assets/evia-version-v208.js',
   './assets/evia-version-v209.js',
   './assets/evia-version-v210.js',
+  './assets/evia-version-v211.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
