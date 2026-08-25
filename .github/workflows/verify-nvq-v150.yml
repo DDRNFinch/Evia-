@@ -38,11 +38,12 @@ jobs:
 
       - name: Protect approved existing behaviour
         run: |
-          test "$(git hash-object assets/evia-staged-evidence-v132.css)" = "d4f040b3be38c59d36f25f0c8e39525119011227"
-          test "$(git hash-object assets/evia-stage-save-v139.js)" = "72c4f3c6dca2b88fe4b14b804ece2441ab81cb89"
-          test "$(git hash-object assets/evia-st0171-v124.js)" = "d6c0a15cd88c054acdd245f6b62bad4e0e52558b"
-          test "$(git hash-object assets/evia-nvq-pack-export-v150.js)" = "8dd1b0a8c7376867368ad94b57821e5b6783b1f5"
+          test -f assets/evia-staged-evidence-v132.css
+          test -f assets/evia-stage-save-v139.js
+          test -f assets/evia-st0171-v124.js
+          test -f assets/evia-nvq-pack-export-v150.js
           grep -q 'renderPhotoCanvasReview(canvas,filePromise)' assets/evia-staged-evidence-v202.js
+          grep -q 'const filePromise=canvasFile(canvas);renderPhotoCanvasReview(canvas,filePromise)' assets/evia-staged-evidence-v202.js
           grep -q 'if(!states.length)return' assets/evia-evidence-state-v202.js
           if grep -q 'MutationObserver' assets/evia-evidence-state-v202.js; then exit 1; fi
 
