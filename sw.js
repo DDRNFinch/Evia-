@@ -1,5 +1,5 @@
-// Evia v215: first-run walkthrough, limited demo and QR-activated learner setup.
-const CACHE_NAME = 'evia-shell-v215';
+// Evia v216: richer college demo with Maths, English, audio evidence and full-feature explanations.
+const CACHE_NAME = 'evia-shell-v216';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -19,6 +19,7 @@ const CRITICAL = [
   './assets/evia-welcome-v120.js',
   './assets/evia-first-run-v215.js',
   './assets/evia-demo-mode-v215.js',
+  './assets/evia-demo-enhancements-v216.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
   './assets/evia-media-stability-v168.js',
@@ -50,6 +51,7 @@ const CRITICAL = [
   './assets/evia-version-v213.js',
   './assets/evia-version-v214.js',
   './assets/evia-version-v215.js',
+  './assets/evia-version-v216.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
