@@ -21,10 +21,10 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v207 runtime keeps the corrected v204 evidence-state layer",()=>{
-  assert.equal(String(manifest.version),"207");
-  assert.match(index,/evia-version-v207\.js\?v=207/);
-  assert.match(index,/evia-recovery-v207\.js\?v=207/);
+test("v208 runtime keeps the corrected v204 evidence-state layer",()=>{
+  assert.equal(String(manifest.version),"208");
+  assert.match(index,/evia-version-v208\.js\?v=208/);
+  assert.match(index,/evia-recovery-v207\.js\?v=208/);
   assert.match(index,/evia-staged-evidence-v202\.js\?v=202/);
   assert.match(index,/evia-evidence-state-v204\.js\?v=204/);
   assert.doesNotMatch(index,/evia-recovery-v206\.js/);
@@ -34,8 +34,8 @@ test("v207 runtime keeps the corrected v204 evidence-state layer",()=>{
   assert.doesNotMatch(index,/evia-ksb-clean-v201\.js/);
   assert.doesNotMatch(index,/evia-single-completion-tick-v173\.js/);
   assert.doesNotMatch(index,/evia-photo-fast-v140\.js/);
-  assert.match(sw,/evia-shell-v207/);
-  assert.match(sw,/evia-version-v207\.js/);
+  assert.match(sw,/evia-shell-v208/);
+  assert.match(sw,/evia-version-v208\.js/);
   assert.match(sw,/evia-recovery-v207\.js/);
   assert.match(sw,/evia-staged-evidence-v202\.js/);
   assert.match(sw,/evia-evidence-state-v204\.js/);
@@ -75,7 +75,7 @@ test("v202 photo review is still shown from the captured canvas before JPEG enco
   assert.match(staged,/const file=await filePromise/);
 });
 
-test("v207 mock-only enforcement cannot continuously observe the app",()=>{
+test("v208 mock-only enforcement cannot continuously observe the app",()=>{
   assert.match(mockOnly,/data-discussion-mode=\"learn\"/);
   assert.match(mockOnly,/data-discussion-mode=\"practice\"/);
   assert.match(mockOnly,/data-practical-mode=\"learn\"/);
@@ -87,6 +87,15 @@ test("v207 mock-only enforcement cannot continuously observe the app",()=>{
   assert.match(recovery,/\[0,40,100,200,400,700\]/);
   assert.match(recovery,/stopImmediatePropagation/);
   assert.match(recovery,/enforceMockOnly/);
+});
+
+test("v208 restores Maths and English after ARP renders",()=>{
+  assert.match(recovery,/function restoreFunctionalSkills\(\)/);
+  assert.match(recovery,/EviaFunctionalSkills\?\.refresh\?\.\(\)/);
+  assert.match(recovery,/restoreFunctionalSkills\(\)/);
+  assert.match(code,/Maths Level 2/);
+  assert.match(code,/English Level 2/);
+  assert.match(code,/practical\.after\(m,e\)/);
 });
 
 test("v207 mock practical has explicit Camera and Gallery controls",()=>{
