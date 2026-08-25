@@ -8,7 +8,7 @@ const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
 const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
 const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const mockOnly=fs.readFileSync("assets/evia-arp-mock-only-v197.js","utf8");
-const recovery=fs.readFileSync("assets/evia-recovery-v206.js","utf8");
+const recovery=fs.readFileSync("assets/evia-recovery-v207.js","utf8");
 const targets=fs.readFileSync("assets/evia-targets.js","utf8");
 const evidenceState=fs.readFileSync("assets/evia-evidence-state-v204.js","utf8");
 const exportStatus=fs.readFileSync("assets/evia-export-status.js","utf8");
@@ -21,24 +21,25 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v206 runtime keeps the corrected v204 evidence-state layer",()=>{
-  assert.equal(String(manifest.version),"206");
-  assert.match(index,/evia-version-v206\.js\?v=206/);
-  assert.match(index,/evia-recovery-v206\.js\?v=206/);
+test("v207 runtime keeps the corrected v204 evidence-state layer",()=>{
+  assert.equal(String(manifest.version),"207");
+  assert.match(index,/evia-version-v207\.js\?v=207/);
+  assert.match(index,/evia-recovery-v207\.js\?v=207/);
   assert.match(index,/evia-staged-evidence-v202\.js\?v=202/);
   assert.match(index,/evia-evidence-state-v204\.js\?v=204/);
+  assert.doesNotMatch(index,/evia-recovery-v206\.js/);
   assert.doesNotMatch(index,/evia-evidence-state-v203\.js/);
   assert.doesNotMatch(index,/evia-evidence-state-v202\.js/);
   assert.doesNotMatch(index,/evia-count-display-v94\.js/);
   assert.doesNotMatch(index,/evia-ksb-clean-v201\.js/);
   assert.doesNotMatch(index,/evia-single-completion-tick-v173\.js/);
   assert.doesNotMatch(index,/evia-photo-fast-v140\.js/);
-  assert.match(sw,/evia-shell-v206/);
-  assert.match(sw,/evia-version-v206\.js/);
-  assert.match(sw,/evia-recovery-v206\.js/);
+  assert.match(sw,/evia-shell-v207/);
+  assert.match(sw,/evia-version-v207\.js/);
+  assert.match(sw,/evia-recovery-v207\.js/);
   assert.match(sw,/evia-staged-evidence-v202\.js/);
   assert.match(sw,/evia-evidence-state-v204\.js/);
-  assert.doesNotMatch(sw,/evia-evidence-state-v203\.js|evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
+  assert.doesNotMatch(sw,/evia-recovery-v206\.js|evia-evidence-state-v203\.js|evia-evidence-state-v202\.js|evia-count-display-v94\.js|evia-ksb-clean-v201\.js|evia-single-completion-tick-v173\.js|evia-photo-fast-v140\.js/);
 });
 
 test("v204 keeps the original pale task tick and preserves coloured KSB source ticks",()=>{
@@ -74,19 +75,21 @@ test("v202 photo review is still shown from the captured canvas before JPEG enco
   assert.match(staged,/const file=await filePromise/);
 });
 
-test("v206 permanently enforces mock-only Discussion and Practical",()=>{
+test("v207 mock-only enforcement cannot continuously observe the app",()=>{
   assert.match(mockOnly,/data-discussion-mode=\"learn\"/);
   assert.match(mockOnly,/data-discussion-mode=\"practice\"/);
   assert.match(mockOnly,/data-practical-mode=\"learn\"/);
   assert.match(mockOnly,/data-practical-mode=\"guided\"/);
   assert.doesNotMatch(mockOnly,/data-arp-option=\"multiple-choice\"/);
   assert.match(recovery,/const FORBIDDEN=/);
-  assert.match(recovery,/MutationObserver/);
+  assert.doesNotMatch(recovery,/MutationObserver/);
+  assert.match(recovery,/function retry\(\)/);
+  assert.match(recovery,/\[0,40,100,200,400,700\]/);
   assert.match(recovery,/stopImmediatePropagation/);
   assert.match(recovery,/enforceMockOnly/);
 });
 
-test("v206 mock practical has explicit Camera and Gallery controls",()=>{
+test("v207 mock practical has explicit Camera and Gallery controls",()=>{
   assert.match(recovery,/data-evidence-file/);
   assert.match(recovery,/textContent="Camera"/);
   assert.match(recovery,/textContent="Gallery"/);
@@ -94,12 +97,13 @@ test("v206 mock practical has explicit Camera and Gallery controls",()=>{
   assert.match(recovery,/removeAttribute\("capture"\)/);
 });
 
-test("v206 course-map failure has a recovery path",()=>{
+test("v207 course-map failure has a recovery path without a global observer",()=>{
   assert.match(recovery,/\.self-load-error/);
   assert.match(recovery,/Choose course/);
   assert.match(recovery,/Return to previous course/);
   assert.match(recovery,/evia-course-timeline-backup-v206/);
   assert.match(recovery,/EviaCoursePacks/);
+  assert.doesNotMatch(recovery,/MutationObserver/);
 });
 
 test("EPA targets still use the same live readiness shown by the Test arch",()=>{
