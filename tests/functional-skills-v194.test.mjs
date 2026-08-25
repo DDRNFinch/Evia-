@@ -6,6 +6,7 @@ const index=fs.readFileSync("index.html","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 const code=fs.readFileSync("assets/evia-functional-skills-v194.js","utf8");
 const placement=fs.readFileSync("assets/evia-functional-skills-v195.js","utf8");
+const foreground=fs.readFileSync("assets/evia-functional-skills-v196.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 
 function bank(){
@@ -14,15 +15,18 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v194 Functional Skills engine is wired through the v195 release",()=>{
-  assert.equal(String(manifest.version),"195");
+test("v194 Functional Skills engine is wired through the v196 release",()=>{
+  assert.equal(String(manifest.version),"196");
   assert.match(index,/evia-functional-skills-v194\.js\?v=195/);
   assert.match(index,/evia-functional-skills-v195\.js\?v=195/);
-  assert.match(index,/evia-version-v195\.js\?v=195/);
+  assert.match(index,/evia-functional-skills-v196\.js\?v=196/);
+  assert.match(index,/evia-version-v196\.js\?v=196/);
   assert.doesNotMatch(index,/evia-functional-skills-v192/);
   assert.doesNotMatch(index,/functional-skills\/maths-level-2-v1|functional-skills\/english-level-2-v1/);
+  assert.match(sw,/evia-shell-v196/);
   assert.match(sw,/evia-functional-skills-v194\.js/);
   assert.match(sw,/evia-functional-skills-v195\.js/);
+  assert.match(sw,/evia-functional-skills-v196\.js/);
   assert.doesNotMatch(sw,/evia-functional-skills-v192/);
 });
 
@@ -64,6 +68,17 @@ test("v195 waits for actual ARP contents before refreshing rows",()=>{
   assert.match(placement,/subtree:true/);
   assert.match(placement,/setTimeout/);
   assert.match(placement,/30,80,160,320,650/);
+});
+
+test("v196 keeps Functional Skills above the ARP tools layer",()=>{
+  const arpCss=fs.readFileSync("assets/evia-tools.css","utf8");
+  const arpZ=Number(arpCss.match(/\.evia-tools-layer\{[^}]*z-index:(\d+)/)?.[1]||0);
+  const fsZ=Number(foreground.match(/const VERSION=196,Z=(\d+)/)?.[1]||0);
+  assert.equal(arpZ,100000,"ARP tools layer should remain at its established stack level");
+  assert.ok(fsZ>arpZ,`Functional Skills ${fsZ} must be above ARP ${arpZ}`);
+  assert.match(foreground,/z-index:\$\{Z\}!important/);
+  assert.match(foreground,/setProperty\("z-index",String\(Z\),"important"\)/);
+  assert.match(foreground,/MutationObserver/);
 });
 
 test("v194 practice remains self-contained and does not fetch question packs",()=>{
