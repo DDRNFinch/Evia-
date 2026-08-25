@@ -1,5 +1,6 @@
 (()=>{
 "use strict";
+// Supersedes assets/evia-evidence-state-v203.js; the legacy file is retained only for release history and is not loaded.
 const VERSION=204,STORE="evia-selfobs-live-v3",RPL_KEY="evia-rpl-ksbs-v1",OBS_KEY="evia-mini-milos-observed-v1",WITNESS_KEY="evia-tinos-witnessed-v1",STYLE_ID="evia-evidence-state-v204-style";
 let queued=false;
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
