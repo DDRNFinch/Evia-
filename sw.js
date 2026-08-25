@@ -1,5 +1,5 @@
-// Evia v204 removes duplicate task-row ticks while preserving coloured KSB source ticks.
-const CACHE_NAME = 'evia-shell-v204';
+// Evia v205 restores the standard evidence download spinner without changing other runtime behaviour.
+const CACHE_NAME = 'evia-shell-v205';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -36,6 +36,7 @@ const CRITICAL = [
   './assets/evia-version-v202.js',
   './assets/evia-version-v203.js',
   './assets/evia-version-v204.js',
+  './assets/evia-version-v205.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
