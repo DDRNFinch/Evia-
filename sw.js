@@ -1,5 +1,5 @@
-// Evia v202 removes empty KSB marker slots and shows photo review immediately.
-const CACHE_NAME = 'evia-shell-v202';
+// Evia v203 keeps one light completion tick and permanently removes dark marker circles.
+const CACHE_NAME = 'evia-shell-v203';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -34,6 +34,7 @@ const CRITICAL = [
   './assets/evia-version-v200.js',
   './assets/evia-version-v201.js',
   './assets/evia-version-v202.js',
+  './assets/evia-version-v203.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
@@ -63,7 +64,7 @@ const CRITICAL = [
   './assets/evia-milos-review-sync-v97.js',
   './assets/evia-targets.js',
   './assets/evia-targets-milos-only-v123.js',
-  './assets/evia-evidence-state-v202.js',
+  './assets/evia-evidence-state-v203.js',
   './assets/evia-milos-observed-arch-v94.js',
   './assets/evia-rpl-evidence.js',
   './assets/evia-rpl-evidence.css',
