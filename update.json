@@ -1,16 +1,16 @@
 {
-  "version": "212",
-  "title": "Course coverage pale marker removal",
+  "version": "213",
+  "title": "Course coverage halo removal",
   "details": [
-    "Removes every pale legacy marker from Course coverage",
+    "Removes the unwanted yellow background halo around Course coverage source ticks",
     "Keeps the dark yellow learner-evidence tick exactly as it is",
     "Keeps purple RPL, blue assessor-observation and orange witness-testimony ticks exactly as they are",
     "No other Evia behaviour is changed"
   ],
-  "summary": "Evia v212 removes the remaining pale legacy Course coverage markers without changing any other app behaviour.",
+  "summary": "Evia v213 removes only the inherited yellow background around the current Course coverage marker rail.",
   "changes": [
-    "Bumped the app from v211 to v212",
-    "Suppressed every direct legacy marker span except the current evidence-source marker rail",
-    "Created a fresh v212 offline cache"
+    "Bumped the app from v212 to v213",
+    "Neutralised the legacy span background on the current KSB marker rail",
+    "Created a fresh v213 offline cache"
   ]
 }
