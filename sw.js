@@ -1,5 +1,5 @@
-// Evia v201 removes legacy KSB markers and reduces runtime/camera overhead.
-const CACHE_NAME = 'evia-shell-v201';
+// Evia v202 removes empty KSB marker slots and shows photo review immediately.
+const CACHE_NAME = 'evia-shell-v202';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -33,6 +33,7 @@ const CRITICAL = [
   './assets/evia-version-v199.js',
   './assets/evia-version-v200.js',
   './assets/evia-version-v201.js',
+  './assets/evia-version-v202.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-functional-skills-v195.js',
   './assets/evia-functional-skills-v196.js',
@@ -40,10 +41,9 @@ const CRITICAL = [
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
   './assets/evia-download-progress-v160.js',
-  './assets/evia-photo-fast-v140.js',
   './assets/evia-pdf-neutral-v172.js',
   './assets/evia-staged-resume-guard-v167.js',
-  './assets/evia-staged-evidence-v132.js',
+  './assets/evia-staged-evidence-v202.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
   './assets/evia-post-evidence-otj-v149.js',
@@ -63,9 +63,7 @@ const CRITICAL = [
   './assets/evia-milos-review-sync-v97.js',
   './assets/evia-targets.js',
   './assets/evia-targets-milos-only-v123.js',
-  './assets/evia-count-display-v94.js',
-  './assets/evia-ksb-clean-v201.js',
-  './assets/evia-single-completion-tick-v173.js',
+  './assets/evia-evidence-state-v202.js',
   './assets/evia-milos-observed-arch-v94.js',
   './assets/evia-rpl-evidence.js',
   './assets/evia-rpl-evidence.css',
