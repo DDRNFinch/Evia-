@@ -15,6 +15,7 @@ const targets=fs.readFileSync("assets/evia-targets.js","utf8");
 const exportStatus=fs.readFileSync("assets/evia-export-status.js","utf8");
 const staged=fs.readFileSync("assets/evia-staged-evidence-v202.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
+const version=String(manifest.version);
 
 function bank(){
   const match=functional.match(/const BANK=(\{.*\});\nlet layer=/s);
@@ -22,13 +23,12 @@ function bank(){
   return JSON.parse(match[1]);
 }
 
-test("v210 is one clean runtime without obsolete recovery layers",()=>{
-  assert.equal(String(manifest.version),"210");
-  assert.match(index,/evia-app-version" content="210"/);
-  assert.match(index,/evia-version-v210\.js\?v=210/);
-  assert.match(index,/evia-updater\.js\?v=210/);
-  assert.match(sw,/evia-shell-v210/);
-  assert.match(sw,/evia-version-v210\.js/);
+test("current release is one clean runtime without obsolete recovery layers",()=>{
+  assert.match(index,new RegExp(`evia-app-version\\" content=\\"${version}`));
+  assert.match(index,new RegExp(`evia-version-v${version}\\.js\\?v=${version}`));
+  assert.match(index,new RegExp(`evia-updater\\.js\\?v=${version}`));
+  assert.match(sw,new RegExp(`evia-shell-v${version}`));
+  assert.match(sw,new RegExp(`evia-version-v${version}\\.js`));
   assert.match(sw,/evia-practical-camera-v210\.js/);
   for(const path of [
     "assets/evia-arp-mock-only-v197.js",
