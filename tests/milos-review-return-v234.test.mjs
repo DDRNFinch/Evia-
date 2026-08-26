@@ -66,7 +66,7 @@ test('v234 Review Snapshot records the learner position Evia knows at the comple
 });
 
 test('v234 adds permanent Review history to Evia Pulse',()=>{
-  assert.match(snapshots,/data\.pulseReviewHistory="1"/);
+  assert.match(snapshots,/dataset\.pulseReviewHistory="1"/);
   assert.match(snapshots,/Review history/);
   assert.match(snapshots,/Review snapshot/);
   assert.match(snapshots,/Review summary/);
