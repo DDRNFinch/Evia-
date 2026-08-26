@@ -8,24 +8,26 @@ const first=fs.readFileSync("assets/evia-first-run-v215.js","utf8");
 const demo=fs.readFileSync("assets/evia-demo-mode-v215.js","utf8");
 const enhance=fs.readFileSync("assets/evia-demo-enhancements-v216.js","utf8");
 const audio=fs.readFileSync("assets/evia-demo-guided-audio-v217.js","utf8");
-const walkthrough=fs.readFileSync("assets/evia-interactive-walkthrough-v217.js","utf8");
+const walkthrough=fs.readFileSync("assets/evia-interactive-walkthrough-v218.js","utf8");
 const lock=fs.readFileSync("assets/evia-profile-course-lock-v215.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 
-test("v217 keeps first-run activation and adds guided demo plus interactive walkthrough",()=>{
-  assert.equal(version,"217");
+test("v218 keeps first-run activation and replaces the rough walkthrough with the premium guided tour",()=>{
+  assert.equal(version,"218");
   assert.match(index,/evia-first-run-v215\.js\?v=215/);
   assert.match(index,/evia-demo-mode-v215\.js\?v=215/);
   assert.match(index,/evia-demo-enhancements-v216\.js\?v=217/);
   assert.match(index,/evia-demo-guided-audio-v217\.js\?v=217/);
-  assert.match(index,/evia-interactive-walkthrough-v217\.js\?v=217/);
+  assert.match(index,/evia-interactive-walkthrough-v218\.js\?v=218/);
+  assert.doesNotMatch(index,/evia-interactive-walkthrough-v217\.js/);
   assert.match(index,/evia-profile-course-lock-v215\.js\?v=215/);
-  assert.match(index,/evia-version-v217\.js\?v=217/);
-  assert.match(index,/evia-updater\.js\?v=217/);
-  assert.match(sw,/evia-shell-v217/);
+  assert.match(index,/evia-version-v218\.js\?v=218/);
+  assert.match(index,/evia-updater\.js\?v=218/);
+  assert.match(sw,/evia-shell-v218/);
   assert.match(sw,/evia-demo-guided-audio-v217\.js/);
-  assert.match(sw,/evia-interactive-walkthrough-v217\.js/);
+  assert.match(sw,/evia-interactive-walkthrough-v218\.js/);
+  assert.doesNotMatch(sw,/evia-interactive-walkthrough-v217\.js/);
   assert.doesNotThrow(()=>new Function(enhance));
   assert.doesNotThrow(()=>new Function(audio));
   assert.doesNotThrow(()=>new Function(walkthrough));
@@ -70,17 +72,49 @@ test("demo audio is one real recording with step-by-step prompts like NVQ",()=>{
   assert.doesNotMatch(audio,/MutationObserver/);
 });
 
-test("walkthrough is interactive and teaches by pressing simulated Evia controls",()=>{
-  assert.match(walkthrough,/data-first-walk/);
-  assert.match(walkthrough,/Press here/);
-  assert.match(walkthrough,/Collect evidence/);
-  assert.match(walkthrough,/Knowledge evidence/);
-  assert.match(walkthrough,/Next prompt/);
-  assert.match(walkthrough,/Course coverage/);
+test("walkthrough is a full-screen animated Evia product tour rather than a fake phone slideshow",()=>{
+  assert.match(walkthrough,/evia-tour218-layer/);
+  assert.match(walkthrough,/class=\"evia-app is-ready evia-tour218\"/);
+  assert.match(walkthrough,/class=\"evia-anchor evia-tour218-avatar\"/);
+  assert.match(walkthrough,/evia-face expression-idle/);
+  assert.match(walkthrough,/evia-tour218-dock/);
+  assert.match(walkthrough,/data-tour218-arch=\"course\"/);
+  assert.match(walkthrough,/data-tour218-team/);
+  assert.doesNotMatch(walkthrough,/evia-walk217-phone/);
+  assert.doesNotMatch(walkthrough,/Demo walkthrough/);
+});
+
+test("walkthrough floats Evia between real-style areas and pauses for meaningful learner presses",()=>{
+  assert.match(walkthrough,/function moveAvatar/);
+  assert.match(walkthrough,/mx=\(from\.x\+x\)\/2-dy\/len\*arc/);
+  assert.match(walkthrough,/cubic-bezier\(\.22,1,\.36,1\)/);
+  assert.match(walkthrough,/expression-\$\{name\}/);
+  assert.match(walkthrough,/evia-tour218-focus/);
+  assert.match(walkthrough,/tour218Tap/);
+  assert.match(walkthrough,/Hi, I’m Evia/);
+  assert.match(walkthrough,/Press me/);
+  assert.match(walkthrough,/data-tour218-collect/);
+  assert.match(walkthrough,/data-tour218-knowledge/);
+  assert.match(walkthrough,/data-tour218-startaudio/);
+  assert.match(walkthrough,/data-tour218-nextprompt/);
+  assert.match(walkthrough,/data-tour218-arch='course'/);
+  assert.match(walkthrough,/data-tour218-arch='test'/);
+});
+
+test("walkthrough demonstrates evidence sources, assessor exchange, OTJ and Test",()=>{
+  assert.match(walkthrough,/Learner evidence/);
+  assert.match(walkthrough,/Recorded Prior Learning/);
+  assert.match(walkthrough,/Assessor Observation/);
+  assert.match(walkthrough,/Witness testimony/);
+  assert.match(walkthrough,/background:#7b3fc6/);
+  assert.match(walkthrough,/background:#367fd0/);
+  assert.match(walkthrough,/background:#d88b45/);
+  assert.match(walkthrough,/Share QR code/);
+  assert.match(walkthrough,/Receive QR code/);
+  assert.match(walkthrough,/Off-the-job learning/);
   assert.match(walkthrough,/Mock Practical/);
   assert.match(walkthrough,/Maths Level 2/);
   assert.match(walkthrough,/English Level 2/);
-  assert.match(walkthrough,/data-walk217-next/);
   assert.doesNotMatch(walkthrough,/MutationObserver/);
 });
 
