@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const VERSION=220,base=window.EviaCoursePacks;
+const VERSION=223,base=window.EviaCoursePacks;
 if(!base)return;
 function clone(v){try{return structuredClone(v)}catch{return JSON.parse(JSON.stringify(v))}}
 function dataFor(pack,p){return Array.isArray(p?.siteData)?p.siteData:Array.isArray(pack?.siteData)?pack.siteData:[]}
@@ -28,4 +28,5 @@ function adapt(raw){
 function install(raw){return base.install(adapt(raw))}
 function normalize(raw){return base.normalize(adapt(raw))}
 window.EviaCoursePacks={...base,install,normalize,naxosCompatibilityVersion:VERSION};
+if(!document.querySelector('script[data-evia-naxos-criteria-v223]')){const s=document.createElement('script');s.src='./assets/evia-naxos-evidence-criteria-v223.js?v=223';s.defer=true;s.dataset.eviaNaxosCriteriaV223='1';document.head.appendChild(s)}
 })();
