@@ -9,31 +9,36 @@ const demo=fs.readFileSync("assets/evia-demo-mode-v215.js","utf8");
 const enhance=fs.readFileSync("assets/evia-demo-enhancements-v216.js","utf8");
 const audio=fs.readFileSync("assets/evia-demo-guided-audio-v217.js","utf8");
 const walkthrough=fs.readFileSync("assets/evia-interactive-walkthrough-v222.js","utf8");
-const recovery=fs.readFileSync("assets/evia-startup-recovery-v224.js","utf8");
+const recovery=fs.readFileSync("assets/evia-startup-recovery-v225.js","utf8");
 const lock=fs.readFileSync("assets/evia-profile-course-lock-v215.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 
-test("v224 keeps the v222 walkthrough and adds startup recovery to the release shell",()=>{
-  assert.equal(version,"224");
+test("v225 keeps the v222 walkthrough and replaces the missing legacy course-map dependency",()=>{
+  assert.equal(version,"225");
   assert.match(index,/evia-first-run-v215\.js\?v=215/);
   assert.match(index,/evia-demo-mode-v215\.js\?v=215/);
   assert.match(index,/evia-demo-enhancements-v216\.js\?v=217/);
   assert.match(index,/evia-demo-guided-audio-v217\.js\?v=217/);
   assert.match(index,/evia-interactive-walkthrough-v222\.js\?v=222/);
-  assert.match(index,/evia-startup-recovery-v224\.js\?v=224/);
+  assert.match(index,/evia-startup-recovery-v225\.js\?v=225/);
+  assert.doesNotMatch(index,/evia-startup-recovery-v224\.js\?v=224/);
   assert.doesNotMatch(index,/evia-interactive-walkthrough-v218\.js/);
   assert.doesNotMatch(index,/evia-interactive-walkthrough-v219\.js/);
   assert.doesNotMatch(index,/evia-interactive-walkthrough-v221\.js/);
   assert.match(index,/evia-profile-course-lock-v215\.js\?v=215/);
   assert.match(index,/evia-version-v222\.js\?v=222/);
   assert.match(index,/evia-version-v224\.js\?v=224/);
-  assert.match(index,/evia-updater\.js\?v=224/);
-  assert.match(sw,/evia-shell-v224/);
+  assert.match(index,/evia-version-v225\.js\?v=225/);
+  assert.match(index,/evia-updater\.js\?v=225/);
+  assert.match(sw,/evia-shell-v225/);
   assert.match(sw,/evia-demo-guided-audio-v217\.js/);
   assert.match(sw,/evia-interactive-walkthrough-v222\.js/);
-  assert.match(sw,/evia-startup-recovery-v224\.js/);
-  assert.match(sw,/evia-version-v224\.js/);
+  assert.match(sw,/evia-startup-recovery-v225\.js/);
+  assert.doesNotMatch(sw,/evia-startup-recovery-v224\.js/);
+  assert.match(sw,/evia-version-v225\.js/);
+  assert.match(sw,/course-packs\/Bricklayer_ST0095_v1\.2\.nisi/);
+  assert.match(sw,/course-packs\/Carpentry_Joinery_ST0264_v1\.4\.nisi/);
   assert.doesNotMatch(sw,/evia-interactive-walkthrough-v218\.js/);
   assert.doesNotMatch(sw,/evia-interactive-walkthrough-v219\.js/);
   assert.doesNotMatch(sw,/evia-interactive-walkthrough-v221\.js/);
@@ -43,13 +48,20 @@ test("v224 keeps the v222 walkthrough and adds startup recovery to the release s
   assert.doesNotThrow(()=>new Function(recovery));
 });
 
-test("startup recovery repairs saved Demo state and protects a true no-course first launch",()=>{
+test("startup recovery repairs Demo, no-course and legacy built-in course maps without clearing learner storage",()=>{
   assert.match(recovery,/function demoIntent\(\)/);
   assert.match(recovery,/function repairDemo\(\)/);
   assert.match(recovery,/packs\.install\(DEMO_PACK\)/);
   assert.match(recovery,/packs\.activate\(DEMO_ID\)/);
-  assert.match(recovery,/function protectNoCourse\(\)/);
+  assert.match(recovery,/function installCourseMapRecovery\(\)/);
   assert.match(recovery,/evia-no-course-data-/);
+  assert.match(recovery,/evia-site-data/);
+  assert.match(recovery,/evia-carpentry-site-data/);
+  assert.match(recovery,/evia-carpentry-joiner-data/);
+  assert.match(recovery,/Bricklayer_ST0095_v1\.2\.nisi/);
+  assert.match(recovery,/Carpentry_Joinery_ST0264_v1\.4\.nisi/);
+  assert.match(recovery,/pathway:"site-carpenter"/);
+  assert.match(recovery,/pathway:"architectural-joiner"/);
   assert.match(recovery,/codes:\["SETUP"\]/);
   assert.doesNotMatch(recovery,/localStorage\.clear/);
 });
