@@ -1,0 +1,19 @@
+/* Evia Pulse v229: eyes-only wellbeing expressions */
+/* Pulse faces never use mouths. v229 overrides the temporary v228 mouth marks. */
+.evia-pulse-face::after{content:none!important;display:none!important}
+
+/* Top stays as Evia's soft arched-eye expression from the core Pulse style. */
+/* Middle stays as the existing round-eye neutral expression. */
+
+/* Lower option: two clearly downturned eyes only — no mouth, no extra facial mark. */
+.evia-pulse-face-1 .evia-pulse-eye{
+  top:45%!important;
+  width:20%!important;
+  height:12%!important;
+  border:0!important;
+  border-bottom:var(--face-stroke) solid #efc33d!important;
+  border-radius:0 0 55% 55% / 0 0 85% 85%!important;
+  transform:none!important;
+}
+.evia-pulse-face-1 .evia-pulse-eye.eye-left{left:25%!important;transform:rotate(-4deg)!important}
+.evia-pulse-face-1 .evia-pulse-eye.eye-right{right:25%!important;transform:rotate(4deg)!important}
