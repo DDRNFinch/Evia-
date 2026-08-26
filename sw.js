@@ -1,5 +1,5 @@
-// Evia v233: reliable Coach Snapshot QR rendering for single and multipart shares.
-const CACHE_NAME = 'evia-shell-v233';
+// Evia v234: accept completed Milos review and observation return QRs.
+const CACHE_NAME = 'evia-shell-v234';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -73,9 +73,11 @@ const CRITICAL = [
   './assets/evia-version-v231.js',
   './assets/evia-version-v232.js',
   './assets/evia-version-v233.js',
+  './assets/evia-version-v234.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
+  './assets/evia-milos-return-v234.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
   './assets/evia-pulse-faces-v228.css',
