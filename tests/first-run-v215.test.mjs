@@ -14,8 +14,8 @@ const lock=fs.readFileSync("assets/evia-profile-course-lock-v215.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 
-test("v226 keeps the v222 walkthrough and v225 legacy course-map recovery",()=>{
-  assert.equal(version,"226");
+test("v227 keeps the v222 walkthrough and v225 legacy course-map recovery",()=>{
+  assert.equal(version,"227");
   assert.match(index,/evia-first-run-v215\.js\?v=215/);
   assert.match(index,/evia-demo-mode-v215\.js\?v=215/);
   assert.match(index,/evia-demo-enhancements-v216\.js\?v=217/);
@@ -31,14 +31,16 @@ test("v226 keeps the v222 walkthrough and v225 legacy course-map recovery",()=>{
   assert.match(index,/evia-version-v224\.js\?v=224/);
   assert.match(index,/evia-version-v225\.js\?v=225/);
   assert.match(index,/evia-version-v226\.js\?v=226/);
-  assert.match(index,/evia-updater\.js\?v=226/);
-  assert.match(sw,/evia-shell-v226/);
+  assert.match(index,/evia-version-v227\.js\?v=227/);
+  assert.match(index,/evia-updater\.js\?v=227/);
+  assert.match(sw,/evia-shell-v227/);
   assert.match(sw,/evia-demo-guided-audio-v217\.js/);
   assert.match(sw,/evia-interactive-walkthrough-v222\.js/);
   assert.match(sw,/evia-startup-recovery-v225\.js/);
   assert.doesNotMatch(sw,/evia-startup-recovery-v224\.js/);
   assert.match(sw,/evia-version-v225\.js/);
   assert.match(sw,/evia-version-v226\.js/);
+  assert.match(sw,/evia-version-v227\.js/);
   assert.match(sw,/course-packs\/Bricklayer_ST0095_v1\.2\.nisi/);
   assert.match(sw,/course-packs\/Carpentry_Joinery_ST0264_v1\.4\.nisi/);
   assert.doesNotMatch(sw,/evia-interactive-walkthrough-v218\.js/);
