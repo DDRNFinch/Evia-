@@ -78,7 +78,7 @@ test("walkthrough is a full-screen animated Evia product tour rather than a fake
   assert.match(walkthrough,/class=\"evia-anchor evia-tour218-avatar\"/);
   assert.match(walkthrough,/evia-face expression-idle/);
   assert.match(walkthrough,/evia-tour218-dock/);
-  assert.match(walkthrough,/data-tour218-arch=\"course\"/);
+  assert.match(walkthrough,/arch\("Course",14,"course"\)/);
   assert.match(walkthrough,/data-tour218-team/);
   assert.doesNotMatch(walkthrough,/evia-walk217-phone/);
   assert.doesNotMatch(walkthrough,/Demo walkthrough/);
