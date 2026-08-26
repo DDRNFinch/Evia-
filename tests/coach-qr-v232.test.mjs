@@ -33,12 +33,12 @@ test('v232 shares no learner identity or media in the transport layer',()=>{
   assert.match(qr,/No learner name, contact details, media files, signatures or private written wellbeing notes/);
 });
 
-test('v232 release loader, update and offline cache include Coach QR transport',()=>{
-  assert.equal(String(update.version),'232');
+test('v232 transport remains loaded and cached in later Evia releases',()=>{
+  assert.ok(Number(update.version)>=232);
   assert.match(loader,/VERSION=232/);
   assert.match(index,/evia-version-v232\.js\?v=232/);
   assert.match(index,/evia-coach-qr-v232\.js\?v=232/);
-  assert.match(sw,/evia-shell-v232/);
+  assert.match(sw,new RegExp(`evia-shell-v${update.version}`));
   assert.match(sw,/evia-coach-qr-v232\.js/);
   assert.match(sw,/evia-version-v232\.js/);
 });

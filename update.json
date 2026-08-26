@@ -1,17 +1,17 @@
 {
-  "version": "232",
-  "title": "Reliable Coach Snapshot sharing",
+  "version": "233",
+  "title": "Coach Snapshot QR display fix",
   "details": [
-    "Large Evia Coach Snapshots now split automatically into a short sequence of QR frames for Milos",
-    "The learner only opens Share with assessor once and keeps the screen still while Milos collects every part",
-    "Small progress records continue to use the existing single QR format",
-    "The Coach Snapshot content and privacy rules are unchanged: no learner identity, media files, signatures or private written wellbeing notes are shared"
+    "Share with assessor now loads the QR generator before drawing both single and multipart Coach Snapshots",
+    "Small Coach Snapshots no longer fall back to the older v231 single-QR screen",
+    "If a single QR cannot be drawn safely, Evia automatically switches to the existing multipart QR sequence",
+    "Coach Snapshot contents and privacy rules are unchanged"
   ],
-  "summary": "Evia v232 makes the v231 Coach Snapshot reliable for larger 10-week review records by adding automatic multipart QR transport without changing the data being shared.",
+  "summary": "Evia v233 fixes the blank Share with assessor QR screen by using one reliable current rendering path for both single and multipart Coach Snapshots.",
   "changes": [
-    "Automatic multipart Coach Snapshot QR",
-    "Legacy single QR retained for smaller records",
-    "Automatic cycling with no learner interaction required",
-    "Same anonymous Coach Snapshot privacy boundary"
+    "Fixed blank Coach Snapshot QR display",
+    "Removed the v231 single-QR rendering fallback",
+    "Automatic fallback to multipart QR when needed",
+    "No change to Coach Snapshot data"
   ]
 }
