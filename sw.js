@@ -1,4 +1,4 @@
-// Evia v236: stop Pulse Review History from self-triggering a DOM mutation loop.
+// Evia v236 hotfix: keep Pulse stable and remove free learner access to paid course codes.
 const CACHE_NAME = 'evia-shell-v236';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
