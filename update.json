@@ -1,20 +1,21 @@
 {
-  "version": "220",
-  "title": "Naxos course coverage and evidence methods",
+  "version": "221",
+  "title": "Real Evia autoplay walkthrough",
   "details": [
-    "Naxos-created course packs can deliberately leave source KSBs or ACs unused for pathway-specific courses",
-    "Unused source codes no longer prevent a Naxos-created course pack from being installed in Evia",
-    "Learner course progress is calculated from the codes actually published into that course or pathway, so deliberately excluded codes do not make 100% impossible",
-    "Naxos evidence tiles can carry Photo, Video or Audio as their chosen evidence method",
-    "Photo evidence opens the photo route, Video opens the video route, and Audio opens the talk/record route",
-    "Existing course packs without the new Naxos settings keep their existing behaviour",
-    "No learner evidence or existing course data is removed"
+    "Show me around now uses Evia's real home layout, course-route structure, task rows and progress arches",
+    "The walkthrough no longer invents Practical evidence or Knowledge evidence route pages",
+    "The walkthrough now auto-plays from start to finish and does not require the learner to press through the tour",
+    "Photo, Video, Written and guided Audio evidence are all demonstrated inside the walkthrough",
+    "Walkthrough guidance stays in one fixed text area above the bottom controls instead of moving speech bubbles",
+    "Evia behaves like the real app by moving from the home position to the open-menu position rather than floating around as a second avatar",
+    "Course coverage, assessor QR exchange, Learn, Mock Practical, Maths Level 2 and English Level 2 remain demonstrated",
+    "The existing demo limits, QR activation, learner evidence, targets and Naxos course-pack behaviour are unchanged"
   ],
-  "summary": "Evia v220 adds compatibility for Naxos coverage audits, intentional pathway omissions and author-selected evidence methods while preserving existing courses.",
+  "summary": "Evia v221 makes Show me around match the real learner interface and turns it into a fully automatic professional walkthrough of the actual evidence journey.",
   "changes": [
-    "Added Naxos course-pack compatibility adapter",
-    "Added Naxos evidence-method routing",
-    "Added v220 version marker and offline cache",
-    "Kept legacy course-pack validation unchanged unless the Naxos allow-unmapped flag is present"
+    "Replaced the v218/v219 walkthrough runtime with a single v221 real-layout walkthrough",
+    "Added automatic Photo, Video, Written and guided Audio demonstrations",
+    "Removed required walkthrough taps and moving speech bubbles",
+    "Added a fixed guidance text position and fresh v221 offline cache"
   ]
 }
