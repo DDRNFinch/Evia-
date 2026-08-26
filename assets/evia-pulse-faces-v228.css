@@ -1,0 +1,8 @@
+/* Evia Pulse v228: clearer wellbeing expressions */
+.evia-pulse-face::after{content:"";position:absolute;left:34%;width:32%;box-sizing:border-box;color:#efc33d;pointer-events:none}
+.evia-pulse-face-3::after{top:61%;height:15%;border-bottom:var(--face-stroke) solid #efc33d;border-radius:0 0 50% 50%/0 0 100% 100%}
+.evia-pulse-face-2::after{top:68%;height:0;border-top:var(--face-stroke) solid #efc33d;border-radius:999px}
+.evia-pulse-face-1::after{top:65%;height:15%;border-top:var(--face-stroke) solid #efc33d;border-radius:50% 50% 0 0/100% 100% 0 0}
+.evia-pulse-face-1 .evia-pulse-eye{top:43%;height:12%;border:0;border-top:var(--face-stroke) solid #efc33d;border-radius:50% 50% 0 0/100% 100% 0 0;transform:none}
+.evia-pulse-face-1 .evia-pulse-eye.eye-left{transform:rotate(7deg)}
+.evia-pulse-face-1 .evia-pulse-eye.eye-right{transform:rotate(-7deg)}
