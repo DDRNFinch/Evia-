@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 
 const snapshots=readFileSync(new URL('../assets/evia-review-snapshots-v236.js',import.meta.url),'utf8');
-const broken235=readFileSync(new URL('../assets/evia-review-snapshots-v235.js',import.meta.url),'utf8');
 const hook=readFileSync(new URL('../assets/evia-review-snapshot-hook-v235.js',import.meta.url),'utf8');
 const coach=readFileSync(new URL('../assets/evia-coach-v231.js',import.meta.url),'utf8');
 const receiver=readFileSync(new URL('../assets/evia-milos-return-v234.js',import.meta.url),'utf8');
@@ -11,6 +10,7 @@ const loader=readFileSync(new URL('../assets/evia-version-v236.js',import.meta.u
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
 const update=JSON.parse(readFileSync(new URL('../update.json',import.meta.url),'utf8'));
+const oldRendererUrl=new URL('../assets/evia-review-snapshots-v235.js',import.meta.url);
 
 test('review snapshot capture still happens before the completed review write closes the Coach period',()=>{
   const captureAt=hook.indexOf('captureFrom(value)');
@@ -38,11 +38,11 @@ test('v236 preserves Review Snapshot data and bounded history',()=>{
   assert.match(snapshots,/slice\(-24\)/);
 });
 
-test('v236 removes the v235 self-triggering MutationObserver that froze Pulse',()=>{
-  assert.match(broken235,/new MutationObserver\(\(\)=>patchPulse\(\)\)/);
-  assert.match(broken235,/button\.innerHTML=/);
+test('v236 permanently removes the self-triggering renderer that froze Pulse',()=>{
+  assert.equal(existsSync(oldRendererUrl),false,'the broken v235 renderer must not remain in production');
   assert.doesNotMatch(snapshots,/new MutationObserver/);
   assert.doesNotMatch(snapshots,/observer\.observe/);
+  assert.doesNotMatch(snapshots,/observer=new MutationObserver/);
   assert.match(snapshots,/document\.addEventListener\("click",schedulePatch,true\)/);
   assert.match(snapshots,/if\(small&&small\.textContent!==label\)small\.textContent=label/);
   assert.match(snapshots,/if\(!b\)\{/);
@@ -66,8 +66,8 @@ test('v236 snapshot layer does not add learner identity, contact details, media 
 
 test('v236 release and offline shell use only the non-looping snapshot renderer',()=>{
   assert.equal(String(update.version),'236');
-  assert.match(loader,/EviaAppVersion=VERSION/);
   assert.match(loader,/VERSION=236/);
+  assert.match(loader,/window\.EviaAppVersion=236/);
   assert.match(index,/evia-app-version" content="236/);
   assert.match(index,/evia-version-v236\.js\?v=236/);
   assert.match(index,/evia-review-snapshots-v236\.js\?v=236/);
