@@ -1,5 +1,5 @@
-// Evia v224: reliable first-run and demo startup recovery.
-const CACHE_NAME = 'evia-shell-v224';
+// Evia v225: recover course maps from the published Nisi course packs.
+const CACHE_NAME = 'evia-shell-v225';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -22,7 +22,7 @@ const CRITICAL = [
   './assets/evia-demo-enhancements-v216.js',
   './assets/evia-demo-guided-audio-v217.js',
   './assets/evia-interactive-walkthrough-v222.js',
-  './assets/evia-startup-recovery-v224.js',
+  './assets/evia-startup-recovery-v225.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
   './assets/evia-media-stability-v168.js',
@@ -62,6 +62,7 @@ const CRITICAL = [
   './assets/evia-version-v221.js',
   './assets/evia-version-v222.js',
   './assets/evia-version-v224.js',
+  './assets/evia-version-v225.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
@@ -116,6 +117,8 @@ const CRITICAL = [
   './course-delivery/course-registry.js',
   './course-delivery/registry-v1.json',
   './course-delivery/qr/ST0171.svg',
+  './course-packs/Bricklayer_ST0095_v1.2.nisi',
+  './course-packs/Carpentry_Joinery_ST0264_v1.4.nisi',
   './assets/evia-rpl-unit-order-v88.js',
   './assets/evia-trowel-meta.js',
   './assets/evia-trowel-ac-text.js',
