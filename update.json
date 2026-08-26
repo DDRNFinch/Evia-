@@ -1,21 +1,17 @@
 {
-  "version": "231",
-  "title": "Evia Coach review snapshot",
+  "version": "232",
+  "title": "Reliable Coach Snapshot sharing",
   "details": [
-    "Evia now keeps a private local review-period ledger for meaningful vocational activity",
-    "The assessor QR now includes an anonymous Coach Snapshot covering engagement, course progress, evidence, OTJ or GLH, Test practice, targets, confidence and wellbeing check-in activity",
-    "A completed Milos review closes the current period and starts the next review period automatically",
-    "No learner name, contact details, media files, written evidence or signatures are placed in the Coach Snapshot"
+    "Large Evia Coach Snapshots now split automatically into a short sequence of QR frames for Milos",
+    "The learner only opens Share with assessor once and keeps the screen still while Milos collects every part",
+    "Small progress records continue to use the existing single QR format",
+    "The Coach Snapshot content and privacy rules are unchanged: no learner identity, media files, signatures or private written wellbeing notes are shared"
   ],
-  "summary": "Evia v231 turns the assessor QR into a review-period Coach Snapshot so Milos can understand what has happened between progress reviews.",
+  "summary": "Evia v232 makes the v231 Coach Snapshot reliable for larger 10-week review records by adding automatic multipart QR transport without changing the data being shared.",
   "changes": [
-    "Local review-period coaching ledger",
-    "Anonymous Coach Snapshot in assessor QR",
-    "Session and active-day engagement statistics",
-    "Evidence counts by photo, video, audio and written evidence",
-    "OTJ or GLH movement since the review",
-    "EPA, Maths and English practice summaries",
-    "Target, confidence and wellbeing review-period summaries",
-    "Automatic new review period after a completed Milos review"
+    "Automatic multipart Coach Snapshot QR",
+    "Legacy single QR retained for smaller records",
+    "Automatic cycling with no learner interaction required",
+    "Same anonymous Coach Snapshot privacy boundary"
   ]
 }
