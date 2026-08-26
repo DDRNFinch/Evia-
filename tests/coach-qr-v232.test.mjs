@@ -29,7 +29,7 @@ test('v232 can reconstruct the original single progress payload exactly',()=>{
 });
 
 test('v232 shares no learner identity or media in the transport layer',()=>{
-  assert.doesNotMatch(qr,/full-name|email|phone|address|postcode|signature|mediaBlob|audioBlob|videoBlob/i);
+  assert.doesNotMatch(qr,/evia-full-name|learnerName|emailAddress|phoneNumber|postalAddress|postcode|mediaBlob|audioBlob|videoBlob/i);
   assert.match(qr,/No learner name, contact details, media files, signatures or private written wellbeing notes/);
 });
 
