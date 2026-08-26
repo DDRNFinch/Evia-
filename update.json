@@ -1,18 +1,20 @@
 {
   "version": "234",
-  "title": "Milos review return QR fix",
+  "title": "Milos review return and Pulse snapshots",
   "details": [
     "Evia now accepts the current Milos completed-review QR format from either the camera or a saved QR image",
-    "The returned review is matched to the same anonymous learner reference and active course before it is saved",
-    "The next review date and newly agreed Milos targets now flow into Evia's existing review and target system automatically",
-    "Current Milos observation return QRs are also recognised by the same receiver"
+    "Before the review closes the current Coach period, Evia saves a permanent local Review Snapshot of the learner's course position, OTJ or GLH, evidence, usage, EPA practice, confidence and wellbeing check-ins",
+    "The review summary, review date, next review date and agreed targets are kept with that snapshot in Evia Pulse review history",
+    "The next review date and newly agreed Milos targets then flow into Evia's existing review and target system automatically",
+    "No learner name, contact details, signatures or media files are added to the QR exchange"
   ],
-  "summary": "Evia v234 fixes Milos-to-Evia review returns so a completed Milos review QR updates the learner's next review date and agreed targets in Evia.",
+  "summary": "Evia v234 fixes Milos-to-Evia review returns and turns each completed Milos review into a permanent local Pulse Review Snapshot before the next review period begins.",
   "changes": [
     "Accept Milos VISIT:2 review QR",
-    "Update next review date from Milos",
-    "Import newly agreed targets",
+    "Save a Pulse Review Snapshot before the review period closes",
+    "Add Review history to Evia Pulse",
+    "Update next review date and agreed targets",
     "Accept current Milos observation QR",
-    "No personal learner data added to QR exchange"
+    "Keep the return exchange anonymous"
   ]
 }
