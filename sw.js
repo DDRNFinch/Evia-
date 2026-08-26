@@ -1,5 +1,5 @@
-// Evia v219: slower premium walkthrough pacing and accurate closing Evia avatar.
-const CACHE_NAME = 'evia-shell-v219';
+// Evia v220: Naxos course coverage and evidence-method support.
+const CACHE_NAME = 'evia-shell-v220';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -58,6 +58,7 @@ const CRITICAL = [
   './assets/evia-version-v217.js',
   './assets/evia-version-v218.js',
   './assets/evia-version-v219.js',
+  './assets/evia-version-v220.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
@@ -65,6 +66,7 @@ const CRITICAL = [
   './assets/evia-pdf-neutral-v172.js',
   './assets/evia-staged-resume-guard-v167.js',
   './assets/evia-staged-evidence-v202.js',
+  './assets/evia-naxos-evidence-type-v220.js',
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
   './assets/evia-post-evidence-otj-v149.js',
@@ -105,6 +107,7 @@ const CRITICAL = [
   './assets/evia-st0171-map-v124.js',
   './assets/evia-st0171-v124.js',
   './assets/evia-course-packs.js',
+  './assets/evia-naxos-course-pack-v220.js',
   './assets/evia-course-enrolment.js',
   './assets/evia-course-pack-qr-v125.js',
   './course-delivery/course-registry.js',
