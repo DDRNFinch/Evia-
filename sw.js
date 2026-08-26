@@ -1,4 +1,4 @@
-// Evia v236 hotfix: keep Pulse stable and remove free learner access to paid course codes.
+// Evia v236 hotfix: keep Pulse stable and hide only the Time Course QR Codes button.
 const CACHE_NAME = 'evia-shell-v236';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
