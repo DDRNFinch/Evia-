@@ -8,8 +8,8 @@ const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const index=fs.readFileSync("index.html","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 
-test("v217 target calibration is wired into the release",()=>{
-  assert.equal(String(manifest.version),"217");
+test("v217 target calibration remains wired into the current release",()=>{
+  assert.ok(Number(manifest.version)>=217);
   assert.match(index,/evia-target-calibration-v217\.js\?v=217/);
   assert.match(sw,/evia-target-calibration-v217\.js/);
   assert.match(source,/weekly>0\?weekly\*\.2\*windowWeeks/);
