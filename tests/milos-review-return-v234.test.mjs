@@ -3,8 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const receiver=readFileSync(new URL('../assets/evia-milos-return-v234.js',import.meta.url),'utf8');
+const snapshots=readFileSync(new URL('../assets/evia-review-snapshots-v234.js',import.meta.url),'utf8');
+const hook=readFileSync(new URL('../assets/evia-review-snapshot-hook-v234.js',import.meta.url),'utf8');
 const loader=readFileSync(new URL('../assets/evia-version-v234.js',import.meta.url),'utf8');
 const sync=readFileSync(new URL('../assets/evia-milos-review-sync-v97.js',import.meta.url),'utf8');
+const coach=readFileSync(new URL('../assets/evia-coach-v231.js',import.meta.url),'utf8');
 const next=readFileSync(new URL('../assets/evia-next-visit-v95.js',import.meta.url),'utf8');
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
@@ -37,8 +40,45 @@ test('v234 stores reviews where existing next-review and target sync already lis
   assert.match(next,/data\.nextReviewDate/);
 });
 
-test('v234 preserves Milos privacy by storing only the compact anonymous review update',()=>{
-  assert.doesNotMatch(receiver,/learnerName|fullName|emailAddress|phoneNumber|postalAddress|signature|mediaBlob|videoBlob|audioBlob/i);
+test('v234 captures the Evia review snapshot before the review write can close the Coach period',()=>{
+  const captureAt=hook.indexOf('captureFrom(value)');
+  const writeAt=hook.indexOf('previous.call(this,key,value)');
+  assert.ok(captureAt>=0&&writeAt>captureAt,'snapshot capture must happen before the underlying review storage write');
+  assert.match(hook,/KEY="evia-mini-milos-visits-v2"/);
+  assert.match(hook,/EviaReviewSnapshots\?\.capture\?\.\(review\)/);
+  assert.match(coach,/evia:milos-review-targets-replaced/);
+  assert.match(coach,/closePeriod\(e\.detail\?\.reviewId/);
+});
+
+test('v234 Review Snapshot records the learner position Evia knows at the completed review',()=>{
+  assert.match(snapshots,/SNAPSHOT_KEY="evia-pulse-review-snapshots-v1"/);
+  assert.match(snapshots,/window\.EviaCoachSnapshot\?\.current\?\.\(\)/);
+  assert.match(snapshots,/position:\{course:/);
+  assert.match(snapshots,/learning:learn/);
+  assert.match(snapshots,/evidence:\{\.\.\.ev,witness:/);
+  assert.match(snapshots,/confidence:conf/);
+  assert.match(snapshots,/wellbeing:wellbeingPosition\(coach\)/);
+  assert.match(snapshots,/period:coach/);
+  assert.match(snapshots,/reviewId:/);
+  assert.match(snapshots,/reviewDate:/);
+  assert.match(snapshots,/nextReviewDate:/);
+  assert.match(snapshots,/targets:reviewTargets\(payload\)/);
+});
+
+test('v234 adds permanent Review history to Evia Pulse',()=>{
+  assert.match(snapshots,/data\.pulseReviewHistory="1"/);
+  assert.match(snapshots,/Review history/);
+  assert.match(snapshots,/Review snapshot/);
+  assert.match(snapshots,/Review summary/);
+  assert.match(snapshots,/Evia activity/);
+  assert.match(snapshots,/EPA practice/);
+  assert.match(snapshots,/Wellbeing/);
+  assert.match(snapshots,/Confidence/);
+});
+
+test('v234 preserves privacy in both the return record and local Pulse snapshot',()=>{
+  const combined=receiver+'\n'+snapshots+'\n'+hook;
+  assert.doesNotMatch(combined,/learnerName|fullName|evia-full-name|emailAddress|phoneNumber|postalAddress|mediaBlob|videoBlob|audioBlob/i);
   assert.match(receiver,/overallProgress/);
   assert.match(receiver,/nextReviewDate/);
   assert.match(receiver,/targets/);
@@ -57,13 +97,17 @@ test('v234 replaces the Receive QR path so image and camera scans use the new de
   assert.match(receiver,/await accept\(raw\)/);
 });
 
-test('v234 release marker and offline wiring are current',()=>{
+test('v234 release marker loads and caches the snapshot system',()=>{
   assert.equal(String(update.version),'234');
   assert.match(loader,/EviaAppVersion=234/);
+  assert.match(loader,/evia-review-snapshots-v234\.js\?v=234/);
+  assert.match(loader,/evia-review-snapshot-hook-v234\.js\?v=234/);
   assert.match(index,/evia-app-version" content="234/);
   assert.match(index,/evia-version-v234\.js\?v=234/);
   assert.match(index,/evia-milos-return-v234\.js\?v=234/);
   assert.match(sw,/evia-shell-v234/);
   assert.match(sw,/evia-version-v234\.js/);
   assert.match(sw,/evia-milos-return-v234\.js/);
+  assert.match(sw,/evia-review-snapshots-v234\.js/);
+  assert.match(sw,/evia-review-snapshot-hook-v234\.js/);
 });
