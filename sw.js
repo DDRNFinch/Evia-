@@ -1,5 +1,5 @@
-// Evia v227: cleaner learner evidence summaries in previews and PDFs.
-const CACHE_NAME = 'evia-shell-v227';
+// Evia v228: clearer weekly Pulse wellbeing expressions.
+const CACHE_NAME = 'evia-shell-v228';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -66,8 +66,10 @@ const CRITICAL = [
   './assets/evia-version-v225.js',
   './assets/evia-version-v226.js',
   './assets/evia-version-v227.js',
+  './assets/evia-version-v228.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
+  './assets/evia-pulse-faces-v228.css',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
