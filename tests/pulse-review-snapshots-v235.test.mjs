@@ -36,6 +36,7 @@ test('v235 snapshot stores review metadata and the learner position known locall
   assert.match(snapshots,/confidence:conf/);
   assert.match(snapshots,/wellbeing:wellbeingPosition\(coach\)/);
   assert.match(snapshots,/period:coach/);
+  assert.match(snapshots,/slice\(-24\)/);
 });
 
 test('v235 exposes permanent Review history inside Evia Pulse',()=>{
