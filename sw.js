@@ -1,5 +1,5 @@
-// Evia v216: richer college demo with Maths, English, audio evidence and full-feature explanations.
-const CACHE_NAME = 'evia-shell-v216';
+// Evia v217: guided demo audio, interactive walkthrough and realistic review targets.
+const CACHE_NAME = 'evia-shell-v217';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -20,6 +20,8 @@ const CRITICAL = [
   './assets/evia-first-run-v215.js',
   './assets/evia-demo-mode-v215.js',
   './assets/evia-demo-enhancements-v216.js',
+  './assets/evia-demo-guided-audio-v217.js',
+  './assets/evia-interactive-walkthrough-v217.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
   './assets/evia-media-stability-v168.js',
@@ -52,6 +54,7 @@ const CRITICAL = [
   './assets/evia-version-v214.js',
   './assets/evia-version-v215.js',
   './assets/evia-version-v216.js',
+  './assets/evia-version-v217.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
@@ -77,6 +80,7 @@ const CRITICAL = [
   './assets/evia-next-visit-v95.js',
   './assets/evia-milos-review-sync-v97.js',
   './assets/evia-targets.js',
+  './assets/evia-target-calibration-v217.js',
   './assets/evia-targets-milos-only-v123.js',
   './assets/evia-evidence-state-v204.js',
   './assets/evia-option-source-sync-v214.js',
