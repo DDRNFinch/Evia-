@@ -1,19 +1,17 @@
 {
-  "version": "235",
-  "title": "Evia Pulse Review Snapshots",
+  "version": "236",
+  "title": "Evia Pulse freeze fix",
   "details": [
-    "When a completed Milos review is received, Evia now saves a permanent local Review Snapshot before the previous Coach period closes",
-    "Each snapshot keeps the review date and summary, next review date, agreed targets, course position, OTJ or GLH, evidence counts, Evia usage, EPA practice, confidence and wellbeing check-in summary",
-    "Evia Pulse now includes Review history so the learner can reopen previous review checkpoints",
-    "The existing v234 Milos return flow still updates the next review date and agreed targets and then starts the next Coach period",
-    "No learner identity, contact details, media files or signatures are added to the QR exchange"
+    "Fixed a v235 Review History rendering loop that could freeze Evia when Pulse was opened",
+    "Pulse Review History now updates only after relevant user actions or a new review snapshot instead of continuously watching and rewriting the page",
+    "Existing review snapshots, wellbeing history, confidence history, targets and Milos review data are unchanged",
+    "The v235 permanent Review Snapshot feature remains available inside Evia Pulse"
   ],
-  "summary": "Evia v235 turns every completed Milos review into a permanent local Pulse Review Snapshot, preserving the learner's position at that exact review checkpoint before the next period begins.",
+  "summary": "Evia v236 fixes the Pulse lock-up introduced in v235 by removing the self-triggering Review History DOM observer while preserving all Pulse and review data.",
   "changes": [
-    "Save Review Snapshot before review-period closure",
-    "Add Review history to Evia Pulse",
-    "Store course, learning, evidence, usage, EPA, confidence and wellbeing position",
-    "Keep Milos review summary, next date and targets with the snapshot",
-    "Preserve anonymous Milos QR exchange"
+    "Remove self-triggering Pulse mutation loop",
+    "Keep Review History without continuous DOM rewrites",
+    "Preserve all existing Pulse data",
+    "Refresh offline shell to v236"
   ]
 }
