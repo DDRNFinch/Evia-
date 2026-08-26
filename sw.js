@@ -1,5 +1,5 @@
-// Evia v234: accept completed Milos review and observation return QRs.
-const CACHE_NAME = 'evia-shell-v234';
+// Evia v235: save completed Milos reviews as permanent Pulse Review Snapshots.
+const CACHE_NAME = 'evia-shell-v235';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -74,10 +74,13 @@ const CRITICAL = [
   './assets/evia-version-v232.js',
   './assets/evia-version-v233.js',
   './assets/evia-version-v234.js',
+  './assets/evia-version-v235.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
   './assets/evia-milos-return-v234.js',
+  './assets/evia-review-snapshots-v235.js',
+  './assets/evia-review-snapshot-hook-v235.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
   './assets/evia-pulse-faces-v228.css',

@@ -57,13 +57,12 @@ test('v234 replaces the Receive QR path so image and camera scans use the new de
   assert.match(receiver,/await accept\(raw\)/);
 });
 
-test('v234 release marker and offline wiring are current',()=>{
-  assert.equal(String(update.version),'234');
+test('v234 return receiver remains loaded and cached in later Evia releases',()=>{
+  assert.ok(Number(update.version)>=234);
   assert.match(loader,/EviaAppVersion=234/);
-  assert.match(index,/evia-app-version" content="234/);
   assert.match(index,/evia-version-v234\.js\?v=234/);
   assert.match(index,/evia-milos-return-v234\.js\?v=234/);
-  assert.match(sw,/evia-shell-v234/);
+  assert.match(sw,new RegExp(`evia-shell-v${update.version}`));
   assert.match(sw,/evia-version-v234\.js/);
   assert.match(sw,/evia-milos-return-v234\.js/);
 });

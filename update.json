@@ -1,18 +1,19 @@
 {
-  "version": "234",
-  "title": "Milos review return QR fix",
+  "version": "235",
+  "title": "Evia Pulse Review Snapshots",
   "details": [
-    "Evia now accepts the current Milos completed-review QR format from either the camera or a saved QR image",
-    "The returned review is matched to the same anonymous learner reference and active course before it is saved",
-    "The next review date and newly agreed Milos targets now flow into Evia's existing review and target system automatically",
-    "Current Milos observation return QRs are also recognised by the same receiver"
+    "When a completed Milos review is received, Evia now saves a permanent local Review Snapshot before the previous Coach period closes",
+    "Each snapshot keeps the review date and summary, next review date, agreed targets, course position, OTJ or GLH, evidence counts, Evia usage, EPA practice, confidence and wellbeing check-in summary",
+    "Evia Pulse now includes Review history so the learner can reopen previous review checkpoints",
+    "The existing v234 Milos return flow still updates the next review date and agreed targets and then starts the next Coach period",
+    "No learner identity, contact details, media files or signatures are added to the QR exchange"
   ],
-  "summary": "Evia v234 fixes Milos-to-Evia review returns so a completed Milos review QR updates the learner's next review date and agreed targets in Evia.",
+  "summary": "Evia v235 turns every completed Milos review into a permanent local Pulse Review Snapshot, preserving the learner's position at that exact review checkpoint before the next period begins.",
   "changes": [
-    "Accept Milos VISIT:2 review QR",
-    "Update next review date from Milos",
-    "Import newly agreed targets",
-    "Accept current Milos observation QR",
-    "No personal learner data added to QR exchange"
+    "Save Review Snapshot before review-period closure",
+    "Add Review history to Evia Pulse",
+    "Store course, learning, evidence, usage, EPA, confidence and wellbeing position",
+    "Keep Milos review summary, next date and targets with the snapshot",
+    "Preserve anonymous Milos QR exchange"
   ]
 }
