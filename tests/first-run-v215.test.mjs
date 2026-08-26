@@ -8,31 +8,31 @@ const first=fs.readFileSync("assets/evia-first-run-v215.js","utf8");
 const demo=fs.readFileSync("assets/evia-demo-mode-v215.js","utf8");
 const enhance=fs.readFileSync("assets/evia-demo-enhancements-v216.js","utf8");
 const audio=fs.readFileSync("assets/evia-demo-guided-audio-v217.js","utf8");
-const walkthroughBase=fs.readFileSync("assets/evia-interactive-walkthrough-v218.js","utf8");
-const walkthrough=fs.readFileSync("assets/evia-interactive-walkthrough-v219.js","utf8");
+const walkthrough=fs.readFileSync("assets/evia-interactive-walkthrough-v221.js","utf8");
 const lock=fs.readFileSync("assets/evia-profile-course-lock-v215.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 
-test("v220 keeps the approved v219 premium tour and current release wiring",()=>{
-  assert.equal(version,"220");
+test("v221 keeps first-run activation and wires only the current walkthrough runtime",()=>{
+  assert.equal(version,"221");
   assert.match(index,/evia-first-run-v215\.js\?v=215/);
   assert.match(index,/evia-demo-mode-v215\.js\?v=215/);
   assert.match(index,/evia-demo-enhancements-v216\.js\?v=217/);
   assert.match(index,/evia-demo-guided-audio-v217\.js\?v=217/);
-  assert.match(index,/evia-interactive-walkthrough-v218\.js\?v=218/);
-  assert.match(index,/evia-interactive-walkthrough-v219\.js\?v=219/);
+  assert.match(index,/evia-interactive-walkthrough-v221\.js\?v=221/);
+  assert.doesNotMatch(index,/evia-interactive-walkthrough-v218\.js/);
+  assert.doesNotMatch(index,/evia-interactive-walkthrough-v219\.js/);
   assert.match(index,/evia-profile-course-lock-v215\.js\?v=215/);
-  assert.match(index,/evia-version-v219\.js\?v=219/);
   assert.match(index,/evia-version-v220\.js\?v=220/);
-  assert.match(index,/evia-updater\.js\?v=220/);
-  assert.match(sw,/evia-shell-v220/);
+  assert.match(index,/evia-version-v221\.js\?v=221/);
+  assert.match(index,/evia-updater\.js\?v=221/);
+  assert.match(sw,/evia-shell-v221/);
   assert.match(sw,/evia-demo-guided-audio-v217\.js/);
-  assert.match(sw,/evia-interactive-walkthrough-v218\.js/);
-  assert.match(sw,/evia-interactive-walkthrough-v219\.js/);
+  assert.match(sw,/evia-interactive-walkthrough-v221\.js/);
+  assert.doesNotMatch(sw,/evia-interactive-walkthrough-v218\.js/);
+  assert.doesNotMatch(sw,/evia-interactive-walkthrough-v219\.js/);
   assert.doesNotThrow(()=>new Function(enhance));
   assert.doesNotThrow(()=>new Function(audio));
-  assert.doesNotThrow(()=>new Function(walkthroughBase));
   assert.doesNotThrow(()=>new Function(walkthrough));
 });
 
@@ -75,64 +75,66 @@ test("demo audio is one real recording with step-by-step prompts like NVQ",()=>{
   assert.doesNotMatch(audio,/MutationObserver/);
 });
 
-test("walkthrough still uses the v218 full-screen Evia visual language",()=>{
-  assert.match(walkthrough,/evia-tour218-layer/);
-  assert.match(walkthrough,/class=\"evia-app is-ready evia-tour218\"/);
-  assert.match(walkthrough,/class=\"evia-anchor evia-tour218-avatar\"/);
-  assert.match(walkthrough,/evia-face expression-idle/);
-  assert.match(walkthrough,/evia-tour218-dock/);
-  assert.match(walkthrough,/arch\("Course",14,"course"\)/);
-  assert.match(walkthrough,/data-tour219-team/);
-  assert.match(walkthrough,/EviaInteractiveWalkthroughV218/);
-  assert.doesNotMatch(walkthrough,/evia-walk217-phone/);
-  assert.doesNotMatch(walkthrough,/Demo walkthrough/);
+test("walkthrough uses Evia's real home component structure instead of a separate imitation",()=>{
+  assert.match(walkthrough,/class=\"evia-app selfobs is-ready\"/);
+  assert.match(walkthrough,/class=\"self-top\"/);
+  assert.match(walkthrough,/class=\"evia-anchor\"/);
+  assert.match(walkthrough,/class=\"menu-stage\"/);
+  assert.match(walkthrough,/class=\"self-panel\"/);
+  assert.match(walkthrough,/class=\"progress-dock\"/);
+  assert.match(walkthrough,/class=\"progress-arch\"/);
+  assert.match(walkthrough,/class=\"option-row\"/);
+  assert.equal((walkthrough.match(/data-tour221-evia/g)||[]).length,2);
 });
 
-test("v219 slows Evia movement and leaves explanations on screen longer",()=>{
-  assert.match(walkthrough,/duration=1150/);
-  assert.match(walkthrough,/moveAvatar\(x,y,\.92,0,1100\)/);
-  assert.match(walkthrough,/wait\(4500,sceneArches\)/);
-  assert.match(walkthrough,/wait\(3600,next\)/);
-  assert.match(walkthrough,/wait\(4300,/);
-  assert.match(walkthrough,/wait\(4800,/);
-  assert.match(walkthrough,/wait\(9000,/);
-  assert.match(walkthrough,/wait\(13000,sceneCoursePrompt\)/);
-  assert.match(walkthrough,/wait\(10000,sceneQr\)/);
-  assert.match(walkthrough,/wait\(6000,sceneLearn\)/);
-  assert.match(walkthrough,/wait\(6000,sceneTestPrompt\)/);
-  assert.match(walkthrough,/wait\(7200,finish\)/);
+test("walkthrough follows real course routes and never invents Practical or Theory route pages",()=>{
+  assert.match(walkthrough,/What are you doing on site today\?/);
+  assert.match(walkthrough,/Tools & Equipment/);
+  assert.match(walkthrough,/Select and use hand tools/);
+  assert.match(walkthrough,/Use a hand tool/);
+  assert.match(walkthrough,/Explain your tool choice/);
+  assert.doesNotMatch(walkthrough,/Practical evidence/);
+  assert.doesNotMatch(walkthrough,/Knowledge evidence/);
+  assert.doesNotMatch(walkthrough,/Theory/);
 });
 
-test("closing Evia reuses the real face and eye construction instead of a small-eye icon",()=>{
-  assert.match(walkthrough,/evia-tour219-finish-avatar/);
-  assert.match(walkthrough,/--evia-stroke:2\.65px/);
-  assert.match(walkthrough,/evia-face expression-smile/);
-  assert.match(walkthrough,/evia-eyes/);
-  assert.match(walkthrough,/evia-eye eye-left/);
-  assert.match(walkthrough,/evia-eye eye-right/);
-  assert.match(walkthrough,/width:78%;height:78%/);
-  assert.match(walkthrough,/face\.className="evia-face expression-idle"/);
-  assert.doesNotMatch(walkthrough,/evia-tour218-finish-eyes/);
+test("walkthrough is autoplay and does not require learner presses",()=>{
+  assert.match(walkthrough,/wait\(4800,arches\)/);
+  assert.match(walkthrough,/wait\(5200,route\)/);
+  assert.match(walkthrough,/wait\(4300,skillChoice\)/);
+  assert.match(walkthrough,/wait\(6800,/);
+  assert.match(walkthrough,/wait\(6200,qrScene\)/);
+  assert.match(walkthrough,/wait\(6700,returnHome\)/);
+  assert.doesNotMatch(walkthrough,/Press me/);
+  assert.doesNotMatch(walkthrough,/Press here/);
+  assert.doesNotMatch(walkthrough,/handleClick/);
+  assert.match(walkthrough,/data-tour221-skip/);
 });
 
-test("walkthrough floats Evia between real-style areas and pauses for meaningful learner presses",()=>{
-  assert.match(walkthrough,/function moveAvatar/);
-  assert.match(walkthrough,/mx=\(from\.x\+x\)\/2-dy\/len\*arc/);
-  assert.match(walkthrough,/cubic-bezier\(\.22,1,\.36,1\)/);
-  assert.match(walkthrough,/expression-\$\{name\}/);
-  assert.match(walkthrough,/evia-tour218-focus/);
-  assert.match(walkthrough,/Hi, I’m Evia/);
-  assert.match(walkthrough,/Press me/);
-  assert.match(walkthrough,/data-tour219-collect/);
-  assert.match(walkthrough,/data-tour219-knowledge/);
-  assert.match(walkthrough,/data-tour219-startaudio/);
-  assert.match(walkthrough,/data-tour219-nextprompt/);
-  assert.match(walkthrough,/data-tour219-arch='course'/);
-  assert.match(walkthrough,/data-tour219-arch='test'/);
-  assert.match(walkthrough,/window\.addEventListener\("click",intercept,true\)/);
+test("walkthrough guidance stays in one fixed text position without speech bubbles",()=>{
+  assert.match(walkthrough,/evia-tour221-caption/);
+  assert.match(walkthrough,/bottom:calc\(6\.05rem \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(walkthrough,/height:3\.2rem/);
+  assert.match(walkthrough,/function setCaption/);
+  assert.doesNotMatch(walkthrough,/bubble/i);
 });
 
-test("walkthrough demonstrates evidence sources, assessor exchange, OTJ and Test",()=>{
+test("walkthrough demonstrates Photo, Video, Written and guided Audio evidence",()=>{
+  assert.match(walkthrough,/Take photo/);
+  assert.match(walkthrough,/Record video/);
+  assert.match(walkthrough,/Write about it/);
+  assert.match(walkthrough,/Record audio/);
+  assert.match(walkthrough,/Photo evidence uses the camera/);
+  assert.match(walkthrough,/Video is one recording/);
+  assert.match(walkthrough,/Written evidence is a focused answer/);
+  assert.match(walkthrough,/Audio is one real recording/);
+  assert.match(walkthrough,/data-tour221-photo-text/);
+  assert.match(walkthrough,/data-tour221-video-prompt/);
+  assert.match(walkthrough,/data-tour221-written-text/);
+  assert.match(walkthrough,/data-tour221-audio-prompt/);
+});
+
+test("walkthrough demonstrates evidence sources, assessor exchange, Learn and Test",()=>{
   assert.match(walkthrough,/Learner evidence/);
   assert.match(walkthrough,/Recorded Prior Learning/);
   assert.match(walkthrough,/Assessor Observation/);
@@ -140,13 +142,22 @@ test("walkthrough demonstrates evidence sources, assessor exchange, OTJ and Test
   assert.match(walkthrough,/background:#7b3fc6/);
   assert.match(walkthrough,/background:#367fd0/);
   assert.match(walkthrough,/background:#d88b45/);
-  assert.match(walkthrough,/Share QR code/);
-  assert.match(walkthrough,/Receive QR code/);
+  assert.match(walkthrough,/Share with assessor/);
+  assert.match(walkthrough,/Receive assessor feedback/);
   assert.match(walkthrough,/Off-the-job learning/);
   assert.match(walkthrough,/Mock Practical/);
   assert.match(walkthrough,/Maths Level 2/);
   assert.match(walkthrough,/English Level 2/);
   assert.doesNotMatch(walkthrough,/MutationObserver/);
+});
+
+test("closing Evia reuses the real Evia face construction",()=>{
+  assert.match(walkthrough,/evia-tour221-finish-avatar/);
+  assert.match(walkthrough,/evia-face expression-idle/);
+  assert.match(walkthrough,/evia-eyes/);
+  assert.match(walkthrough,/evia-eye eye-left/);
+  assert.match(walkthrough,/evia-eye eye-right/);
+  assert.match(walkthrough,/width:78%;height:78%/);
 });
 
 test("demo still exposes Maths, English and one Practical while keeping other EPA practice limited",()=>{
