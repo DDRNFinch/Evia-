@@ -1,5 +1,5 @@
-// Evia v229: Pulse wellbeing faces use eyes only, with no mouth marks.
-const CACHE_NAME = 'evia-shell-v229';
+// Evia v230: more natural eye and head movement for the Evia avatar.
+const CACHE_NAME = 'evia-shell-v230';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -15,6 +15,7 @@ const CRITICAL = [
   './assets/evia-menu-response-v173.js',
   './assets/evia-v69-interaction-fixes.js',
   './assets/evia-avatar-life-v108.js',
+  './assets/evia-avatar-life-v230.js',
   './assets/evia-qr-neutral-v122.js',
   './assets/evia-welcome-v120.js',
   './assets/evia-first-run-v215.js',
@@ -68,6 +69,7 @@ const CRITICAL = [
   './assets/evia-version-v227.js',
   './assets/evia-version-v228.js',
   './assets/evia-version-v229.js',
+  './assets/evia-version-v230.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
   './assets/evia-pulse-faces-v228.css',

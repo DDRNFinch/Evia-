@@ -1,15 +1,16 @@
 {
-  "version": "229",
-  "title": "Evia Pulse eyes-only check-in faces",
+  "version": "230",
+  "title": "More natural Evia movement",
   "details": [
-    "The weekly Pulse check-in faces now use eyes only, with no mouth marks",
-    "The top option keeps soft arched eyes, the middle keeps round neutral eyes and the lower option uses two clearly downturned eyes",
-    "The change is visual only and does not alter wellbeing history, confidence data or review information"
+    "Evia now makes occasional natural eye movements instead of only staring and blinking",
+    "She can glance left, right, up and down, make a small curious head tilt and briefly follow learner taps",
+    "The new motion is subtle, respects reduced-motion settings and does not change Evia's layout, data or functionality"
   ],
-  "summary": "Evia v229 removes mouth-like marks from the Pulse wellbeing check-in and makes the lower option two downturned eyes only.",
+  "summary": "Evia v230 adds subtle eye and head reactions so Evia feels more attentive without changing anything else in the learner app.",
   "changes": [
-    "Removed all Pulse mouth marks",
-    "Lower wellbeing option now uses downturned eyes only",
-    "No change to stored Pulse data"
+    "Natural idle eye glances",
+    "Small curious head tilts",
+    "Brief attention reactions to learner interaction",
+    "No layout or feature changes"
   ]
 }

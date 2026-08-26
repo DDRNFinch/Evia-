@@ -7,9 +7,10 @@ const css = readFileSync(new URL('../assets/evia-pulse-v226.css', import.meta.ur
 const faces228 = readFileSync(new URL('../assets/evia-pulse-faces-v228.css', import.meta.url), 'utf8');
 const faces229 = readFileSync(new URL('../assets/evia-pulse-faces-v229.css', import.meta.url), 'utf8');
 const loader = readFileSync(new URL('../assets/evia-version-v226.js', import.meta.url), 'utf8');
-const currentLoader = readFileSync(new URL('../assets/evia-version-v229.js', import.meta.url), 'utf8');
+const faceLoader = readFileSync(new URL('../assets/evia-version-v229.js', import.meta.url), 'utf8');
 const sw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 const manifest = JSON.parse(readFileSync(new URL('../update.json', import.meta.url), 'utf8'));
+const version=String(manifest.version);
 
 test('Pulse stores wellbeing and confidence locally', () => {
   assert.match(pulse, /evia-pulse-wellbeing-v1/);
@@ -58,10 +59,10 @@ test('Pulse loader remains present in the current offline shell', () => {
   assert.match(loader, /const VERSION=226/);
   assert.match(loader, /evia-pulse-v226\.js/);
   assert.match(loader, /evia-pulse-v226\.css/);
-  assert.equal(String(manifest.version), '229');
-  assert.match(currentLoader, /const VERSION=229/);
-  assert.match(currentLoader, /evia-pulse-faces-v229\.css\?v=229/);
-  assert.match(sw, /evia-shell-v229/);
+  assert.ok(Number(version)>=229);
+  assert.match(faceLoader, /const VERSION=229/);
+  assert.match(faceLoader, /evia-pulse-faces-v229\.css\?v=229/);
+  assert.match(sw, new RegExp(`evia-shell-v${version}`));
   assert.match(sw, /assets\/evia-pulse-v226\.js/);
   assert.match(sw, /assets\/evia-pulse-v226\.css/);
   assert.match(sw, /assets\/evia-pulse-faces-v229\.css/);
