@@ -42,6 +42,7 @@ test('v236 removes the v235 self-triggering MutationObserver that froze Pulse',(
   assert.match(broken235,/new MutationObserver\(\(\)=>patchPulse\(\)\)/);
   assert.match(broken235,/button\.innerHTML=/);
   assert.doesNotMatch(snapshots,/new MutationObserver/);
+  assert.doesNotMatch(snapshots,/observer\.observe/);
   assert.match(snapshots,/document\.addEventListener\("click",schedulePatch,true\)/);
   assert.match(snapshots,/if\(small&&small\.textContent!==label\)small\.textContent=label/);
   assert.match(snapshots,/if\(!b\)\{/);
