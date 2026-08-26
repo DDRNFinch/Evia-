@@ -1,17 +1,18 @@
 {
-  "version": "233",
-  "title": "Coach Snapshot QR display fix",
+  "version": "234",
+  "title": "Milos review return QR fix",
   "details": [
-    "Share with assessor now loads the QR generator before drawing both single and multipart Coach Snapshots",
-    "Small Coach Snapshots no longer fall back to the older v231 single-QR screen",
-    "If a single QR cannot be drawn safely, Evia automatically switches to the existing multipart QR sequence",
-    "Coach Snapshot contents and privacy rules are unchanged"
+    "Evia now accepts the current Milos completed-review QR format from either the camera or a saved QR image",
+    "The returned review is matched to the same anonymous learner reference and active course before it is saved",
+    "The next review date and newly agreed Milos targets now flow into Evia's existing review and target system automatically",
+    "Current Milos observation return QRs are also recognised by the same receiver"
   ],
-  "summary": "Evia v233 fixes the blank Share with assessor QR screen by using one reliable current rendering path for both single and multipart Coach Snapshots.",
+  "summary": "Evia v234 fixes Milos-to-Evia review returns so a completed Milos review QR updates the learner's next review date and agreed targets in Evia.",
   "changes": [
-    "Fixed blank Coach Snapshot QR display",
-    "Removed the v231 single-QR rendering fallback",
-    "Automatic fallback to multipart QR when needed",
-    "No change to Coach Snapshot data"
+    "Accept Milos VISIT:2 review QR",
+    "Update next review date from Milos",
+    "Import newly agreed targets",
+    "Accept current Milos observation QR",
+    "No personal learner data added to QR exchange"
   ]
 }
