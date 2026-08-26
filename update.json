@@ -1,16 +1,21 @@
 {
-  "version": "230",
-  "title": "More natural Evia movement",
+  "version": "231",
+  "title": "Evia Coach review snapshot",
   "details": [
-    "Evia now makes occasional natural eye movements instead of only staring and blinking",
-    "She can glance left, right, up and down, make a small curious head tilt and briefly follow learner taps",
-    "The new motion is subtle, respects reduced-motion settings and does not change Evia's layout, data or functionality"
+    "Evia now keeps a private local review-period ledger for meaningful vocational activity",
+    "The assessor QR now includes an anonymous Coach Snapshot covering engagement, course progress, evidence, OTJ or GLH, Test practice, targets, confidence and wellbeing check-in activity",
+    "A completed Milos review closes the current period and starts the next review period automatically",
+    "No learner name, contact details, media files, written evidence or signatures are placed in the Coach Snapshot"
   ],
-  "summary": "Evia v230 adds subtle eye and head reactions so Evia feels more attentive without changing anything else in the learner app.",
+  "summary": "Evia v231 turns the assessor QR into a review-period Coach Snapshot so Milos can understand what has happened between progress reviews.",
   "changes": [
-    "Natural idle eye glances",
-    "Small curious head tilts",
-    "Brief attention reactions to learner interaction",
-    "No layout or feature changes"
+    "Local review-period coaching ledger",
+    "Anonymous Coach Snapshot in assessor QR",
+    "Session and active-day engagement statistics",
+    "Evidence counts by photo, video, audio and written evidence",
+    "OTJ or GLH movement since the review",
+    "EPA, Maths and English practice summaries",
+    "Target, confidence and wellbeing review-period summaries",
+    "Automatic new review period after a completed Milos review"
   ]
 }

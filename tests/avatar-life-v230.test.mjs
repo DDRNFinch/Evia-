@@ -6,6 +6,7 @@ const motion=readFileSync(new URL('../assets/evia-avatar-life-v230.js',import.me
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
 const manifest=JSON.parse(readFileSync(new URL('../update.json',import.meta.url),'utf8'));
+const version=String(manifest.version);
 
 test('v230 adds subtle eye directions and curious head tilts only',()=>{
   assert.match(motion,/evia-v230-look-left/);
@@ -27,14 +28,13 @@ test('v230 reacts to learner interaction without changing app data',()=>{
   assert.doesNotMatch(motion,/localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest/);
 });
 
-test('v230 motion loads after the existing Evia life layer and is cached offline',()=>{
-  assert.equal(String(manifest.version),'230');
+test('v230 motion remains loaded after the existing Evia life layer and cached offline',()=>{
   const base=index.indexOf('evia-avatar-life-v108.js?v=188');
   const extra=index.indexOf('evia-avatar-life-v230.js?v=230');
   assert.ok(base>=0&&extra>base);
   assert.match(index,/evia-version-v230\.js\?v=230/);
-  assert.match(index,/evia-updater\.js\?v=230/);
-  assert.match(sw,/evia-shell-v230/);
+  assert.match(index,new RegExp(`evia-updater\\.js\\?v=${version}`));
+  assert.match(sw,new RegExp(`evia-shell-v${version}`));
   assert.match(sw,/assets\/evia-avatar-life-v230\.js/);
   assert.match(sw,/assets\/evia-version-v230\.js/);
 });
