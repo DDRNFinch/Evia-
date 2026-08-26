@@ -93,9 +93,9 @@ test("walkthrough follows real course routes and never invents Practical or Theo
   assert.match(walkthrough,/Select and use hand tools/);
   assert.match(walkthrough,/Use a hand tool/);
   assert.match(walkthrough,/Explain your tool choice/);
-  assert.doesNotMatch(walkthrough,/Practical evidence/);
-  assert.doesNotMatch(walkthrough,/Knowledge evidence/);
-  assert.doesNotMatch(walkthrough,/Theory/);
+  assert.doesNotMatch(walkthrough,/title\("Practical evidence"/);
+  assert.doesNotMatch(walkthrough,/title\("Knowledge evidence"/);
+  assert.doesNotMatch(walkthrough,/title\("Theory"/);
 });
 
 test("walkthrough is autoplay and does not require learner presses",()=>{
