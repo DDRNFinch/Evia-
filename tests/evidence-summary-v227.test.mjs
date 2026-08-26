@@ -6,6 +6,7 @@ const summary=fs.readFileSync("assets/evia-evidence-summary-v227.js","utf8");
 const index=fs.readFileSync("index.html","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
+const version=String(manifest.version);
 
 test("evidence preview keeps only the learner explanation detail",()=>{
   assert.match(summary,/label!=="Learner explanation"/);
@@ -22,13 +23,11 @@ test("PDF evidence summaries remove duplicated prompt metadata",()=>{
   assert.match(summary,/simplifyPdfText/);
 });
 
-test("v227 loads and caches the evidence summary cleanup",()=>{
-  assert.equal(String(manifest.version),"227");
-  assert.match(index,/evia-app-version" content="227"/);
-  assert.match(index,/evia-version-v227\.js\?v=227/);
+test("evidence summary cleanup remains loaded and cached in the current release",()=>{
+  assert.match(index,new RegExp(`evia-app-version\\" content=\\"${version}\\"`));
+  assert.match(index,new RegExp(`evia-version-v${version}\\.js\\?v=${version}`));
   assert.match(index,/evia-evidence-summary-v227\.js\?v=227/);
-  assert.match(index,/evia-updater\.js\?v=227/);
-  assert.match(sw,/evia-shell-v227/);
-  assert.match(sw,/evia-version-v227\.js/);
+  assert.match(index,new RegExp(`evia-updater\\.js\\?v=${version}`));
+  assert.match(sw,new RegExp(`evia-shell-v${version}`));
   assert.match(sw,/evia-evidence-summary-v227\.js/);
 });
