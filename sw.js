@@ -1,5 +1,5 @@
-// Evia v231: review-period Coach Snapshot for Milos.
-const CACHE_NAME = 'evia-shell-v231';
+// Evia v232: automatic multipart Coach Snapshot QR transport for Milos.
+const CACHE_NAME = 'evia-shell-v232';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -71,7 +71,9 @@ const CRITICAL = [
   './assets/evia-version-v229.js',
   './assets/evia-version-v230.js',
   './assets/evia-version-v231.js',
+  './assets/evia-version-v232.js',
   './assets/evia-coach-v231.js',
+  './assets/evia-coach-qr-v232.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
   './assets/evia-pulse-faces-v228.css',
