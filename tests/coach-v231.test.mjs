@@ -30,12 +30,10 @@ test('Coach Snapshot does not export learner identity or evidence media',()=>{
   assert.match(coach,/No learner name, contact details, media files or signatures/);
 });
 
-test('v231 is loaded and cached in the current Evia release',()=>{
-  assert.equal(String(manifest.version),'231');
+test('v231 Coach ledger remains loaded and cached in later Evia releases',()=>{
+  assert.ok(Number(manifest.version)>=231);
   assert.match(index,/evia-version-v231\.js\?v=231/);
   assert.match(index,/evia-coach-v231\.js\?v=231/);
-  assert.match(index,/evia-updater\.js\?v=231/);
-  assert.match(sw,/evia-shell-v231/);
   assert.match(sw,/assets\/evia-coach-v231\.js/);
   assert.match(sw,/assets\/evia-version-v231\.js/);
 });
