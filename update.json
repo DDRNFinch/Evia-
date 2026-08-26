@@ -1,19 +1,20 @@
 {
-  "version": "219",
-  "title": "Slower Evia walkthrough and accurate closing avatar",
+  "version": "220",
+  "title": "Naxos course coverage and evidence methods",
   "details": [
-    "Show me around now holds each explanation for longer so the learner has time to read and follow what Evia is showing",
-    "Evia's movement between areas is slower and more deliberate while keeping the same curved floating motion",
-    "Evidence-source colours, guided audio, assessor exchange, Learn and Test demonstrations all remain unchanged",
-    "The final Evia now reuses the same face construction as the moving walkthrough avatar, with the correct larger eye size and spacing",
-    "No demo limits, learner evidence behaviour, targets or QR activation behaviour are changed"
+    "Naxos-created course packs can deliberately leave source KSBs or ACs unused for pathway-specific courses",
+    "Unused source codes no longer prevent a Naxos-created course pack from being installed in Evia",
+    "Learner course progress is calculated from the codes actually published into that course or pathway, so deliberately excluded codes do not make 100% impossible",
+    "Naxos evidence tiles can carry Photo, Video or Audio as their chosen evidence method",
+    "Photo evidence opens the photo route, Video opens the video route, and Audio opens the talk/record route",
+    "Existing course packs without the new Naxos settings keep their existing behaviour",
+    "No learner evidence or existing course data is removed"
   ],
-  "summary": "Evia v219 slows the animated product tour to a more comfortable pace and makes the closing Evia match the real avatar exactly.",
+  "summary": "Evia v220 adds compatibility for Naxos coverage audits, intentional pathway omissions and author-selected evidence methods while preserving existing courses.",
   "changes": [
-    "Extended scene holds and speech-bubble reading time",
-    "Slowed short and long Evia travel animations",
-    "Staggered Mock Practical, Maths and English explanations",
-    "Rebuilt the closing Evia from the same face, eye and expression components used by the moving guide",
-    "Created a fresh v219 offline cache"
+    "Added Naxos course-pack compatibility adapter",
+    "Added Naxos evidence-method routing",
+    "Added v220 version marker and offline cache",
+    "Kept legacy course-pack validation unchanged unless the Naxos allow-unmapped flag is present"
   ]
 }
