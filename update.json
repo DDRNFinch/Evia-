@@ -1,18 +1,19 @@
 {
-  "version": "224",
-  "title": "Reliable demo startup",
+  "version": "225",
+  "title": "Course-map recovery",
   "details": [
-    "Evia now repairs a saved Demo course before the main evidence screen starts if the local demo pack is missing or stale",
-    "Fresh browsers with no course no longer fall through to the course-map error while the welcome and demo setup is loading",
-    "The startup recovery is loaded before the evidence engine and is included in the offline shell",
-    "A fresh v224 service-worker cache forces existing v222 browsers onto the repaired startup path",
-    "The walkthrough, learner evidence, targets, QR activation and existing course behaviour are otherwise unchanged"
+    "Evia no longer depends on the old unpublished /app course-map files for Bricklayer or Carpentry and Joinery",
+    "Bricklayer and both ST0264 pathways now rebuild their learner course map directly from the published Nisi course packs already shipped with Evia",
+    "Saved Demo installations now replace the Demo pack with the canonical copy on startup even when the damaged local pack reports the same version number",
+    "Fresh no-course startup still stays on the normal Evia setup path instead of falling through to the course-map error",
+    "The Bricklayer and Carpentry and Joinery course packs are included in the v225 offline shell"
   ],
-  "summary": "Evia v224 fixes the startup path that could leave a fresh or Demo laptop on the 'could not load the course map' screen.",
+  "summary": "Evia v225 removes the missing legacy course-map dependency that could leave laptops on the 'could not load the course map' screen.",
   "changes": [
-    "Added startup recovery before course evidence loading",
-    "Automatically restores the current Demo pack when Demo state exists",
-    "Prevents the no-course evidence loader from replacing first-run setup",
-    "Created a fresh v224 offline cache"
+    "Recovered legacy Bricklayer course-map requests from the published ST0095 Nisi pack",
+    "Recovered Site Carpenter and Architectural Joiner course-map requests from the published ST0264 Nisi pack",
+    "Strengthened Demo startup repair",
+    "Added the required published course packs to the offline shell",
+    "Created a fresh v225 service-worker cache"
   ]
 }
