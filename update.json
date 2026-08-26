@@ -1,19 +1,19 @@
 {
-  "version": "218",
-  "title": "Premium animated Evia walkthrough",
+  "version": "219",
+  "title": "Slower Evia walkthrough and accurate closing avatar",
   "details": [
-    "Show me around is now a full-screen guided Evia tour rather than a static phone-style slideshow",
-    "Evia floats between the real-style home controls, arches, evidence routes, guided audio, Course Coverage, assessor exchange, Learn and Test",
-    "The tour mostly auto-plays like a product video and pauses only for the important learner presses",
-    "Spotlights, tap ripples, short speech bubbles and Evia eye expressions show exactly where to press without covering the interface",
-    "The existing demo, QR activation, guided audio, targets and full learner behaviour are unchanged"
+    "Show me around now holds each explanation for longer so the learner has time to read and follow what Evia is showing",
+    "Evia's movement between areas is slower and more deliberate while keeping the same curved floating motion",
+    "Evidence-source colours, guided audio, assessor exchange, Learn and Test demonstrations all remain unchanged",
+    "The final Evia now reuses the same face construction as the moving walkthrough avatar, with the correct larger eye size and spacing",
+    "No demo limits, learner evidence behaviour, targets or QR activation behaviour are changed"
   ],
-  "summary": "Evia v218 replaces the rough walkthrough with a polished animated product tour that looks and behaves like Evia itself.",
+  "summary": "Evia v219 slows the animated product tour to a more comfortable pace and makes the closing Evia match the real avatar exactly.",
   "changes": [
-    "Removed the fake phone-card walkthrough presentation",
-    "Added curved floating Evia movement between live-style interface areas",
-    "Added auto-play scenes with interactive pauses for Evia, evidence, guided audio, Course and Test",
-    "Added animated Course Coverage evidence-source examples and QR/OTJ/Test demonstrations",
-    "Created a fresh v218 offline cache"
+    "Extended scene holds and speech-bubble reading time",
+    "Slowed short and long Evia travel animations",
+    "Staggered Mock Practical, Maths and English explanations",
+    "Rebuilt the closing Evia from the same face, eye and expression components used by the moving guide",
+    "Created a fresh v219 offline cache"
   ]
 }
