@@ -1,5 +1,5 @@
-// Evia v221: real-layout autoplay walkthrough.
-const CACHE_NAME = 'evia-shell-v221';
+// Evia v222: guided walkthrough bubble, next arrow, fades and yellow QR control.
+const CACHE_NAME = 'evia-shell-v222';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -21,7 +21,7 @@ const CRITICAL = [
   './assets/evia-demo-mode-v215.js',
   './assets/evia-demo-enhancements-v216.js',
   './assets/evia-demo-guided-audio-v217.js',
-  './assets/evia-interactive-walkthrough-v221.js',
+  './assets/evia-interactive-walkthrough-v222.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
   './assets/evia-media-stability-v168.js',
@@ -59,6 +59,7 @@ const CRITICAL = [
   './assets/evia-version-v219.js',
   './assets/evia-version-v220.js',
   './assets/evia-version-v221.js',
+  './assets/evia-version-v222.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
