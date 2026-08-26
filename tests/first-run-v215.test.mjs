@@ -14,8 +14,8 @@ const lock=fs.readFileSync("assets/evia-profile-course-lock-v215.js","utf8");
 const manifest=JSON.parse(fs.readFileSync("update.json","utf8"));
 const version=String(manifest.version);
 
-test("v219 keeps the premium tour and slows it to a readable pace",()=>{
-  assert.equal(version,"219");
+test("v220 keeps the approved v219 premium tour and current release wiring",()=>{
+  assert.equal(version,"220");
   assert.match(index,/evia-first-run-v215\.js\?v=215/);
   assert.match(index,/evia-demo-mode-v215\.js\?v=215/);
   assert.match(index,/evia-demo-enhancements-v216\.js\?v=217/);
@@ -24,8 +24,9 @@ test("v219 keeps the premium tour and slows it to a readable pace",()=>{
   assert.match(index,/evia-interactive-walkthrough-v219\.js\?v=219/);
   assert.match(index,/evia-profile-course-lock-v215\.js\?v=215/);
   assert.match(index,/evia-version-v219\.js\?v=219/);
-  assert.match(index,/evia-updater\.js\?v=219/);
-  assert.match(sw,/evia-shell-v219/);
+  assert.match(index,/evia-version-v220\.js\?v=220/);
+  assert.match(index,/evia-updater\.js\?v=220/);
+  assert.match(sw,/evia-shell-v220/);
   assert.match(sw,/evia-demo-guided-audio-v217\.js/);
   assert.match(sw,/evia-interactive-walkthrough-v218\.js/);
   assert.match(sw,/evia-interactive-walkthrough-v219\.js/);
