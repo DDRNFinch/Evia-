@@ -2,7 +2,7 @@
   "version": "234",
   "title": "Milos review return QR fix",
   "details": [
-    "Evia now accepts the current Milos completed-review QR format",
+    "Evia now accepts the current Milos completed-review QR format from either the camera or a saved QR image",
     "The returned review is matched to the same anonymous learner reference and active course before it is saved",
     "The next review date and newly agreed Milos targets now flow into Evia's existing review and target system automatically",
     "Current Milos observation return QRs are also recognised by the same receiver"
