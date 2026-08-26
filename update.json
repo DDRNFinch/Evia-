@@ -1,20 +1,19 @@
 {
-  "version": "217",
-  "title": "Guided demo audio, interactive walkthrough and realistic targets",
+  "version": "218",
+  "title": "Premium animated Evia walkthrough",
   "details": [
-    "Demo audio evidence now records one real audio file with step-by-step prompts, matching the guided NVQ audio pattern",
-    "The demo evidence routes are now Practical evidence for Skills and Knowledge evidence for guided audio Knowledge evidence",
-    "The first-run walkthrough is now interactive, showing where to press and simulating the Evia evidence, coverage and Test journey",
-    "Ten-week apprenticeship targets are now paced against the learner's actual programme dates and contracted hours instead of asking for unrealistic early progress",
-    "Existing excessive target periods are automatically corrected when v217 opens"
+    "Show me around is now a full-screen guided Evia tour rather than a static phone-style slideshow",
+    "Evia floats between the real-style home controls, arches, evidence routes, guided audio, Course Coverage, assessor exchange, Learn and Test",
+    "The tour mostly auto-plays like a product video and pauses only for the important learner presses",
+    "Spotlights, tap ripples, short speech bubbles and Evia eye expressions show exactly where to press without covering the interface",
+    "The existing demo, QR activation, guided audio, targets and full learner behaviour are unchanged"
   ],
-  "summary": "Evia v217 makes the college demo more representative of the real evidence flow and recalibrates learner targets to achievable review-period progress.",
+  "summary": "Evia v218 replaces the rough walkthrough with a polished animated product tour that looks and behaves like Evia itself.",
   "changes": [
-    "Added guided one-file demo audio with Next prompt timestamps",
-    "Mapped demo photo evidence to Skills only and demo audio evidence to Knowledge only",
-    "Added an interactive press-here walkthrough",
-    "Paced KSB, evidence breadth, OTJ and EPA targets to the real course timeline",
-    "Based apprenticeship OTJ review targets on 20% of contracted weekly hours when those hours are available",
-    "Created a fresh v217 offline cache"
+    "Removed the fake phone-card walkthrough presentation",
+    "Added curved floating Evia movement between live-style interface areas",
+    "Added auto-play scenes with interactive pauses for Evia, evidence, guided audio, Course and Test",
+    "Added animated Course Coverage evidence-source examples and QR/OTJ/Test demonstrations",
+    "Created a fresh v218 offline cache"
   ]
 }
