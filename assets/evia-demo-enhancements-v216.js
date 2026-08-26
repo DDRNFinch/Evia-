@@ -1,20 +1,20 @@
 (()=>{
 "use strict";
 const VERSION=216;
-const DEMO_KEY="evia-demo-mode-v1",DEMO_ID="evia-demo-st0095-v1",DEMO_BACKUP_KEY="evia-demo-backup-v1",STATE_KEY="evia-first-run-state-v1",TIMELINE_KEY="evia-course-timeline",NAME_KEY="evia-full-name",PORTFOLIO_KEY="evia-online-portfolio-url",PRACTICAL_KEY="evia-arp-practical-v1",PRACTICAL_DRAFT_KEY="evia-arp-practical-draft-v1",SYNC_KEY="evia-demo-content-v216-applied",STYLE_ID="evia-demo-enhancements-v216-style";
+const DEMO_KEY="evia-demo-mode-v1",DEMO_ID="evia-demo-st0095-v1",DEMO_BACKUP_KEY="evia-demo-backup-v1",STATE_KEY="evia-first-run-state-v1",TIMELINE_KEY="evia-course-timeline",NAME_KEY="evia-full-name",PORTFOLIO_KEY="evia-online-portfolio-url",PRACTICAL_KEY="evia-arp-practical-v1",PRACTICAL_DRAFT_KEY="evia-arp-practical-draft-v1",SYNC_KEY="evia-demo-content-v217-applied",STYLE_ID="evia-demo-enhancements-v216-style";
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
 const DEMO_PACK={
-  nisiCoursePack:1,schemaVersion:1,id:DEMO_ID,familyId:"ST0095",version:"1.1-demo",title:"Evia Demo — Bricklayer",shortTitle:"Evia Demo",standard:"ST0095 Demo",standardId:"ST0095",courseType:"apprenticeship",coverageLabel:"KSB",learningLabel:"OTJ",fourthLabel:"EPA",otjMinimumHours:1,gatewayBufferMonths:3,epaConfigured:true,compatStorageSuffix:"demo-v1",
+  nisiCoursePack:1,schemaVersion:1,id:DEMO_ID,familyId:"ST0095",version:"1.2-demo",title:"Evia Demo — Bricklayer",shortTitle:"Evia Demo",standard:"ST0095 Demo",standardId:"ST0095",courseType:"apprenticeship",coverageLabel:"KSB",learningLabel:"OTJ",fourthLabel:"EPA",otjMinimumHours:1,gatewayBufferMonths:3,epaConfigured:true,compatStorageSuffix:"demo-v1",
   codes:["K13","S8","S9"],
   codeDescriptions:{K13:"Hand tools: selection, use, maintenance and storage.",S8:"Select and use hand tools and equipment.",S9:"Maintain and store hand tools correctly."},
   siteData:[
-    {id:"demo-tools",title:"Tools & equipment",jobs:[{id:"demo-use-tools",title:"Using hand tools",opps:[
-      {id:"demo-use-tool",title:"Use a hand tool",instruction:"Take one clear photo showing a hand tool being used for the job.",question:"What tool are you using, what is it for, and how are you using it safely?",codes:["K13","S8"],bundle:"Demo evidence"},
-      {id:"demo-care-tool",title:"Look after the tool",instruction:"Take one clear photo showing the tool being cleaned, checked or stored.",question:"What do you check or do to keep this tool in good condition?",codes:["K13","S9"],bundle:"Demo evidence"}
+    {id:"demo-practical",title:"Practical evidence",jobs:[{id:"demo-use-tools",title:"Using & caring for hand tools",opps:[
+      {id:"demo-use-tool",title:"Use a hand tool",instruction:"Take one clear photo showing a hand tool being used for the job.",question:"What tool are you using and what are you doing with it?",codes:["S8"],bundle:"Demo practical evidence"},
+      {id:"demo-care-tool",title:"Look after the tool",instruction:"Take one clear photo showing the tool being cleaned, checked or stored.",question:"What are you doing to keep the tool in good condition?",codes:["S9"],bundle:"Demo practical evidence"}
     ]}]},
-    {id:"demo-reflection",title:"Talk about your work",jobs:[{id:"demo-audio",title:"Audio reflection",opps:[
-      {id:"demo-audio-reflection",title:"Record an audio reflection",media:"talk",question:"Explain why the hand tool is suitable for the task, how you used it safely and how you would look after it after use.",codes:["K13","S8","S9"],bundle:"Demo evidence"}
+    {id:"demo-knowledge",title:"Knowledge evidence",jobs:[{id:"demo-audio",title:"Explain hand tools",opps:[
+      {id:"demo-audio-reflection",title:"Guided audio explanation",media:"audio",methods:["audio"],instruction:"Record one guided audio explanation. Keep recording while Evia gives you each prompt.",question:"Explain your knowledge of selecting, using and looking after hand tools.",prompts:["Name the hand tool and explain what type of work it is suited to.","Explain how the tool should be used safely and correctly.","Explain what checks, cleaning and storage are needed after use."],codes:["K13"],bundle:"Demo knowledge evidence"}
     ]}]}
   ]
 };
