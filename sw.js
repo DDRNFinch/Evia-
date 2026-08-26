@@ -1,5 +1,5 @@
-// Evia v218: premium animated walkthrough over the real Evia visual language.
-const CACHE_NAME = 'evia-shell-v218';
+// Evia v219: slower premium walkthrough pacing and accurate closing Evia avatar.
+const CACHE_NAME = 'evia-shell-v219';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -22,6 +22,7 @@ const CRITICAL = [
   './assets/evia-demo-enhancements-v216.js',
   './assets/evia-demo-guided-audio-v217.js',
   './assets/evia-interactive-walkthrough-v218.js',
+  './assets/evia-interactive-walkthrough-v219.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
   './assets/evia-media-stability-v168.js',
@@ -56,6 +57,7 @@ const CRITICAL = [
   './assets/evia-version-v216.js',
   './assets/evia-version-v217.js',
   './assets/evia-version-v218.js',
+  './assets/evia-version-v219.js',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
