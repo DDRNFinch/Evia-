@@ -1,5 +1,5 @@
-// Evia v225: recover course maps from the published Nisi course packs.
-const CACHE_NAME = 'evia-shell-v225';
+// Evia v226: Evia Pulse review, wellbeing and confidence layer.
+const CACHE_NAME = 'evia-shell-v226';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -63,6 +63,9 @@ const CRITICAL = [
   './assets/evia-version-v222.js',
   './assets/evia-version-v224.js',
   './assets/evia-version-v225.js',
+  './assets/evia-version-v226.js',
+  './assets/evia-pulse-v226.js',
+  './assets/evia-pulse-v226.css',
   './assets/evia-functional-skills-v194.js',
   './assets/evia-smooth-flow-v161.js',
   './assets/evia-evidence-route-v161.js',
