@@ -1,5 +1,5 @@
-// Evia v235: save completed Milos reviews as permanent Pulse Review Snapshots.
-const CACHE_NAME = 'evia-shell-v235';
+// Evia v236: stop Pulse Review History from self-triggering a DOM mutation loop.
+const CACHE_NAME = 'evia-shell-v236';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -75,11 +75,12 @@ const CRITICAL = [
   './assets/evia-version-v233.js',
   './assets/evia-version-v234.js',
   './assets/evia-version-v235.js',
+  './assets/evia-version-v236.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
   './assets/evia-milos-return-v234.js',
-  './assets/evia-review-snapshots-v235.js',
+  './assets/evia-review-snapshots-v236.js',
   './assets/evia-review-snapshot-hook-v235.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
