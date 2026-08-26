@@ -1,22 +1,15 @@
 {
-  "version": "226",
-  "title": "Evia Pulse",
+  "version": "227",
+  "title": "Cleaner evidence summaries",
   "details": [
-    "The Targets board is now Evia Pulse, with the next review date, current targets, overall wellbeing and overall confidence in one review-ready view",
-    "The home target symbol is now a yellow heart with a pulse line while its badge continues to show unfinished targets",
-    "Evia asks one lightweight weekly wellbeing check-in using three vertical Evia-style expressions with no emotion labels",
-    "Wellbeing history is kept by review period so learners and reviewers can see the pattern since the last review and look back at earlier check-ins",
-    "Every completed course subcategory now offers a 1-to-5 confidence check after all of its child evidence sections have evidence",
-    "Learners can revisit any completed subcategory in Overall confidence and raise or lower their score later; previous scores are retained as history",
-    "Confidence is reflective information only and does not change course completion or evidence progress"
+    "Evidence previews now keep the learner explanation as the only detailed evidence text",
+    "The separate Evidence prompt, Prompt timestamps and Evidence stage blocks have been removed from evidence previews",
+    "Exported evidence PDFs use the same cleaner learner-explanation layout and no longer repeat recording prompt timestamps"
   ],
-  "summary": "Evia v226 adds Evia Pulse: review targets, weekly wellbeing and editable confidence tracking brought together in the existing Targets area.",
+  "summary": "Evia v227 simplifies evidence previews and PDFs so the learner explanation is the single detailed evidence summary.",
   "changes": [
-    "Added Evia Pulse review dashboard",
-    "Replaced the target bullseye with the Pulse heart symbol",
-    "Added weekly vertical Evia-expression wellbeing check-ins and history",
-    "Added course-wide subcategory confidence checks with 1-to-5 wording",
-    "Added editable confidence history and review-period comparison",
-    "Preserved the existing Targets board as the Overall targets deep dive"
+    "Simplified evidence preview details",
+    "Removed duplicate prompt timestamp sections",
+    "Simplified exported PDF evidence summaries"
   ]
 }

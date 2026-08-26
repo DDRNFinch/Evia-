@@ -6,6 +6,7 @@ const pulse = readFileSync(new URL('../assets/evia-pulse-v226.js', import.meta.u
 const css = readFileSync(new URL('../assets/evia-pulse-v226.css', import.meta.url), 'utf8');
 const loader = readFileSync(new URL('../assets/evia-version-v226.js', import.meta.url), 'utf8');
 const sw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
+const manifest = JSON.parse(readFileSync(new URL('../update.json', import.meta.url), 'utf8'));
 
 test('Pulse stores wellbeing and confidence locally', () => {
   assert.match(pulse, /evia-pulse-wellbeing-v1/);
@@ -41,11 +42,11 @@ test('Pulse replaces the bullseye with a heart and pulse mark', () => {
   assert.match(css, /M16 27\.1S5\.2 20\.5/);
 });
 
-test('v226 loader and offline shell include Pulse assets', () => {
+test('Pulse loader remains present in the current offline shell', () => {
   assert.match(loader, /const VERSION=226/);
   assert.match(loader, /evia-pulse-v226\.js/);
   assert.match(loader, /evia-pulse-v226\.css/);
-  assert.match(sw, /evia-shell-v226/);
+  assert.match(sw, new RegExp(`evia-shell-v${manifest.version}`));
   assert.match(sw, /assets\/evia-pulse-v226\.js/);
   assert.match(sw, /assets\/evia-pulse-v226\.css/);
 });
