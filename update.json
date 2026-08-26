@@ -1,15 +1,15 @@
 {
-  "version": "228",
-  "title": "Clearer Evia Pulse check-in faces",
+  "version": "229",
+  "title": "Evia Pulse eyes-only check-in faces",
   "details": [
-    "The three weekly Pulse check-in choices now have clearly different expressions",
-    "The top option has a soft upward expression, the middle option is neutral and the lower option is visibly downturned",
-    "The change is visual only and does not alter wellbeing history or review data"
+    "The weekly Pulse check-in faces now use eyes only, with no mouth marks",
+    "The top option keeps soft arched eyes, the middle keeps round neutral eyes and the lower option uses two clearly downturned eyes",
+    "The change is visual only and does not alter wellbeing history, confidence data or review information"
   ],
-  "summary": "Evia v228 makes the weekly Pulse wellbeing choices immediately distinguishable while keeping Evia's minimal visual style.",
+  "summary": "Evia v229 removes mouth-like marks from the Pulse wellbeing check-in and makes the lower option two downturned eyes only.",
   "changes": [
-    "Clearer weekly wellbeing expressions",
-    "Distinct neutral and lower check-in faces",
+    "Removed all Pulse mouth marks",
+    "Lower wellbeing option now uses downturned eyes only",
     "No change to stored Pulse data"
   ]
 }
