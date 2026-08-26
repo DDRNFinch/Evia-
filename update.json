@@ -1,22 +1,18 @@
 {
-  "version": "222",
-  "title": "Guided Evia walkthrough controls",
+  "version": "224",
+  "title": "Reliable demo startup",
   "details": [
-    "Show me around keeps the real Evia home, course routes, task rows, evidence methods and progress arches from v221",
-    "Walkthrough guidance now appears inside one fixed speech bubble above the bottom controls",
-    "A yellow next-arrow inside the speech bubble moves the walkthrough to the next part",
-    "Each walkthrough change fades out and back in instead of switching abruptly",
-    "The round yellow Evia QR button is restored between Course and Learn and is demonstrated during assessor sharing",
-    "Photo, Video, Written and guided Audio evidence remain demonstrated",
-    "Course coverage, assessor QR exchange, Learn, Mock Practical, Maths Level 2 and English Level 2 remain demonstrated",
-    "The existing demo limits, QR activation, learner evidence, targets and Naxos course-pack behaviour are unchanged"
+    "Evia now repairs a saved Demo course before the main evidence screen starts if the local demo pack is missing or stale",
+    "Fresh browsers with no course no longer fall through to the course-map error while the welcome and demo setup is loading",
+    "The startup recovery is loaded before the evidence engine and is included in the offline shell",
+    "A fresh v224 service-worker cache forces existing v222 browsers onto the repaired startup path",
+    "The walkthrough, learner evidence, targets, QR activation and existing course behaviour are otherwise unchanged"
   ],
-  "summary": "Evia v222 keeps the real-layout walkthrough but adds a fixed speech bubble, next-arrow navigation, fade transitions and the missing round yellow Evia QR button.",
+  "summary": "Evia v224 fixes the startup path that could leave a fresh or Demo laptop on the 'could not load the course map' screen.",
   "changes": [
-    "Replaced the v221 walkthrough runtime with v222",
-    "Added fixed speech-bubble guidance and next-arrow control",
-    "Added fade transitions between walkthrough parts",
-    "Restored the yellow Evia QR button in the walkthrough home layout",
-    "Created a fresh v222 offline cache"
+    "Added startup recovery before course evidence loading",
+    "Automatically restores the current Demo pack when Demo state exists",
+    "Prevents the no-course evidence loader from replacing first-run setup",
+    "Created a fresh v224 offline cache"
   ]
 }
