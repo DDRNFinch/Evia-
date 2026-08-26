@@ -4,7 +4,9 @@ import { readFileSync } from 'node:fs';
 
 const pulse = readFileSync(new URL('../assets/evia-pulse-v226.js', import.meta.url), 'utf8');
 const css = readFileSync(new URL('../assets/evia-pulse-v226.css', import.meta.url), 'utf8');
+const faces = readFileSync(new URL('../assets/evia-pulse-faces-v228.css', import.meta.url), 'utf8');
 const loader = readFileSync(new URL('../assets/evia-version-v226.js', import.meta.url), 'utf8');
+const currentLoader = readFileSync(new URL('../assets/evia-version-v228.js', import.meta.url), 'utf8');
 const sw = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
 const manifest = JSON.parse(readFileSync(new URL('../update.json', import.meta.url), 'utf8'));
 
@@ -20,6 +22,16 @@ test('weekly wellbeing check uses neutral Evia expressions only', () => {
   assert.match(pulse, /data-wellbeing="1"/);
   assert.doesNotMatch(pulse, /\bhappy\b|\bsad\b|\banxious\b/i);
   assert.match(css, /\.evia-pulse-wellbeing-choices\{display:grid/);
+});
+
+test('v228 gives all three weekly check-in choices visibly different expressions', () => {
+  assert.match(faces, /\.evia-pulse-face-3::after/);
+  assert.match(faces, /border-bottom:var\(--face-stroke\) solid #efc33d/);
+  assert.match(faces, /\.evia-pulse-face-2::after/);
+  assert.match(faces, /height:0;border-top:var\(--face-stroke\) solid #efc33d/);
+  assert.match(faces, /\.evia-pulse-face-1::after/);
+  assert.match(faces, /border-top:var\(--face-stroke\) solid #efc33d/);
+  assert.match(faces, /\.evia-pulse-face-1 \.evia-pulse-eye/);
 });
 
 test('confidence is 1 to 5 and editable with history', () => {
@@ -46,7 +58,11 @@ test('Pulse loader remains present in the current offline shell', () => {
   assert.match(loader, /const VERSION=226/);
   assert.match(loader, /evia-pulse-v226\.js/);
   assert.match(loader, /evia-pulse-v226\.css/);
-  assert.match(sw, new RegExp(`evia-shell-v${manifest.version}`));
+  assert.equal(String(manifest.version), '228');
+  assert.match(currentLoader, /const VERSION=228/);
+  assert.match(currentLoader, /evia-pulse-faces-v228\.css\?v=228/);
+  assert.match(sw, /evia-shell-v228/);
   assert.match(sw, /assets\/evia-pulse-v226\.js/);
   assert.match(sw, /assets\/evia-pulse-v226\.css/);
+  assert.match(sw, /assets\/evia-pulse-faces-v228\.css/);
 });
