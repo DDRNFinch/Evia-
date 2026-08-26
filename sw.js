@@ -1,5 +1,5 @@
-// Evia v226: Evia Pulse review, wellbeing and confidence layer.
-const CACHE_NAME = 'evia-shell-v226';
+// Evia v227: cleaner learner evidence summaries in previews and PDFs.
+const CACHE_NAME = 'evia-shell-v227';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -25,6 +25,7 @@ const CRITICAL = [
   './assets/evia-startup-recovery-v225.js',
   './assets/evia-profile-course-lock-v215.js',
   './assets/evia-evidence-media-v122.js',
+  './assets/evia-evidence-summary-v227.js',
   './assets/evia-media-stability-v168.js',
   './assets/evia-evidence-hub-v109.js',
   './assets/evia-home-header-v110.js',
@@ -64,6 +65,7 @@ const CRITICAL = [
   './assets/evia-version-v224.js',
   './assets/evia-version-v225.js',
   './assets/evia-version-v226.js',
+  './assets/evia-version-v227.js',
   './assets/evia-pulse-v226.js',
   './assets/evia-pulse-v226.css',
   './assets/evia-functional-skills-v194.js',
