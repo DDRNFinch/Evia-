@@ -35,13 +35,12 @@ test('v233 patches the live EviaQrExchange openShare used by the assistant menu'
   assert.match(display,/const raw=String\(old\.buildProgress\(\)\),frames=framesFor\(raw\)/);
 });
 
-test('v233 release marker and offline shell are wired',()=>{
-  assert.equal(String(update.version),'233');
+test('v233 QR display remains loaded and cached in later Evia releases',()=>{
+  assert.ok(Number(update.version)>=233);
   assert.match(loader,/EviaAppVersion=233/);
-  assert.match(index,/evia-app-version" content="233/);
   assert.match(index,/evia-version-v233\.js\?v=233/);
   assert.match(index,/evia-coach-qr-v233\.js\?v=233/);
-  assert.match(sw,/evia-shell-v233/);
+  assert.match(sw,new RegExp(`evia-shell-v${update.version}`));
   assert.match(sw,/evia-version-v233\.js/);
   assert.match(sw,/evia-coach-qr-v233\.js/);
 });
