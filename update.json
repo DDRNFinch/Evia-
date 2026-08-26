@@ -1,18 +1,20 @@
 {
-  "version": "216",
-  "title": "Richer Evia college demo",
+  "version": "217",
+  "title": "Guided demo audio, interactive walkthrough and realistic targets",
   "details": [
-    "Maths Level 2 and English Level 2 are now available in the demo alongside one Mock Practical",
-    "The demo course now has two clear evidence paths and three evidence opportunities including an audio reflection",
-    "QR sharing, receiving and provider course-management areas now explain what they do instead of appearing broken in the demo",
-    "The DEMO indicator is now a small yellow circle below Targets rather than a bar covering Evia"
+    "Demo audio evidence now records one real audio file with step-by-step prompts, matching the guided NVQ audio pattern",
+    "The demo evidence routes are now Practical evidence for Skills and Knowledge evidence for guided audio Knowledge evidence",
+    "The first-run walkthrough is now interactive, showing where to press and simulating the Evia evidence, coverage and Test journey",
+    "Ten-week apprenticeship targets are now paced against the learner's actual programme dates and contracted hours instead of asking for unrealistic early progress",
+    "Existing excessive target periods are automatically corrected when v217 opens"
   ],
-  "summary": "Evia v216 makes the college demo easier to understand while keeping the full QR-activated learner version unchanged.",
+  "summary": "Evia v217 makes the college demo more representative of the real evidence flow and recalibrates learner targets to achievable review-period progress.",
   "changes": [
-    "Exposed Maths and English in Demo mode",
-    "Expanded the demo course to two navigation paths with photo and audio evidence",
-    "Added demo explanations for full-version QR exchange and licensed course-pack features",
-    "Moved the demo badge away from Evia into a compact yellow circle below Targets",
-    "Created a fresh v216 offline cache"
+    "Added guided one-file demo audio with Next prompt timestamps",
+    "Mapped demo photo evidence to Skills only and demo audio evidence to Knowledge only",
+    "Added an interactive press-here walkthrough",
+    "Paced KSB, evidence breadth, OTJ and EPA targets to the real course timeline",
+    "Based apprenticeship OTJ review targets on 20% of contracted weekly hours when those hours are available",
+    "Created a fresh v217 offline cache"
   ]
 }
