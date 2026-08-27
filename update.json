@@ -1,17 +1,19 @@
 {
-  "version": "236",
-  "title": "Evia Pulse freeze fix",
+  "version": "239",
+  "title": "Unified OTJ learning timeline",
   "details": [
-    "Fixed a v235 Review History rendering loop that could freeze Evia when Pulse was opened",
-    "Pulse Review History now updates only after relevant user actions or a new review snapshot instead of continuously watching and rewriting the page",
-    "Existing review snapshots, wellbeing history, confidence history, targets and Milos review data are unchanged",
-    "The v235 permanent Review Snapshot feature remains available inside Evia Pulse"
+    "College, learner, assessor and employer OTJ now appear together in one Recent learning timeline in date order",
+    "Learner input uses light yellow tiles, college sessions light green, assessor OTJ light blue and employer session OTJ light orange",
+    "Symi college learning no longer appears in a separate Recent college learning section",
+    "Monthly OTJ PDFs include every OTJ source for that month when the learner creates the portfolio upload package",
+    "College attendance percentages are capped at 100%"
   ],
-  "summary": "Evia v236 fixes the Pulse lock-up introduced in v235 by removing the self-triggering Review History DOM observer while preserving all Pulse and review data.",
+  "summary": "Evia v239 combines every OTJ source into one colour-coded chronological learning feed and includes the combined records in monthly portfolio OTJ PDFs.",
   "changes": [
-    "Remove self-triggering Pulse mutation loop",
-    "Keep Review History without continuous DOM rewrites",
-    "Preserve all existing Pulse data",
-    "Refresh offline shell to v236"
+    "Unified Recent learning feed",
+    "Colour-coded OTJ source tiles",
+    "Monthly combined OTJ PDFs",
+    "100% attendance cap",
+    "Refresh offline shell to v239"
   ]
 }
