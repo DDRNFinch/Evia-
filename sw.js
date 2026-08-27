@@ -1,5 +1,5 @@
-// Evia v236 hotfix: keep Pulse stable, hide only the Time Course QR Codes button, and cache Symi OTJ/attendance support.
-const CACHE_NAME = 'evia-shell-v236';
+// Evia v239: unified OTJ feed, source colours, monthly OTJ PDFs, and Symi attendance cap support.
+const CACHE_NAME = 'evia-shell-v239';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -76,11 +76,14 @@ const CRITICAL = [
   './assets/evia-version-v234.js',
   './assets/evia-version-v235.js',
   './assets/evia-version-v236.js',
+  './assets/evia-version-v239.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
   './assets/evia-symi-otj-v237.js',
   './assets/evia-symi-attendance-v238.js',
+  './assets/evia-otj-feed-v239.js',
+  './assets/evia-otj-export-v239.js',
   './assets/evia-milos-return-v234.js',
   './assets/evia-review-snapshots-v236.js',
   './assets/evia-review-snapshot-hook-v235.js',
@@ -99,7 +102,6 @@ const CRITICAL = [
   './assets/evia-staged-evidence-v132.css',
   './assets/evia-stage-save-v139.js',
   './assets/evia-post-evidence-otj-v149.js',
-  './assets/evia-otj-export.js',
   './assets/evia-nvq-audio-v150.js',
   './assets/evia-nvq-pack-export-v150.js',
   './assets/evia-signature-smooth-v155.js',
