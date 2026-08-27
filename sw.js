@@ -1,4 +1,4 @@
-// Evia v236 hotfix: keep Pulse stable, hide only the Time Course QR Codes button, and cache Symi OTJ receipt support.
+// Evia v236 hotfix: keep Pulse stable, hide only the Time Course QR Codes button, and cache Symi OTJ/attendance support.
 const CACHE_NAME = 'evia-shell-v236';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
@@ -80,6 +80,7 @@ const CRITICAL = [
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
   './assets/evia-symi-otj-v237.js',
+  './assets/evia-symi-attendance-v238.js',
   './assets/evia-milos-return-v234.js',
   './assets/evia-review-snapshots-v236.js',
   './assets/evia-review-snapshot-hook-v235.js',
