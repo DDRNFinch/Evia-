@@ -1,18 +1,19 @@
 {
-  "version": "240",
-  "title": "Formal unit and AC course view",
+  "version": "241",
+  "title": "Complete course coverage sources",
   "details": [
-    "The Course arch now opens the formal qualification structure using official units and assessment criteria",
-    "Each unit shows its official title and AC coverage progress",
-    "Opening a unit shows every official AC and its full wording",
-    "Yellow remains Evia evidence, purple remains recognised prior learning, and blue remains Milos assessor observation",
+    "The Course arch remains the formal qualification view using official units and assessment criteria",
+    "Evia evidence, RPL, Milos assessor observations and Tinos witness testimony now all count towards course and unit coverage progress",
+    "Opening a unit shows every official AC with its full wording",
+    "Each covered AC now shows coloured source ticks: yellow Evia, purple RPL, blue Milos and orange Tinos",
     "The simpler learner activity view remains available through Evia"
   ],
-  "summary": "Evia v240 changes the Course arch to the formal qualification view: official units, official ACs and existing evidence-status colours.",
+  "summary": "Evia v241 keeps the official Unit → AC course view and makes all accepted evidence sources contribute consistently to progress and AC status ticks.",
   "changes": [
-    "Official Unit → AC Course view",
-    "Full AC wording",
-    "Unit-level progress",
-    "Preserved evidence, RPL and Milos status colours"
+    "Milos observations count in course coverage",
+    "Tinos witness testimony counts in course coverage",
+    "RPL counts in course coverage",
+    "Source ticks shown on official ACs",
+    "Offline shell refreshed for v241"
   ]
 }
