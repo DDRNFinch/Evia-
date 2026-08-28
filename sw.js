@@ -1,5 +1,5 @@
-// Evia v239: unified OTJ feed, source colours, monthly OTJ PDFs, and Symi attendance cap support.
-const CACHE_NAME = 'evia-shell-v239';
+// Evia v239 maintenance: formal Unit → AC Course arch view, with the existing offline shell preserved.
+const CACHE_NAME = 'evia-shell-v239-course-units-1';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
