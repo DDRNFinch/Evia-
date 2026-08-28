@@ -1,5 +1,5 @@
-// Evia v239 maintenance: formal Unit → AC Course arch view, with the existing offline shell preserved.
-const CACHE_NAME = 'evia-shell-v239-course-units-1';
+// Evia v241: formal Unit → AC Course view with Evia, RPL, Milos and Tinos coverage sources.
+const CACHE_NAME = 'evia-shell-v241';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -76,7 +76,7 @@ const CRITICAL = [
   './assets/evia-version-v234.js',
   './assets/evia-version-v235.js',
   './assets/evia-version-v236.js',
-  './assets/evia-version-v239.js',
+  './assets/evia-version-v241.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
@@ -108,7 +108,8 @@ const CRITICAL = [
   './assets/evia-trowel-framework-v150.js',
   './assets/evia-trowel-practical-v151.js',
   './assets/evia-nvq-practical-nav-v151.js',
-  './assets/evia-nvq-structure-browser-v151.js',
+  './assets/evia-nvq-structure-browser-v241.js',
+  './assets/evia-nvq-v241.js',
   './assets/evia-export-status.js',
   './assets/evia-qr-exchange-v107.js',
   './assets/evia-qr-st0171-v126.js',
@@ -153,7 +154,6 @@ const CRITICAL = [
   './assets/evia-trowel-loader.js',
   './assets/evia-6570-pack-migration.js',
   './assets/evia-6570-v91-remap.js',
-  './assets/evia-nvq-v94.js',
   './assets/evia-nvq-ac-browser-v90.js',
   './assets/evia-nvq-ac-browser-v90.css',
   './assets/qrcode.js',
