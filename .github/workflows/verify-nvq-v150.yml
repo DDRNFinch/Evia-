@@ -24,7 +24,8 @@ jobs:
           node --check assets/evia-trowel-framework-v150.js
           node --check assets/evia-trowel-practical-v151.js
           node --check assets/evia-nvq-practical-nav-v151.js
-          node --check assets/evia-nvq-structure-browser-v151.js
+          node --check assets/evia-nvq-structure-browser-v241.js
+          node --check assets/evia-nvq-v241.js
           node --check assets/evia-nvq-audio-v150.js
           node --check assets/evia-nvq-pack-export-v150.js
           node --check assets/evia-signature-smooth-v155.js
@@ -91,13 +92,18 @@ jobs:
           grep -q 'restoreParent(ctx' assets/evia-nvq-practical-nav-v151.js
           grep -q 'const VERSION=177' assets/evia-nvq-practical-nav-v151.js
 
-      - name: Check A-E AC coverage navigation
+      - name: Check formal Unit AC coverage navigation
         run: |
-          grep -q 'AC coverage now follows the same NVQ structure' assets/evia-nvq-structure-browser-v151.js
-          grep -q 'data-nvq151-group' assets/evia-nvq-structure-browser-v151.js
-          grep -q 'data-nvq151-sub' assets/evia-nvq-structure-browser-v151.js
-          grep -q 'data-nvq151-activity' assets/evia-nvq-structure-browser-v151.js
-          if grep -q 'evia-nvq-ac-browser-v90.js' index.html; then exit 1; fi
+          grep -q 'data-nvq241-unit' assets/evia-nvq-structure-browser-v241.js
+          grep -q 'WITNESS_KEY="evia-tinos-witnessed-v1"' assets/evia-nvq-structure-browser-v241.js
+          grep -q 'sourceTick("milos"' assets/evia-nvq-structure-browser-v241.js
+          grep -q 'sourceTick("witness"' assets/evia-nvq-structure-browser-v241.js
+          grep -q 'witnessSet().forEach(code=>out.add(code))' assets/evia-nvq-v241.js
+          grep -q 'evia:nvq-coverage-changed' assets/evia-nvq-v241.js
+          grep -q 'evia-nvq-structure-browser-v241.js?v=241' index.html
+          grep -q 'evia-nvq-v241.js?v=241' index.html
+          if grep -q 'evia-nvq-structure-browser-v151.js' index.html; then exit 1; fi
+          if grep -q 'evia-nvq-v94.js' index.html; then exit 1; fi
 
       - name: Check post-evidence OTJ and GLH routing
         run: |
@@ -145,4 +151,4 @@ jobs:
           grep -q 'evia-staged-evidence-v202.js' index.html
           grep -q "evia-evidence-state-v204.js?v=${EVIA_VERSION}" index.html
           if grep -q 'evia-evidence-state-v203.js\|evia-evidence-state-v202.js' index.html; then exit 1; fi
-          grep -q 'evia-otj-export.js' sw.js
+          grep -q 'evia-otj-export-v239.js' sw.js
