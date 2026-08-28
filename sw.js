@@ -1,5 +1,5 @@
-// Evia v239: unified OTJ feed, source colours, monthly OTJ PDFs, and Symi attendance cap support.
-const CACHE_NAME = 'evia-shell-v239';
+// Evia v240: restore the NVQ course arch to the official unit matrix while preserving Milos-observed coverage.
+const CACHE_NAME = 'evia-shell-v240';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -77,6 +77,7 @@ const CRITICAL = [
   './assets/evia-version-v235.js',
   './assets/evia-version-v236.js',
   './assets/evia-version-v239.js',
+  './assets/evia-version-v240.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
@@ -108,6 +109,7 @@ const CRITICAL = [
   './assets/evia-trowel-framework-v150.js',
   './assets/evia-trowel-practical-v151.js',
   './assets/evia-nvq-practical-nav-v151.js',
+  './assets/evia-course-matrix-v240.js',
   './assets/evia-nvq-structure-browser-v151.js',
   './assets/evia-export-status.js',
   './assets/evia-qr-exchange-v107.js',
