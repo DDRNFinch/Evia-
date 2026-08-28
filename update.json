@@ -1,19 +1,19 @@
 {
-  "version": "239",
-  "title": "Unified OTJ learning timeline",
+  "version": "240",
+  "title": "NVQ course matrix restored",
   "details": [
-    "College, learner, assessor and employer OTJ now appear together in one Recent learning timeline in date order",
-    "Learner input uses light yellow tiles, college sessions light green, assessor OTJ light blue and employer session OTJ light orange",
-    "Symi college learning no longer appears in a separate Recent college learning section",
-    "Monthly OTJ PDFs include every OTJ source for that month when the learner creates the portfolio upload package",
-    "College attendance percentages are capped at 100%"
+    "The NVQ course arch now opens the qualification by official unit instead of the A-E evidence-collection categories",
+    "Each unit shows AC coverage and retains Milos assessor-observed coverage returned by QR",
+    "Opening a unit shows its official ACs with Evia evidence, RPL and Milos-observed status",
+    "The A-E practical evidence structure remains available for evidence collection and has not been removed",
+    "No Milos recording, QR transfer or learner evidence data is changed"
   ],
-  "summary": "Evia v239 combines every OTJ source into one colour-coded chronological learning feed and includes the combined records in monthly portfolio OTJ PDFs.",
+  "summary": "Evia v240 restores the learner-facing NVQ course matrix to the official qualification units while keeping Milos-observed blue coverage intact.",
   "changes": [
-    "Unified Recent learning feed",
-    "Colour-coded OTJ source tiles",
-    "Monthly combined OTJ PDFs",
-    "100% attendance cap",
-    "Refresh offline shell to v239"
+    "Official unit course matrix",
+    "Unit-level AC coverage",
+    "Milos observed coverage retained",
+    "A-E evidence workflow preserved",
+    "Refresh offline shell to v240"
   ]
 }
