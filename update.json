@@ -1,19 +1,18 @@
 {
-  "version": "239",
-  "title": "Unified OTJ learning timeline",
+  "version": "240",
+  "title": "Formal unit and AC course view",
   "details": [
-    "College, learner, assessor and employer OTJ now appear together in one Recent learning timeline in date order",
-    "Learner input uses light yellow tiles, college sessions light green, assessor OTJ light blue and employer session OTJ light orange",
-    "Symi college learning no longer appears in a separate Recent college learning section",
-    "Monthly OTJ PDFs include every OTJ source for that month when the learner creates the portfolio upload package",
-    "College attendance percentages are capped at 100%"
+    "The Course arch now opens the formal qualification structure using official units and assessment criteria",
+    "Each unit shows its official title and AC coverage progress",
+    "Opening a unit shows every official AC and its full wording",
+    "Yellow remains Evia evidence, purple remains recognised prior learning, and blue remains Milos assessor observation",
+    "The simpler learner activity view remains available through Evia"
   ],
-  "summary": "Evia v239 combines every OTJ source into one colour-coded chronological learning feed and includes the combined records in monthly portfolio OTJ PDFs.",
+  "summary": "Evia v240 changes the Course arch to the formal qualification view: official units, official ACs and existing evidence-status colours.",
   "changes": [
-    "Unified Recent learning feed",
-    "Colour-coded OTJ source tiles",
-    "Monthly combined OTJ PDFs",
-    "100% attendance cap",
-    "Refresh offline shell to v239"
+    "Official Unit → AC Course view",
+    "Full AC wording",
+    "Unit-level progress",
+    "Preserved evidence, RPL and Milos status colours"
   ]
 }
