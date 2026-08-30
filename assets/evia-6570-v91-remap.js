@@ -15,7 +15,7 @@ function run(){
   if(read(MARKER,null)?.done)return true;
   const packs=window.EviaCoursePacks,migration=window.Evia6570PackMigration;
   if(!packs?.get||!packs?.install||!migration?.build)return false;
-  const current=packs.get(COURSE_ID);if(!current)return false;if(current?.naxosMappingPack===1||current?.pathways?.some?.(p=>p?.naxosMappingPack===1))return true;
+  const current=packs.get(COURSE_ID);if(!current)return false;
   try{
     const next=migration.build();audit(next);packs.install(next);
     write(MARKER,{done:true,updatedAt:Date.now(),rule:"every-selectable-area-has-ac"});

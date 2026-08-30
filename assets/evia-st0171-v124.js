@@ -120,7 +120,7 @@ function migrateEvidence(){
 function patchInstalled(){
   try{
     const all=JSON.parse(localStorage.getItem(PACK_KEY)||'{}'),pack=all?.['st0171-v1-1'];
-    if(!pack||pack.naxosMappingPack===1||!Array.isArray(window.EviaST0171Map))return;
+    if(!pack||!Array.isArray(window.EviaST0171Map))return;
     pack.siteData=window.EviaST0171Map;pack.updatedAt=Date.now();pack.evidenceTilesVersion=VERSION;
     all['st0171-v1-1']=pack;localStorage.setItem(PACK_KEY,JSON.stringify(all))
   }catch(error){console.debug('Evia ST0171 tile refresh',error)}

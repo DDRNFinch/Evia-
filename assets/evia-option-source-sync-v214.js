@@ -7,13 +7,11 @@ function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queu
 function intersects(codes,set){return codes.some(code=>set.has(code))}
 function marker(type,label){const mark=document.createElement("span");mark.className=`evia-option-source-v214 ${type}`;mark.textContent="✓";mark.title=label;mark.setAttribute("aria-label",label);mark.setAttribute("role","img");return mark}
 function apply(){
-  const active=window.EviaCoursePacks?.active?.(),naxos=active?.pathway?.naxosMappingPack===1||active?.pack?.naxosMappingPack===1;
-  document.querySelectorAll("button[data-opp] .evia-option-source-rail-v214").forEach(x=>x.remove());
-  if(naxos)return;
   const api=window.EviaEvidenceStateV204;if(!api||!codeMap.size)return;
   const rpl=new Set(api.rpl?.()||[]),milos=new Set(api.milos?.()||[]),witness=new Set(api.witness?.()||[]);
   document.querySelectorAll("button[data-opp]").forEach(btn=>{
     const side=btn.querySelector(":scope > .self-side");if(!side)return;
+    side.querySelector(":scope > .evia-option-source-rail-v214")?.remove();
     const codes=codeMap.get(String(btn.dataset.opp||""))||[];
     if(!codes.length)return;
     const states=[];

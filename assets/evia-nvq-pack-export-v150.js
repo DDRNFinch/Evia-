@@ -1,11 +1,11 @@
 (()=>{
 "use strict";
-const VERSION=170,STORE="evia-selfobs-live-v3",DB="evia-self-observation-media",DBS="files";
+const VERSION=170,COURSE_ID="6570-05",STORE="evia-selfobs-live-v3",DB="evia-self-observation-media",DBS="files";
 const enc=new TextEncoder();let busy=false;
 const read=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
 const ctx=()=>window.EviaCourseContext?.current?.()||{};
-const isTrowel=()=>ctx()?.courseType==="nvq";
+const isTrowel=()=>ctx()?.courseType==="nvq"&&ctx()?.courseId===COURSE_ID;
 const framework=()=>window.EviaTrowelFramework||null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fileSafe=s=>String(s||"Evidence").replace(/[<>:"/\\|?*\x00-\x1F]/g,"").replace(/\s+/g," ").trim().replace(/[. ]+$/g,"").slice(0,120)||"Evidence";
@@ -19,7 +19,7 @@ async function stored(id){if(!id)return null;const db=await openDb();try{return 
 function unpack(r){if(!r)return null;if(r instanceof Blob)return{blob:r,type:r.type||"",name:r.name||""};for(const k of ["blob","file","data","media","content"]){const v=r[k];if(v instanceof Blob)return{blob:v,type:r.type||v.type||"",name:r.name||v.name||""}}return null}
 function ext(type,name){const n=String(name||"");if(n.includes(".")){const x=n.slice(n.lastIndexOf(".")+1).replace(/[^a-z0-9]/gi,"");if(x&&x.length<=6)return x.toLowerCase()}const t=String(type||"").toLowerCase();if(t.includes("jpeg"))return"jpg";if(t.includes("png"))return"png";if(t.includes("mp4"))return"mp4";if(t.includes("webm"))return"webm";if(t.includes("ogg"))return"ogg";if(t.includes("mpeg"))return"mp3";if(t.includes("pdf"))return"pdf";return"bin"}
 function entryMeta(e){const f=framework(),a=f?.activity?.(e?.opportunityId)||f?.activity?.(e?.activityCode)||(e?.codes||[]).map(c=>f?.activityForCode?.(c)).find(Boolean)||null;const code=a?.code||e?.activityCode||String(e?.title||"").match(/^[A-E]\d(?:\.\d)?/)?.[0]||"Activity";return{groupId:a?.groupId||e?.groupId||e?.categoryId||"NVQ",groupTitle:a?.groupTitle||e?.groupTitle||e?.categoryTitle||"NVQ Evidence",subId:a?.subCategoryId||e?.subCategoryId||e?.jobId||"Evidence",subTitle:a?.subCategoryTitle||e?.subCategoryTitle||e?.jobTitle||"Evidence",activityCode:code,activityTitle:a?.plainTitle||String(e?.title||"Evidence").replace(/^[A-E]\d(?:\.\d)?\s*[—-]\s*/,""),mappedCodes:a?.codes||e?.codes||[]}}
-function fresh(){const c=ctx(),courseId=String(c?.courseId||"");const xs=read(STORE,[]);return Array.isArray(xs)?xs.filter(e=>!e?.downloadedAt&&(!e?.courseId||String(e.courseId)===courseId)):[]}
+function fresh(){const xs=read(STORE,[]);return Array.isArray(xs)?xs.filter(e=>!e?.downloadedAt&&e?.courseId===COURSE_ID):[]}
 function cleanPdfText(s){return String(s??"").replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,"-").replace(/[^\x20-\x7E]/g," ").replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)")}
 function wrap(s,max=68){const words=cleanPdfText(s).split(/\s+/).filter(Boolean),lines=[];let line="";for(const w of words){if(!line)line=w;else if((line+" "+w).length<=max)line+=" "+w;else{lines.push(line);line=w}}if(line)lines.push(line);return lines.length?lines:[""]}
 function text(lines,x,y,size=8,leading=10,bold=false){let out=`BT /${bold?"F2":"F1"} ${size} Tf ${x} ${y} Td `;for(let i=0;i<lines.length;i++){if(i)out+=`0 -${leading} Td `;out+=`(${cleanPdfText(lines[i])}) Tj `}return out+"ET\n"}

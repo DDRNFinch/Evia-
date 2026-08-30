@@ -11,10 +11,14 @@ function entries(){const x=read(EVIDENCE_KEY,[]);return Array.isArray(x)?x:[]}
 function glhEntries(){const x=read(GLH_KEY,[]);return Array.isArray(x)?x:[]}
 function allowed(){return new Set((ctx()?.codes||[]).map(String))}
 function rplSet(){const a=allowed(),x=read(RPL_KEY,[]);return new Set((Array.isArray(x)?x:[]).map(String).filter(code=>a.has(code)))}
-function routeIds(c=ctx()){if(!c)return[];const p=String(c.pathway||"thin"),up=p.toUpperCase(),ids=[];if(c.courseId==="6570-05")ids.push(({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[up]||"6570-05-THIN");ids.push(`${c.courseId}-${up}`,p,up);return[...new Set(ids.filter(Boolean))]}
-function routeSet(key){const c=ctx(),a=allowed(),map=read(key,{}),out=new Set();for(const route of routeIds(c)){const bucket=map&&typeof map[route]==="object"?map[route]:{};Object.keys(bucket||{}).map(String).filter(code=>a.has(code)).forEach(code=>out.add(code))}return out}
+function routeId(c=ctx()){
+  if(!c||c.courseId!=="6570-05")return"";
+  const p=String(c.pathway||"thin").toUpperCase();
+  return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||"6570-05-THIN"
+}
+function routeSet(key){const c=ctx(),a=allowed(),route=routeId(c),map=read(key,{}),bucket=route&&map&&typeof map[route]==="object"?map[route]:{};return new Set(Object.keys(bucket||{}).map(String).filter(code=>a.has(code)))}
 const observedSet=()=>routeSet(OBS_KEY),witnessSet=()=>routeSet(WITNESS_KEY);
-function countMap(){const c=ctx(),out={};if(!c)return out;c.codes.map(String).forEach(x=>out[x]=0);const active=window.EviaCoursePacks?.active?.(),isNaxos=active?.pathway?.naxosMappingPack===1||active?.pack?.naxosMappingPack===1,criteria=isNaxos?window.EviaNaxosEvidenceCriteriaV223?.state?.():null;if(criteria?.learnerCovered){for(const code of criteria.learnerCovered)if(String(code) in out)out[String(code)]=1;return out}entries().forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).map(String).forEach(code=>{if(code in out)out[code]++}));return out}
+function countMap(){const c=ctx(),out={};if(!c)return out;c.codes.map(String).forEach(x=>out[x]=0);entries().forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).map(String).forEach(code=>{if(code in out)out[code]++}));return out}
 function coveredSet(){const c=ctx(),x=countMap(),out=rplSet();if(!c)return out;observedSet().forEach(code=>out.add(code));witnessSet().forEach(code=>out.add(code));c.codes.map(String).forEach(code=>{if((x[code]||0)>0)out.add(code)});return out}
 function acPercent(){const c=ctx();if(!c?.codes?.length)return 0;const covered=coveredSet(),codes=c.codes.map(String);return Math.round(codes.filter(code=>covered.has(code)).length/codes.length*100)}
 function mins(x){return Math.max(0,Math.round(Number(x?.durationMinutes)||0))}

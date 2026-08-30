@@ -1,19 +1,19 @@
 {
-  "version": "242",
-  "title": "Naxos course source integration",
+  "version": "241",
+  "title": "Complete course coverage sources",
   "details": [
-    "Naxos Mapping Engine is the source of the learner course structure when a Naxos course is imported",
-    "The Evia avatar follows the exact Naxos 5 × 5 × 5 category, subcategory and task structure",
-    "The Course arch keeps Evia’s official KSB or AC view with yellow, purple, blue and orange evidence-source ticks",
-    "Evia evidence, RPL, Milos observations, Tinos witness evidence, progress and completion use the same imported course state",
-    "Naxos facet and atomic assessment-criterion requirements are preserved for completion"
+    "The Course arch remains the formal qualification view using official units and assessment criteria",
+    "Evia evidence, RPL, Milos assessor observations and Tinos witness testimony now all count towards course and unit coverage progress",
+    "Opening a unit shows every official AC with its full wording",
+    "Each covered AC now shows coloured source ticks: yellow Evia, purple RPL, blue Milos and orange Tinos",
+    "The simpler learner activity view remains available through Evia"
   ],
-  "summary": "Evia v242 uses Naxos as the imported course-definition source while preserving Evia’s existing learner, evidence and Course coverage systems.",
+  "summary": "Evia v241 keeps the official Unit → AC course view and makes all accepted evidence sources contribute consistently to progress and AC status ticks.",
   "changes": [
-    "Naxos QR course import",
-    "Exact 5 × 5 × 5 learner map",
-    "Shared completion state",
-    "Existing Course evidence-source ticks preserved",
-    "Offline shell refreshed for v242"
+    "Milos observations count in course coverage",
+    "Tinos witness testimony counts in course coverage",
+    "RPL counts in course coverage",
+    "Source ticks shown on official ACs",
+    "Offline shell refreshed for v241"
   ]
 }

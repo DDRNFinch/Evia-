@@ -50,7 +50,7 @@ function openCarpentryRpl(){
   const sections=groups.map(([title,prefix])=>{const codes=c.codes.filter(x=>x.startsWith(prefix));return `<div class="evia-rpl-group"><h3>${title}</h3>${codes.map(code=>`<button class="evia-rpl-row ${r.has(code)?"on":""}" data-rpl-code="${code}"><span><b>${code}</b><small>${esc(labels[code]||code)}</small></span><em>${r.has(code)?"RPL":""}</em></button>`).join("")}</div>`}).join("");
   const el=layer(`<p class="evia-tools-kicker">Recognised prior learning</p><h2>RPL KSBs</h2><p class="evia-tools-copy">Only the KSBs for <b>${esc(c.pathwayTitle)}</b> are shown. Tap a KSB to mark or unmark it as RPL.</p>${sections}`,"RPL");bindRows(el)
 }
-async function data(){const c=ctx();if(c?.courseType!=="nvq")return[];const active=window.EviaCoursePacks?.active?.();if(active?.pack?.naxosMappingPack===1){const d=active?.pathway?.siteData||active?.pack?.siteData;return Array.isArray(d)?d:[]}if(window.EviaTrowelDataReady)await window.EviaTrowelDataReady;return window.EviaTrowelData?.build?.(c.pathway)||[]}
+async function data(){if(window.EviaTrowelDataReady)await window.EviaTrowelDataReady;const c=ctx();return c?.courseType==="nvq"?(window.EviaTrowelData?.build?.(c.pathway)||[]):[]}
 function desc(code){return window.EviaTrowelACText?.describe?.(code)||window.EviaTrowelMeta?.themeNames?.[window.EviaTrowelMeta?.codeTheme?.[code]]||"Assessment criterion"}
 async function openNvqRpl(){
   const c=ctx(),d=await data(),r=rplSet(),total=d.flatMap(cat=>cat.jobs.flatMap(job=>job.opps.flatMap(o=>o.codes||[])));

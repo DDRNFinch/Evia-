@@ -9,7 +9,6 @@ const write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));re
 const ctx=()=>window.EviaCourseContext?.current?.()||null;
 function routeId(c=ctx()){
   if(!c||c.noCourse)return"";
-  const nr=window.EviaNaxosCoursePacks?.routeId?.(c);if(nr)return nr;
   if(c.courseId==="st0171-v1-1")return"ST0171";
   if(c.courseId==="st0095-v1-2")return"ST0095";
   if(c.courseId==="st0264-v1-4")return c.pathway==="architectural-joiner"?"ST0264-AJ":"ST0264-SITE";
