@@ -4,17 +4,18 @@ const VERSION=241,RPL_KEY="evia-rpl-ksbs-v1",EVIDENCE_KEY="evia-selfobs-live-v3"
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");return x??d}catch{return d}};
 const numeric=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true,sensitivity:"base"});
-function ctx(){const c=window.EviaCourseContext?.current?.();return c?.courseType==="nvq"&&c?.courseId==="6570-05"?c:null}
+function ctx(){const c=window.EviaCourseContext?.current?.();return c?.courseType==="nvq"?c:null}
 function meta(){return window.EviaTrowelMeta||null}
-function desc(code){return window.EviaTrowelACText?.describe?.(code)||window.EviaTrowelHandbook?.describe?.(code)||"Assessment criterion"}
-function routeId(c=ctx()){if(!c)return"";const p=String(c.pathway||"thin").toUpperCase();return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||""}
+function desc(code){return meta()?.codeDescriptions?.[String(code)]||window.EviaTrowelACText?.describe?.(code)||window.EviaTrowelHandbook?.describe?.(code)||"Assessment criterion"}
+function routeIds(c=ctx()){if(!c)return[];const p=String(c.pathway||"thin"),up=p.toUpperCase(),ids=[];if(c.courseId==="6570-05")ids.push(({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[up]||"6570-05-THIN");ids.push(`${c.courseId}-${up}`,p,up);return[...new Set(ids.filter(Boolean))]}
 function routeSet(key,c=ctx()){
-  const allowed=new Set((c?.codes||[]).map(String)),map=read(key,{}),bucket=routeId(c)&&map&&typeof map[routeId(c)]==="object"?map[routeId(c)]:{};
-  return new Set(Object.keys(bucket||{}).map(String).filter(code=>allowed.has(code)))
+  const allowed=new Set((c?.codes||[]).map(String)),map=read(key,{}),out=new Set();
+  for(const id of routeIds(c)){const bucket=map&&typeof map[id]==="object"?map[id]:{};Object.keys(bucket||{}).map(String).filter(code=>allowed.has(code)).forEach(code=>out.add(code))}
+  return out
 }
 function snapshot(){
-  const c=ctx(),allowed=new Set((c?.codes||[]).map(String)),rawRpl=read(RPL_KEY,[]),rpl=new Set((Array.isArray(rawRpl)?rawRpl:[]).map(String).filter(code=>allowed.has(code))),evidence=new Map(),xs=read(EVIDENCE_KEY,[]),observed=routeSet(OBS_KEY,c),witness=routeSet(WITNESS_KEY,c);
-  if(Array.isArray(xs))xs.forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).map(String).forEach(code=>{if(allowed.has(code))evidence.set(code,(evidence.get(code)||0)+1)}));
+  const c=ctx(),allowed=new Set((c?.codes||[]).map(String)),rawRpl=read(RPL_KEY,[]),rpl=new Set((Array.isArray(rawRpl)?rawRpl:[]).map(String).filter(code=>allowed.has(code))),evidence=new Map(),xs=read(EVIDENCE_KEY,[]),observed=routeSet(OBS_KEY,c),witness=routeSet(WITNESS_KEY,c),active=window.EviaCoursePacks?.active?.(),isNaxos=active?.pathway?.naxosMappingPack===1||active?.pack?.naxosMappingPack===1,criteria=isNaxos?window.EviaNaxosEvidenceCriteriaV223?.state?.():null;
+  if(criteria?.learnerCovered){for(const code of criteria.learnerCovered){if(allowed.has(String(code)))evidence.set(String(code),1)}}else if(Array.isArray(xs))xs.forEach(e=>(Array.isArray(e?.codes)?e.codes:[]).map(String).forEach(code=>{if(allowed.has(code))evidence.set(code,(evidence.get(code)||0)+1)}));
   const covered=new Set([...rpl,...observed,...witness]);evidence.forEach((n,code)=>{if(n>0)covered.add(code)});
   return{allowed,rpl,evidence,observed,witness,covered}
 }

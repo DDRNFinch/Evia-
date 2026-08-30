@@ -101,7 +101,7 @@ function migrate(){
   if(busy)return false;busy=true;
   try{
     const t=timeline();if(t.courseId!==COURSE_ID)return false;
-    const current=installed();if(current&&Number(current.mappingRevision)===MAPPING_REVISION)return true;
+    const current=installed();if(current?.naxosMappingPack===1||current?.pathways?.some?.(p=>p?.naxosMappingPack===1))return true;if(current&&Number(current.mappingRevision)===MAPPING_REVISION)return true;
     if(!window.EviaCoursePacks?.install)throw Error("Course pack engine is not ready.");
     const {pack,result}=verify();if(!result.ok)throw Error(`6570-05 pack parity failed: ${result.errors.join(", ")}`);
     window.EviaCoursePacks.install(pack);

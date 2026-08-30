@@ -9,6 +9,7 @@ function numeric(a,b){return String(a).localeCompare(String(b),undefined,{numeri
 function desc(code){return window.EviaTrowelACText?.describe?.(code)||window.EviaTrowelHandbook?.describe?.(code)||"Assessment criterion"}
 function routeId(c=ctx()){
   if(!c||c.noCourse)return"";
+  const nr=window.EviaNaxosCoursePacks?.routeId?.(c);if(nr)return nr;
   if(c.courseId==="6570-05"){const p=String(c.pathway||"thin").toUpperCase();return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||""}
   return""
 }

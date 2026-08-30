@@ -1,5 +1,5 @@
-// Evia v241: formal Unit → AC Course view with Evia, RPL, Milos and Tinos coverage sources.
-const CACHE_NAME = 'evia-shell-v241';
+// Evia v242: Naxos course-source integration with existing Evia evidence, RPL and coverage behavior.
+const CACHE_NAME = 'evia-shell-v242';
 const CACHE_PREFIXES = ['evia-shell-', 'evia-beta-shell-'];
 const CRITICAL = [
   './',
@@ -77,6 +77,7 @@ const CRITICAL = [
   './assets/evia-version-v235.js',
   './assets/evia-version-v236.js',
   './assets/evia-version-v241.js',
+  './assets/evia-version-v242.js',
   './assets/evia-coach-v231.js',
   './assets/evia-coach-qr-v232.js',
   './assets/evia-coach-qr-v233.js',
@@ -140,6 +141,7 @@ const CRITICAL = [
   './assets/evia-st0171-v124.js',
   './assets/evia-course-packs.js',
   './assets/evia-naxos-course-pack-v220.js',
+  './assets/evia-naxos-evidence-criteria-v223.js',
   './assets/evia-course-enrolment.js',
   './assets/evia-course-pack-qr-v125.js',
   './course-delivery/course-registry.js',

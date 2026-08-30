@@ -132,8 +132,16 @@ function verifyRegistryPack(pack,entry){
 async function installFromInput(value){
   if(installing)return;installing=true;stopCamera();status("Checking course…");
   try{
-    if(!window.EviaCourseRegistry?.resolve)throw Error("The course registry is not ready.");
     if(!window.EviaCoursePacks?.install||!window.EviaCoursePacks?.activate)throw Error("The course installer is not ready.");
+    const naxosPayload=window.EviaNaxosCoursePacks?.parsePayload?.(value);
+    if(naxosPayload){
+      if(!window.EviaNaxosCoursePacks?.installFromPayload)throw Error("The Naxos course importer is not ready.");
+      status("Downloading Naxos course…");
+      const result=await window.EviaNaxosCoursePacks.installFromPayload(naxosPayload),installed=result.pack;
+      localStorage.setItem(RECEIPT_KEY,JSON.stringify({enrolmentId:result.enrolmentId,packageId:installed.id,packageVersion:String(installed.version||""),pathwayId:result.pathwayId||"",source:"naxos",installedAt:Date.now()}));
+      status(`${installed.shortTitle||installed.title} installed. Opening Evia…`);await new Promise(r=>setTimeout(r,450));location.reload();return
+    }
+    if(!window.EviaCourseRegistry?.resolve)throw Error("The course registry is not ready.");
     const resolved=await window.EviaCourseRegistry.resolve(value,{requirePublishable:true});
     if(!resolved.ok){
       if(resolved.reason==="invalid-code")throw Error("That is not a valid Evia course code.");

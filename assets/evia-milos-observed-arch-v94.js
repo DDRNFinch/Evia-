@@ -5,6 +5,7 @@ const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||"null");retur
 function ctx(){return window.EviaCourseContext?.current?.()||null}
 function routeId(c=ctx()){
   if(!c||c.noCourse)return"";
+  const naxosRoute=window.EviaNaxosCoursePacks?.routeId?.(c);if(naxosRoute)return naxosRoute;
   if(c.courseId==="st0095-v1-2")return"ST0095";
   if(c.courseId==="st0264-v1-4")return c.pathway==="architectural-joiner"?"ST0264-AJ":"ST0264-SITE";
   if(c.courseId==="6570-05"){const p=String(c.pathway||"thin").toUpperCase();return({THIN:"6570-05-THIN",REPAIR:"6570-05-REPAIR",SPECIALIST:"6570-05-SPECIALIST",DRAINAGE:"6570-05-DRAINAGE"})[p]||"6570-05-THIN"}
